@@ -346,17 +346,12 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href="/2019/02/26/NJCTF-guess/">
+        <a class="abstract-title" href="/2019/02/26/Jarvis-OJ-inject/">
             
-                <span>2017 NJCTF web guess</span>
+                <span>Jarvis OJ inject</span>
         </a>
         <div class="abstract-content">
-            粗一看，是文件上传的题目。随便传一个文件试试，测试可知，只是验证后缀，改后缀即可绕过。
-问题是文件传到哪里去了，这也是本题的核心考点。
-http://111.198.29.45:30117/?page=upload
-url 有所变化，可能任意跳转，尝试下伪协议读源码，成功。
-http://111.198.29.45:30117/?page=php://filter/read=convert.base64-encode/resource=index
-123456789101112131415161718192021222324252627// index.php&lt;?php    er...
+            反引号注入
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -367,7 +362,221 @@ http://111.198.29.45:30117/?page=php://filter/read=convert.base64-encode/resourc
             
             <div class="abstract-tags">
     
+        <a class="post-tag" href="javascript:void(0);" data-tags="Write-up">Write-up</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="SQL注入">SQL注入</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2019/02/25/Jarvis-OJ-phpinfo/">
+            
+                <span>Jarvis OJ phpinfo</span>
+        </a>
+        <div class="abstract-content">
+            session 序列化方法使用不当导致的任意对象注入问题
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/25</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Write-up">Write-up</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="反序列化">反序列化</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2019/01/30/安恒杯-一月-web/">
+            
+                <span>安恒杯 一月 web</span>
+        </a>
+        <div class="abstract-content">
+            babyGo12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849&lt;?php  @error_reporting(1); include 'flag.php';class baby &#123;       protected $skyobj;      public $aaa;    public $bbb;    function __construct() &#123;              $this-&gt;skyobj = new sec;  ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/30</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Write-up">Write-up</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2019/01/30/fireshell-2019-Vice/">
+            
+                <span>fireshell 2019 Vice</span>
+        </a>
+        <div class="abstract-content">
+            123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051&lt;?php	//require_once 'config.php';	class SHITS&#123;		private $url;		private $method;		private $addr;		private $host;		private $name;			function __construct($method,$url)&#123;			$this-&gt;method = $me...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/30</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Write-up">Write-up</a>
+    
         <a class="post-tag" href="javascript:void(0);" data-tags="CTF">CTF</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ssrf">ssrf</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/12/30/NJCTF-guess/">
+            
+                <span>2017 NJCTF web guess</span>
+        </a>
+        <div class="abstract-content">
+            php 伪随机数的安全性问题
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/30</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Write-up">Write-up</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="php 伪随机数">php 伪随机数</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/12/08/Please don't stop rua 233333/">
+            
+                <span>Please don&#39;t stop rua 233333</span>
+        </a>
+        <div class="abstract-content">
+            入门性的序列化问题
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Write-up">Write-up</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="反序列化">反序列化</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/10/26/Raccoon_Writeup/">
+            
+                <span>Raccoon web Writeup</span>
+        </a>
+        <div class="abstract-content">
+            PHP 后门分析李大猫在他的 WordPress 博客里发现了被黑客植入的 PHP 后门，快帮他分析分析这个后门要怎么利用吧
+123456789101112&lt;?php 	$z0 = $_REQUEST['sort'];	$q1 = '';	$c2 = "wt8m4;6eb39fxl*s5/.yj7(pod_h1kgzu0cqr)aniv2";	$y3 = array(8,38,15,7,6,4,26,25,7,34,24,25,7);	foreach($y3 as $h4)&#123;		$q1.=$c2[$h4];  // q1 = base64_decode	&#125;	$v...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/26</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Write-up">Write-up</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/09/26/bugku-Web-部分WP/">
+            
+                <span>bugku Web 部分WP</span>
+        </a>
+        <div class="abstract-content">
+            123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130131132133134135...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/26</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
     
         <a class="post-tag" href="javascript:void(0);" data-tags="Write-up">Write-up</a>
     
@@ -491,9 +700,156 @@ http://111.198.29.45:30117/?page=php://filter/read=convert.base64-encode/resourc
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 2
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -509,12 +865,86 @@ http://111.198.29.45:30117/?page=php://filter/read=convert.base64-encode/resourc
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/NJCTF-guess/">2017 NJCTF web guess</a>
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/Web安全笔记-1/">Web安全笔记</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/hello-world/">Hello World</a>
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/Jarvis-OJ-inject/">Jarvis OJ inject</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2019/02/25/Jarvis-OJ-phpinfo/">Jarvis OJ phpinfo</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-web/">安恒杯 一月 web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/fireshell-2019-Vice/">fireshell 2019 Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars【树状数组】/">POJ-2352 Stars【树状数组】</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/NJCTF-guess/">2017 NJCTF web guess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href="/2018/12/08/Please don't stop rua 233333/">Please don't stop rua 233333</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href="/2018/12/08/爬取电影天堂全站电影/">爬取电影天堂电影</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span><a class="archive-post-title" href="/2018/11/26/爬取京东商品信息/">爬取京东商品信息</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href="/2018/10/26/Raccoon_Writeup/">Raccoon web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href="/2018/09/26/bugku-Web-部分WP/">bugku Web 部分WP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2018/02/26/葵花宝典/">葵花宝典</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2018/02/26/hello-world/">Hello World</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span><a class="archive-post-title" href="/2018/01/26/Web安全笔记/">Web 安全笔记</a>
         </li>
     
     </ul></div>
@@ -522,9 +952,25 @@ http://111.198.29.45:30117/?page=php://filter/read=convert.base64-encode/resourc
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="Write-up"><span class="iconfont-archer">&#xe606;</span>Write-up</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQL注入"><span class="iconfont-archer">&#xe606;</span>SQL注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="爬虫"><span class="iconfont-archer">&#xe606;</span>爬虫</span>
+    
         <span class="sidebar-tag-name" data-tags="CTF"><span class="iconfont-archer">&#xe606;</span>CTF</span>
     
-        <span class="sidebar-tag-name" data-tags="Write-up"><span class="iconfont-archer">&#xe606;</span>Write-up</span>
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="学习笔记"><span class="iconfont-archer">&#xe606;</span>学习笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
