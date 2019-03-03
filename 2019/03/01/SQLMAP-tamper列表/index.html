@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>SQLMAP tamper WAF 绕过脚本列表 · wywwzjj&#39;s Blog</title>
+    <title>sqlmap tamper 列表 · wywwzjj&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/">wywwzjj&#39;s Blog.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">SQLMAP tamper WAF 绕过脚本列表</a>
+                <a href="#" class="post-name">sqlmap tamper 列表</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            SQLMAP tamper WAF 绕过脚本列表
+            sqlmap tamper 列表
             <!-- 404 -->
             
         </h1>
@@ -403,58 +403,130 @@ height:50vh;
     <article class="article-entry">
         <ul>
 <li>apostrophemask.py 用UTF-8全角字符替换单引号字符</li>
+</ul>
+<ul>
 <li>apostrophenullencode.py 用非法双字节unicode字符替换单引号字符</li>
+</ul>
+<ul>
 <li>appendnullbyte.py 在payload末尾添加空字符编码</li>
+</ul>
+<ul>
 <li>base64encode.py 对给定的payload全部字符使用Base64编码</li>
+</ul>
+<ul>
 <li>between.py 分别用“NOT BETWEEN 0 AND #”替换大于号“&gt;”，“BETWEEN # AND #”替换等于号“=”</li>
+</ul>
+<ul>
 <li>bluecoat.py 在SQL语句之后用有效的随机空白符替换空格符，随后用“LIKE”替换等于号“=”</li>
+</ul>
+<ul>
 <li>chardoubleencode.py 对给定的payload全部字符使用双重URL编码（不处理已经编码的字符）</li>
+</ul>
+<ul>
 <li>charencode.py 对给定的payload全部字符使用URL编码（不处理已经编码的字符）</li>
+</ul>
+<ul>
 <li>charunicodeencode.py 对给定的payload的非编码字符使用Unicode URL编码（不处理已经编码的字符）</li>
+</ul>
+<ul>
 <li>concat2concatws.py 用“CONCAT_WS(MID(CHAR(0), 0, 0), A, B)”替换像“CONCAT(A, B)”的实例</li>
+</ul>
+<ul>
 <li>equaltolike.py 用“LIKE”运算符替换全部等于号“=”</li>
+</ul>
+<ul>
 <li>greatest.py 用“GREATEST”函数替换大于号“&gt;”</li>
+</ul>
+<ul>
 <li>halfversionedmorekeywords.py 在每个关键字之前添加MySQL注释</li>
+</ul>
+<ul>
 <li>ifnull2ifisnull.py 用“IF(ISNULL(A), B, A)”替换像“IFNULL(A, B)”的实例</li>
+</ul>
+<ul>
 <li>lowercase.py 用小写值替换每个关键字字符</li>
+</ul>
+<ul>
 <li>modsecurityversioned.py 用注释包围完整的查询</li>
+</ul>
+<ul>
 <li>modsecurityzeroversioned.py 用当中带有数字零的注释包围完整的查询</li>
+</ul>
+<ul>
 <li>multiplespaces.py 在SQL关键字周围添加多个空格</li>
+</ul>
+<ul>
 <li>nonrecursivereplacement.py 用representations替换预定义SQL关键字，适用于过滤器</li>
+</ul>
+<ul>
 <li>overlongutf8.py 转换给定的payload当中的所有字符</li>
+</ul>
+<ul>
 <li>percentage.py 在每个字符之前添加一个百分号</li>
+</ul>
+<ul>
 <li>randomcase.py 随机转换每个关键字字符的大小写</li>
+</ul>
+<ul>
 <li>randomcomments.py 向SQL关键字中插入随机注释</li>
+</ul>
+<ul>
 <li>securesphere.py 添加经过特殊构造的字符串</li>
+</ul>
+<ul>
 <li>sp_password.py 向payload末尾添加“sp_password” for automatic obfuscation from DBMS logs</li>
+</ul>
+<ul>
 <li>space2comment.py 用“/**/”替换空格符</li>
+</ul>
+<ul>
 <li>space2dash.py 用破折号注释符“–”其次是一个随机字符串和一个换行符替换空格符</li>
+</ul>
+<ul>
 <li>space2hash.py 用磅注释符“#”其次是一个随机字符串和一个换行符替换空格符</li>
+</ul>
+<ul>
 <li>space2morehash.py 用磅注释符“#”其次是一个随机字符串和一个换行符替换空格符</li>
+</ul>
+<ul>
 <li>space2mssqlblank.py 用一组有效的备选字符集当中的随机空白符替换空格符</li>
+</ul>
+<ul>
 <li>space2mssqlhash.py 用磅注释符“#”其次是一个换行符替换空格符</li>
+</ul>
+<ul>
 <li>space2mysqlblank.py 用一组有效的备选字符集当中的随机空白符替换空格符</li>
+</ul>
+<ul>
 <li>space2mysqldash.py 用破折号注释符“–”其次是一个换行符替换空格符</li>
+</ul>
+<ul>
 <li>space2plus.py 用加号“+”替换空格符</li>
+</ul>
+<ul>
 <li>space2randomblank.py 用一组有效的备选字符集当中的随机空白符替换空格符</li>
+</ul>
+<ul>
 <li>unionalltounion.py 用“UNION SELECT”替换“UNION ALL SELECT”</li>
+</ul>
+<ul>
 <li>unmagicquotes.py 用一个多字节组合%bf%27和末尾通用注释一起替换空格符</li>
+</ul>
+<ul>
 <li>varnish.py 添加一个HTTP头“X-originating-IP”来绕过WAF</li>
+</ul>
+<ul>
 <li>versionedkeywords.py 用MySQL注释包围每个非函数关键字</li>
+</ul>
+<ul>
 <li>versionedmorekeywords.py 用MySQL注释包围每个关键字</li>
+</ul>
+<ul>
 <li>xforwardedfor.py 添加一个伪造的HTTP头“X-Forwarded-For”来绕过WAF</li>
 </ul>
 
     </article>
     <!-- license  -->
-    
-        <div class="license-wrapper">
-            <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
-            </p><p>原文链接：<a href="https://wywwzjj.top/2019/03/01/SQLMAP-tamper列表/">https://wywwzjj.top/2019/03/01/SQLMAP-tamper列表/</a>
-            </p><p>发表日期：<a href="https://wywwzjj.top/2019/03/01/SQLMAP-tamper列表/">March 1st 2019, 11:43:38 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/03/01/SQLMAP-tamper列表/">March 1st 2019, 11:45:44 pm</a>
-            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
-        </div>
     
     <!-- paginator  -->
     <ul class="post-paginator">
@@ -775,12 +847,6 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 15
@@ -799,7 +865,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/SQLMAP-tamper列表/">SQLMAP tamper WAF 绕过脚本列表</a>
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/SQLMAP-tamper列表/">sqlmap tamper 列表</a>
         </li>
     
     
@@ -814,12 +880,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019 fireshell-web-Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-web/">安恒杯 一月 web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019 fireshell-web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
@@ -886,19 +952,19 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
-    
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
-    
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
-    
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
-        <span class="sidebar-tag-name" data-tags="爬虫"><span class="iconfont-archer">&#xe606;</span>爬虫</span>
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="爬虫"><span class="iconfont-archer">&#xe606;</span>爬虫</span>
     
         <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
