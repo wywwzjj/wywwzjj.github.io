@@ -6,3 +6,6 @@ Disallow: /css/
 Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
+
+Sitemap: https://wywwzjj.top/sitemap.xml
+Sitemap: https://wywwzjj.top/baidusitemap.xml
