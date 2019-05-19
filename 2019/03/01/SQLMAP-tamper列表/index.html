@@ -472,7 +472,7 @@ height:50vh;
 </blockquote>
 <p><strong>适用数据库：</strong>MySQL</p>
 <h2 id="commentbeforeparentheses-py"><a href="#commentbeforeparentheses-py" class="headerlink" title="commentbeforeparentheses.py"></a>commentbeforeparentheses.py</h2><blockquote>
-<p>retVal = re.sub(r”b(w+)(“, “g<1>/**/(“, retVal)</1></p>
+<p>retVal = re.sub(r”b(w+)(“, “g&lt;1&gt;/**/(“, retVal)</p>
 </blockquote>
 <p>在某个单词后的第一个括号前面加入 /**/ ，用于过滤了函数的情况</p>
 <blockquote>
@@ -498,9 +498,9 @@ height:50vh;
 <h2 id="escapequotes-py"><a href="#escapequotes-py" class="headerlink" title="escapequotes.py"></a>escapequotes.py</h2><blockquote>
 <p>return payload.replace(“‘“, “‘“).replace(‘“‘, ‘“‘)</p>
 </blockquote>
-<p>将单引号转换成 \’ ，双引号转换成 \” ，用于过滤了单引号或双引号的情况</p>
+<p>将单引号转换成 &#39; ，双引号转换成 &quot; ，用于过滤了单引号或双引号的情况</p>
 <blockquote>
-<p>1’ and 1=1–+ <strong>to</strong> 1\’ and 1=1–+</p>
+<p>1’ and 1=1–+ <strong>to</strong> 1&#39; and 1=1–+</p>
 </blockquote>
 <p><strong>适用数据库：</strong>ALL</p>
 <h2 id="greatest-py"><a href="#greatest-py" class="headerlink" title="greatest.py"></a>greatest.py</h2><p>用 greatest 代替大于符号，用于大于符号被过滤了的情况</p>
@@ -527,7 +527,7 @@ height:50vh;
 </blockquote>
 <p><strong>适用数据库：</strong>MySql</p>
 <h2 id="informationschemacomment-py"><a href="#informationschemacomment-py" class="headerlink" title="informationschemacomment.py"></a>informationschemacomment.py</h2><blockquote>
-<p>retVal = re.sub(r”(?i)(information_schema).”, “g<1>/**/.”, payload)</1></p>
+<p>retVal = re.sub(r”(?i)(information_schema).”, “g&lt;1&gt;/**/.”, payload)</p>
 </blockquote>
 <p>在 information_schema 后面加上 /**/ ，用于绕过对 information_schema 的情况</p>
 <blockquote>
@@ -1286,9 +1286,57 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 30
+        Total : 34
         </div>
         <!-- search  -->
         
@@ -1301,6 +1349,26 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/SSRF-Tips/">SSRF Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化/">phar 与反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入绕过总结/">命令注入总结</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1468,23 +1536,29 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     
