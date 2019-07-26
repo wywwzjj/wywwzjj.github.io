@@ -477,7 +477,7 @@ height:50vh;
 </blockquote>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TokenStorage</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">performAction</span><span class="params">($action, $data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> ($action) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">'create'</span>:</span><br><span class="line">                <span class="keyword">$this</span>-&gt;createToken($data);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">'delete'</span>:</span><br><span class="line">                <span class="keyword">$this</span>-&gt;clearToken($data);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">Exception</span>(<span class="string">'Unknown action'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">createToken</span><span class="params">($seed)</span> </span>&#123;</span><br><span class="line">        $token = md5($seed);</span><br><span class="line">        file_put_contents(<span class="string">'/tmp/tokens/'</span> . $token, <span class="string">'...data'</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">clearToken</span><span class="params">($token)</span> </span>&#123;</span><br><span class="line">        $file = preg_replace(<span class="string">"/[^a-z.-_]/"</span>, <span class="string">""</span>, $token);</span><br><span class="line">        unlink(<span class="string">'/tmp/tokens/'</span> . $file);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$storage = <span class="keyword">new</span> TokenStorage();</span><br><span class="line">$storage-&gt;performAction($_GET[<span class="string">'action'</span>], $_GET[<span class="string">'data'</span>]);</span><br></pre></td></tr></table></figure>
 
-<h3 id="分析-5"><a href="#分析-5" class="headerlink" title="分析"></a>分析</h3><p>本题实现的功能就两个，写文件，删除文件。</p>
+<h3 id="分析-5"><a href="#分析-5" class="headerlink" title="分析"></a>分析</h3><p>本题实现的功能就两个，写文件、删除文件。</p>
 <p><code>createToken()</code> 唯一可控的就是 <code>seed</code> ，然而文件名还被完全限死，内容也不可控。</p>
 <p><code>clearToken()</code> 有一个正则匹配的过滤，不过<code>/[^a-z.-_]/</code> 这里配置有点问题。</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g1f65tmt8vj20jd02l0sz.jpg" alt></p>
@@ -489,7 +489,7 @@ height:50vh;
 </blockquote>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getUser</span><span class="params">($id)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $config, $db;</span><br><span class="line">    <span class="keyword">if</span> (!is_resource($db)) &#123;</span><br><span class="line">        $db = <span class="keyword">new</span> MySQLi(</span><br><span class="line">            $config[<span class="string">'dbhost'</span>],</span><br><span class="line">            $config[<span class="string">'dbuser'</span>],</span><br><span class="line">            $config[<span class="string">'dbpass'</span>],</span><br><span class="line">            $config[<span class="string">'dbname'</span>]</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">    $sql = <span class="string">"SELECT username FROM users WHERE id = ?"</span>;</span><br><span class="line">    $stmt = $db-&gt;prepare($sql);</span><br><span class="line">    $stmt-&gt;bind_param(<span class="string">'i'</span>, $id);</span><br><span class="line">    $stmt-&gt;bind_result($name);</span><br><span class="line">    $stmt-&gt;execute();</span><br><span class="line">    $stmt-&gt;fetch();</span><br><span class="line">    <span class="keyword">return</span> $name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$var = parse_url($_SERVER[<span class="string">'HTTP_REFERER'</span>]);</span><br><span class="line">parse_str($var[<span class="string">'query'</span>]);</span><br><span class="line">$currentUser = getUser($id);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;h1&gt;'</span>.htmlspecialchars($currentUser).<span class="string">'&lt;/h1&gt;'</span>;</span><br></pre></td></tr></table></figure>
 
-<h3 id="分析-6"><a href="#分析-6" class="headerlink" title="分析"></a>分析</h3><p>parse_str()` 极其容易导致变量覆盖漏洞，</p>
+<h3 id="分析-6"><a href="#分析-6" class="headerlink" title="分析"></a>分析</h3><p><code>parse_str()</code> 极其容易导致变量覆盖漏洞，</p>
 <p>另外<code>$_SERVER[&#39;HTTP_REFERER&#39;]</code> 是可控的，改下 <code>Referer</code> 头即可。</p>
 <blockquote>
 <p>要获取当前的 <em>QUERY_STRING</em>，可以使用 <a href="https://php.net/manual/zh/reserved.variables.server.php" target="_blank" rel="noopener">$_SERVER[‘QUERY_STRING’]</a> 变量。 </p>
@@ -761,7 +761,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/03/02/PHP-SECURITY-CALENDAR-2017/">https://wywwzjj.top/2019/03/02/PHP-SECURITY-CALENDAR-2017/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/03/02/PHP-SECURITY-CALENDAR-2017/">March 2nd 2019, 12:10:12 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/03/02/PHP-SECURITY-CALENDAR-2017/">May 19th 2019, 9:13:50 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/03/02/PHP-SECURITY-CALENDAR-2017/">July 12th 2019, 6:24:20 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -778,7 +778,7 @@ height:50vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2019/03/01/SQLMAP-tamper列表/" title="sqlmap tamper 列表">
+                <a href="/2019/03/01/sqlmap-tamper-列表/" title="sqlmap tamper 列表">
                     <div class="prevTitle">sqlmap tamper 列表</div>
                 </a>
             
@@ -1366,9 +1366,37 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 33
+        Total : 35
         </div>
         <!-- search  -->
         
@@ -1381,6 +1409,16 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href="/2019/07/18/Discuz ML! V3.X RCE 分析/">Discuz ML! V3.X RCE 分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写入配置文件经典问题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1419,7 +1457,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/SQLMAP-tamper列表/">sqlmap tamper 列表</a>
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/sqlmap-tamper-列表/">sqlmap tamper 列表</a>
         </li>
     
     
@@ -1473,12 +1511,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
         </li>
     
     
@@ -1563,23 +1601,27 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
-    
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
