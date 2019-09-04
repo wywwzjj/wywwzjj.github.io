@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wywwzjj.top/"/>
-  <updated>2019-09-01T11:10:20.763Z</updated>
+  <updated>2019-09-04T09:00:43.152Z</updated>
   <id>https://wywwzjj.top/</id>
   
   <author>
@@ -18,36 +18,12 @@
   
   <entry>
     <title>CSAPP 计算机系统漫游 笔记</title>
-    <link href="https://wywwzjj.top/2019/09/01/CSAPP-chapter-1-note/"/>
-    <id>https://wywwzjj.top/2019/09/01/CSAPP-chapter-1-note/</id>
-    <published>2019-09-01T09:08:23.000Z</published>
-    <updated>2019-09-01T11:10:20.763Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="信息-位-上下文"><a href="#信息-位-上下文" class="headerlink" title="信息 = 位 + 上下文"></a>信息 = 位 + 上下文</h2><p>编码是一切信息处理的基础。</p><h2 id="程序被其他程序翻译成不同的格式"><a href="#程序被其他程序翻译成不同的格式" class="headerlink" title="程序被其他程序翻译成不同的格式"></a>程序被其他程序翻译成不同的格式</h2><p><strong>编译过程：</strong></p><p>源程序（hello.c）=&gt; 预处理器 （hello.i） =&gt;  编译器（hello.s）  =&gt;  汇编器（hello.o）  =&gt;  链接器（可执行）</p><ul><li>预处理：以 # 开头的，直接修改源程序。比如 #include &lt;stdio.h&gt;，将直接把文件插入进来。</li><li>编译器：将此文本文件翻译成汇编语句。</li><li>汇编器：将汇编语句翻译成机器语言指令。</li><li>链接器：将用到的链接库合并。</li></ul><h2 id="了解编译系统如何工作大有益处"><a href="#了解编译系统如何工作大有益处" class="headerlink" title="了解编译系统如何工作大有益处"></a>了解编译系统如何工作大有益处</h2><ul><li>优化程序性能</li><li>理解链接时出现的错误</li><li>避免安全漏洞</li></ul><h2 id="处理器读并解释储存在内存中的指令"><a href="#处理器读并解释储存在内存中的指令" class="headerlink" title="处理器读并解释储存在内存中的指令"></a>处理器读并解释储存在内存中的指令</h2><h3 id="系统的硬件组成"><a href="#系统的硬件组成" class="headerlink" title="系统的硬件组成"></a>系统的硬件组成</h3><p>计算机：</p><ul><li>以硬件为基础</li><li>以软件扩充其功能</li><li>以执行程序的方式提现功能</li></ul><p>组成：</p><ul><li>总线：bus，各部件信息传输的渠道</li><li>I/O 设备：输入输出设备。输入信息  =&gt;  处理信息  =&gt;  输出信息</li><li>主存</li><li>处理器</li></ul><h3 id="运行-hello-程序"><a href="#运行-hello-程序" class="headerlink" title="运行 hello 程序"></a>运行 hello 程序</h3><h2 id="高速缓存至关重要"><a href="#高速缓存至关重要" class="headerlink" title="高速缓存至关重要"></a>高速缓存至关重要</h2><h2 id="存储设备形成层次结构"><a href="#存储设备形成层次结构" class="headerlink" title="存储设备形成层次结构"></a>存储设备形成层次结构</h2><h2 id="操作系统管理硬件"><a href="#操作系统管理硬件" class="headerlink" title="操作系统管理硬件"></a>操作系统管理硬件</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>一个进程可以由多个线程构成，每个线程都运行在进程的上下文中，并共享同样的代码和全局数据。</p><h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p>为每个进程提供了一个假象，就好像每个进程都独占了主存，每个</p><h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><h2 id="系统之间利用网络通信"><a href="#系统之间利用网络通信" class="headerlink" title="系统之间利用网络通信"></a>系统之间利用网络通信</h2><h2 id="Amdahl-定律"><a href="#Amdahl-定律" class="headerlink" title="Amdahl 定律"></a>Amdahl 定律</h2><h2 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h2><h2 id="抽象的重要性"><a href="#抽象的重要性" class="headerlink" title="抽象的重要性"></a>抽象的重要性</h2>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;信息-位-上下文&quot;&gt;&lt;a href=&quot;#信息-位-上下文&quot; class=&quot;headerlink&quot; title=&quot;信息 = 位 + 上下文&quot;&gt;&lt;/a&gt;信息 = 位 + 上下文&lt;/h2&gt;&lt;p&gt;编码是一切信息处理的基础。&lt;/p&gt;
-&lt;h2 id=&quot;程序被其他程序翻译成不同
-      
-    
-    </summary>
-    
-    
-      <category term="读书笔记" scheme="https://wywwzjj.top/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CSAPP 计算机系统漫游 笔记</title>
     <link href="https://wywwzjj.top/2019/09/01/CSAPP-chapter-1-notes/"/>
     <id>https://wywwzjj.top/2019/09/01/CSAPP-chapter-1-notes/</id>
     <published>2019-09-01T09:08:23.000Z</published>
-    <updated>2019-09-01T09:13:01.020Z</updated>
+    <updated>2019-09-04T09:00:43.152Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="信息-位-上下文"><a href="#信息-位-上下文" class="headerlink" title="信息 = 位 + 上下文"></a>信息 = 位 + 上下文</h2><p>编码是一切信息处理的基础。</p><h2 id="程序被其他程序翻译成不同的格式"><a href="#程序被其他程序翻译成不同的格式" class="headerlink" title="程序被其他程序翻译成不同的格式"></a>程序被其他程序翻译成不同的格式</h2><p><strong>编译过程：</strong></p><p>源程序（hello.c）=&gt; 预处理器 （hello.i） =&gt;  编译器（hello.s）  =&gt;  汇编器（hello.o）  =&gt;  链接器（可执行）</p><ul><li>预处理：以 # 开头的，直接修改源程序。比如 #include &lt;stdio.h&gt;，将直接把文件插入进来。</li><li>编译器：将此文本文件翻译成汇编语句。</li><li>汇编器：将汇编语句翻译成机器语言指令。</li><li>链接器：将用到的链接库合并。</li></ul><h2 id="了解编译系统如何工作大有益处"><a href="#了解编译系统如何工作大有益处" class="headerlink" title="了解编译系统如何工作大有益处"></a>了解编译系统如何工作大有益处</h2><ul><li>优化程序性能</li><li>理解链接时出现的错误</li><li>避免安全漏洞</li></ul><h2 id="处理器读并解释储存在内存中的指令"><a href="#处理器读并解释储存在内存中的指令" class="headerlink" title="处理器读并解释储存在内存中的指令"></a>处理器读并解释储存在内存中的指令</h2><h3 id="系统的硬件组成"><a href="#系统的硬件组成" class="headerlink" title="系统的硬件组成"></a>系统的硬件组成</h3><p>计算机：</p><ul><li>以硬件为基础</li><li>以软件扩充其功能</li><li>以执行程序的方式提现功能</li></ul><p>组成：</p><ul><li>总线：bus，各部件信息传输的渠道</li><li>I/O 设备：输入输出设备。输入信息  =&gt;  处理信息  =&gt;  输出信息</li><li>主存</li><li>处理器</li></ul><h3 id="运行-hello-程序"><a href="#运行-hello-程序" class="headerlink" title="运行 hello 程序"></a>运行 hello 程序</h3><h2 id="高速缓存至关重要"><a href="#高速缓存至关重要" class="headerlink" title="高速缓存至关重要"></a>高速缓存至关重要</h2><h2 id="存储设备形成层次结构"><a href="#存储设备形成层次结构" class="headerlink" title="存储设备形成层次结构"></a>存储设备形成层次结构</h2><h2 id="操作系统管理硬件"><a href="#操作系统管理硬件" class="headerlink" title="操作系统管理硬件"></a>操作系统管理硬件</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><h2 id="系统之间利用网络通信"><a href="#系统之间利用网络通信" class="headerlink" title="系统之间利用网络通信"></a>系统之间利用网络通信</h2><h2 id="Amdahl-定律"><a href="#Amdahl-定律" class="headerlink" title="Amdahl 定律"></a>Amdahl 定律</h2><h2 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h2><h2 id="抽象的重要性"><a href="#抽象的重要性" class="headerlink" title="抽象的重要性"></a>抽象的重要性</h2>]]></content>
+    <content type="html"><![CDATA[<h2 id="信息-位-上下文"><a href="#信息-位-上下文" class="headerlink" title="信息 = 位 + 上下文"></a>信息 = 位 + 上下文</h2><p>编码是一切信息处理的基础。</p><h2 id="程序被其他程序翻译成不同的格式"><a href="#程序被其他程序翻译成不同的格式" class="headerlink" title="程序被其他程序翻译成不同的格式"></a>程序被其他程序翻译成不同的格式</h2><p><strong>编译过程：</strong></p><p>源程序（hello.c）=&gt; 预处理器 （hello.i） =&gt;  编译器（hello.s）  =&gt;  汇编器（hello.o）  =&gt;  链接器（可执行）</p><ul><li>预处理：以 # 开头的，直接修改源程序。比如 #include &lt;stdio.h&gt;，将直接把文件插入进来。</li><li>编译器：将此文本文件翻译成汇编语句。</li><li>汇编器：将汇编语句翻译成机器语言指令。</li><li>链接器：将用到的链接库合并。</li></ul><h2 id="了解编译系统如何工作大有益处"><a href="#了解编译系统如何工作大有益处" class="headerlink" title="了解编译系统如何工作大有益处"></a>了解编译系统如何工作大有益处</h2><ul><li>优化程序性能</li><li>理解链接时出现的错误</li><li>避免安全漏洞</li></ul><h2 id="处理器读并解释储存在内存中的指令"><a href="#处理器读并解释储存在内存中的指令" class="headerlink" title="处理器读并解释储存在内存中的指令"></a>处理器读并解释储存在内存中的指令</h2><h3 id="系统的硬件组成"><a href="#系统的硬件组成" class="headerlink" title="系统的硬件组成"></a>系统的硬件组成</h3><p>计算机：</p><ul><li>以硬件为基础</li><li>以软件扩充其功能</li><li>以执行程序的方式提现功能</li></ul><p>组成：</p><ul><li>总线：bus，各部件信息传输的渠道</li><li>I/O 设备：输入输出设备。输入信息  =&gt;  处理信息  =&gt;  输出信息</li><li>主存</li><li>处理器</li></ul><h3 id="运行-hello-程序"><a href="#运行-hello-程序" class="headerlink" title="运行 hello 程序"></a>运行 hello 程序</h3><h2 id="高速缓存至关重要"><a href="#高速缓存至关重要" class="headerlink" title="高速缓存至关重要"></a>高速缓存至关重要</h2><h2 id="存储设备形成层次结构"><a href="#存储设备形成层次结构" class="headerlink" title="存储设备形成层次结构"></a>存储设备形成层次结构</h2><h2 id="操作系统管理硬件"><a href="#操作系统管理硬件" class="headerlink" title="操作系统管理硬件"></a>操作系统管理硬件</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>一个进程可以由多个线程构成，每个线程都运行在进程的上下文中，并共享同样的代码和全局数据。</p><h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p>为每个进程提供了一个假象，就好像每个进程都独占了主存，每个</p><h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><h2 id="系统之间利用网络通信"><a href="#系统之间利用网络通信" class="headerlink" title="系统之间利用网络通信"></a>系统之间利用网络通信</h2><h2 id="Amdahl-定律"><a href="#Amdahl-定律" class="headerlink" title="Amdahl 定律"></a>Amdahl 定律</h2><h2 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h2><h2 id="抽象的重要性"><a href="#抽象的重要性" class="headerlink" title="抽象的重要性"></a>抽象的重要性</h2>]]></content>
     
     <summary type="html">
     
@@ -493,6 +469,29 @@
       <category term="Writeup" scheme="https://wywwzjj.top/tags/Writeup/"/>
     
       <category term="ssrf" scheme="https://wywwzjj.top/tags/ssrf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>POJ 2352 Stars[树状数组]</title>
+    <link href="https://wywwzjj.top/2019/01/02/%C2%96POJ-2352-Stars-%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/"/>
+    <id>https://wywwzjj.top/2019/01/02/POJ-2352-Stars-树状数组/</id>
+    <published>2019-01-02T01:52:33.000Z</published>
+    <updated>2019-05-02T03:19:54.220Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="http://poj.org/problem?id=2352" target="_blank" rel="noopener">原题链接</a><br> <strong>题目大意</strong><br>  给出一些星星的二维坐标，求星星左方，下方，左下方的星星个数。</p><p><strong>思路</strong><br>题目已经把星星按照 y 坐标从小到大排序，若 y 相等则按 x 从小到大排序。因此，在每次对一个星星进行统计时，之前出现过的星星，只要 x 坐标比其小，则必在其左，左下方，x 坐标相等的自然在下方。</p><p><strong>代码</strong></p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">4e4</span>;  <span class="comment">// 注意此处</span></span><br><span class="line"><span class="keyword">int</span> arr[N] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> ans[N/<span class="number">2</span>] = &#123;<span class="number">0</span>&#125;, n;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lowbit</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x &amp; (-x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(i &lt; N) &#123;  <span class="comment">// 注意是 N</span></span><br><span class="line">        arr[i] += v;</span><br><span class="line">        i += lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Sum</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(x) &#123;</span><br><span class="line">        res += arr[x];</span><br><span class="line">        x -= lowbit(x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ios::sync_with_stdio(<span class="number">0</span>);</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> x, y; <span class="built_in">cin</span>&gt;&gt;x&gt;&gt;y;</span><br><span class="line">        ans[Sum(++x)]++;  <span class="comment">// x 要加一</span></span><br><span class="line">        add(x, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;ans[i]&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=2352&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;原题链接&lt;/a&gt;&lt;br&gt; &lt;strong&gt;题目大意&lt;/strong&gt;&lt;br&gt;  给出一些星星的二维坐标，求星星左方，下方，左下方的
+      
+    
+    </summary>
+    
+    
+      <category term="算法" scheme="https://wywwzjj.top/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
