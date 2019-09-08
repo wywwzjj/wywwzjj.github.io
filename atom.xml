@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wywwzjj.top/"/>
-  <updated>2019-09-04T09:00:43.152Z</updated>
+  <updated>2019-09-08T15:34:27.417Z</updated>
   <id>https://wywwzjj.top/</id>
   
   <author>
@@ -17,9 +17,33 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>CSAPP-Chapter-2-Notes</title>
+    <link href="https://wywwzjj.top/2019/09/08/CSAPP-Chapter-2-Notes/"/>
+    <id>https://wywwzjj.top/2019/09/08/CSAPP-Chapter-2-Notes/</id>
+    <published>2019-09-08T15:33:45.000Z</published>
+    <updated>2019-09-08T15:34:27.417Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是每周必做的笔记，先挖一个坑，明天补上。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;这是每周必做的笔记，先挖一个坑，明天补上。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="读书笔记" scheme="https://wywwzjj.top/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>CSAPP 计算机系统漫游 笔记</title>
-    <link href="https://wywwzjj.top/2019/09/01/CSAPP-chapter-1-notes/"/>
-    <id>https://wywwzjj.top/2019/09/01/CSAPP-chapter-1-notes/</id>
+    <link href="https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/"/>
+    <id>https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/</id>
     <published>2019-09-01T09:08:23.000Z</published>
     <updated>2019-09-04T09:00:43.152Z</updated>
     
@@ -59,9 +83,9 @@
     </summary>
     
     
-      <category term="反序列化" scheme="https://wywwzjj.top/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
-    
       <category term="php" scheme="https://wywwzjj.top/tags/php/"/>
+    
+      <category term="反序列化" scheme="https://wywwzjj.top/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
     
       <category term="SSRF" scheme="https://wywwzjj.top/tags/SSRF/"/>
     
@@ -469,29 +493,6 @@
       <category term="Writeup" scheme="https://wywwzjj.top/tags/Writeup/"/>
     
       <category term="ssrf" scheme="https://wywwzjj.top/tags/ssrf/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>POJ 2352 Stars[树状数组]</title>
-    <link href="https://wywwzjj.top/2019/01/02/%C2%96POJ-2352-Stars-%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/"/>
-    <id>https://wywwzjj.top/2019/01/02/POJ-2352-Stars-树状数组/</id>
-    <published>2019-01-02T01:52:33.000Z</published>
-    <updated>2019-05-02T03:19:54.220Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="http://poj.org/problem?id=2352" target="_blank" rel="noopener">原题链接</a><br> <strong>题目大意</strong><br>  给出一些星星的二维坐标，求星星左方，下方，左下方的星星个数。</p><p><strong>思路</strong><br>题目已经把星星按照 y 坐标从小到大排序，若 y 相等则按 x 从小到大排序。因此，在每次对一个星星进行统计时，之前出现过的星星，只要 x 坐标比其小，则必在其左，左下方，x 坐标相等的自然在下方。</p><p><strong>代码</strong></p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">4e4</span>;  <span class="comment">// 注意此处</span></span><br><span class="line"><span class="keyword">int</span> arr[N] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> ans[N/<span class="number">2</span>] = &#123;<span class="number">0</span>&#125;, n;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lowbit</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x &amp; (-x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(i &lt; N) &#123;  <span class="comment">// 注意是 N</span></span><br><span class="line">        arr[i] += v;</span><br><span class="line">        i += lowbit(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Sum</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(x) &#123;</span><br><span class="line">        res += arr[x];</span><br><span class="line">        x -= lowbit(x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ios::sync_with_stdio(<span class="number">0</span>);</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> x, y; <span class="built_in">cin</span>&gt;&gt;x&gt;&gt;y;</span><br><span class="line">        ans[Sum(++x)]++;  <span class="comment">// x 要加一</span></span><br><span class="line">        add(x, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;ans[i]&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=2352&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;原题链接&lt;/a&gt;&lt;br&gt; &lt;strong&gt;题目大意&lt;/strong&gt;&lt;br&gt;  给出一些星星的二维坐标，求星星左方，下方，左下方的
-      
-    
-    </summary>
-    
-    
-      <category term="算法" scheme="https://wywwzjj.top/tags/%E7%AE%97%E6%B3%95/"/>
     
   </entry>
   
