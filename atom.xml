@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wywwzjj.top/"/>
-  <updated>2019-09-08T15:34:27.417Z</updated>
+  <updated>2019-09-08T15:38:32.502Z</updated>
   <id>https://wywwzjj.top/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>CSAPP-Chapter-2-Notes</title>
+    <title>CSAPP 信息的表示和处理 笔记</title>
     <link href="https://wywwzjj.top/2019/09/08/CSAPP-Chapter-2-Notes/"/>
     <id>https://wywwzjj.top/2019/09/08/CSAPP-Chapter-2-Notes/</id>
     <published>2019-09-08T15:33:45.000Z</published>
-    <updated>2019-09-08T15:34:27.417Z</updated>
+    <updated>2019-09-08T15:38:32.502Z</updated>
     
     <content type="html"><![CDATA[<p>这是每周必做的笔记，先挖一个坑，明天补上。</p>]]></content>
     
@@ -83,9 +83,9 @@
     </summary>
     
     
-      <category term="php" scheme="https://wywwzjj.top/tags/php/"/>
-    
       <category term="反序列化" scheme="https://wywwzjj.top/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    
+      <category term="php" scheme="https://wywwzjj.top/tags/php/"/>
     
       <category term="SSRF" scheme="https://wywwzjj.top/tags/SSRF/"/>
     
