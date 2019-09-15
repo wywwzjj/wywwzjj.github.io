@@ -410,7 +410,7 @@ height:50vh;
 <p>注意开桥接模式！在此顺便补充下常用的几种<strong>虚拟机网络模式</strong>。</p>
 <ul>
 <li><p>bridged（桥接模式）</p>
-<p>  在这种模式下，使用 <code>VMnet0</code> 虚拟交换机，虚拟机就像是局域网中的一台独立的主机，与宿主机一样，它可以访问网络内任何一台机器。再桥接模式下，可以手工配置它的 <code>TCP/IP</code> 配置信息（<code>IP</code>、子网掩码等，而且还要和宿主机处于同一网段），以实现通过局域网的网关或路由器访问互联网，还可以将 <code>IP</code> 和 <code>DNS</code> 设置成”自动获取“。</p>
+<p>  在这种模式下，使用 <code>VMnet0</code> 虚拟交换机，虚拟机就像是局域网中的一台独立的主机，与宿主机一样，它可以访问网络内任何一台机器。在桥接模式下，可以手工配置它的 <code>TCP/IP</code> 配置信息（<code>IP</code>、子网掩码等，而且还要和宿主机处于同一网段），以实现通过局域网的网关或路由器访问互联网，还可以将 <code>IP</code> 和 <code>DNS</code> 设置成”自动获取“。</p>
 <p>  在桥接模式中，使用VMnet0虚拟交换机，此时虚拟机相当与网络上的一台独立计算机与主机一样，拥有一个独立的IP地址。</p>
 <ul>
 <li><p>A1、A2、A、B 四个操作系统可以相互访问</p>
@@ -453,7 +453,7 @@ height:50vh;
 </ul>
 </li>
 </ul>
-<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h3><p>先找 IP，<code>netdiscover</code> 启动！扫半天还是扫不到 IP，实际情况就像其他办法了，但这种玄学问题还是灵活解决一下吧。换成桥接模式后重启，访客模式进去直接查看 IP。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h3><p>先找 IP，<code>netdiscover</code> 启动！扫半天还是扫不到 IP，这种玄学问题还是灵活解决一下吧。换成桥接模式后重启，访客模式进去直接查看 IP。</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g1xne1vfncj20j20c7gob.jpg" alt></p>
 <p>紧接着查看端口信息</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g1xnerjyghj20nx0b94bh.jpg" alt></p>
@@ -523,7 +523,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/04/07/vulnhub-靶机实战系列-HackInOS/">https://wywwzjj.top/2019/04/07/vulnhub-靶机实战系列-HackInOS/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/04/07/vulnhub-靶机实战系列-HackInOS/">April 7th 2019, 9:24:18 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/04/07/vulnhub-靶机实战系列-HackInOS/">May 19th 2019, 10:00:09 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/04/07/vulnhub-靶机实战系列-HackInOS/">September 14th 2019, 4:43:45 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1205,36 +1205,6 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 38
@@ -1367,12 +1337,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
         </li>
     
     
@@ -1457,25 +1427,23 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
-    
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
@@ -1483,11 +1451,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
-        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
-    
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
