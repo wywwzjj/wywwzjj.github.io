@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">18</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">343</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -401,8 +401,19 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>这是每周必做的笔记，先挖一个坑，明天补上。</p>
-
+        <p>信息的表示是信息处理的基础。</p>
+<p>计算机存储和处理的信息都是以二进制的形式表示，这与底层的物理结构有关。</p>
+<blockquote>
+<p>单个的位不是非常有用，然而，当把位组合在一起，再加上某种<em>解释</em>，即赋予不同的可能位模式以含义，我们就能够表示任何有限集合的元素。</p>
+</blockquote>
+<p>进一步的问题就是编码和解码，比如数据与文字该如何表示？</p>
+<h2 id="信息存储"><a href="#信息存储" class="headerlink" title="信息存储"></a>信息存储</h2><p>大多数计算机使用 8 位的块，作为最小的可寻址的内存单位（字节），而不是访问内存中单独的位。机械级程序将内存视为一个非常大的字节数组，称为虚拟内存。内存的每个字节都由一个唯一的数字来标识，该数字被称为<strong>地址</strong>，所有可能地址的集合称为<strong>虚拟地址空间</strong>。</p>
+<p>十六进制表示，记一下 A、C、F 对应的十进制就好了。</p>
+<blockquote>
+<p>每当想起这些简单的算数、逻辑运算撑起了复杂抽象的信息处理，就不免感慨其神奇，万丈高楼平地起。</p>
+</blockquote>
+<h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><p>这些数值表示及其运算在学组原时就整理过好几遍了，没细看，回头想起再补充吧。</p>
+<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2>
     </article>
     <!-- license  -->
     
@@ -410,13 +421,18 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/09/08/CSAPP-Chapter-2-Notes/">https://wywwzjj.top/2019/09/08/CSAPP-Chapter-2-Notes/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/09/08/CSAPP-Chapter-2-Notes/">September 8th 2019, 11:33:45 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/09/08/CSAPP-Chapter-2-Notes/">September 8th 2019, 11:38:32 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/09/08/CSAPP-Chapter-2-Notes/">October 11th 2019, 10:32:14 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
     <!-- paginator  -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019/10/10/CSAPP-Chapter-3-Notes/" title="CSAPP 程序的机器级表示 笔记">
+                    <div class="nextTitle">CSAPP 程序的机器级表示 笔记</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -552,7 +568,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#信息存储"><span class="toc-number">1.</span> <span class="toc-text">信息存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#整数"><span class="toc-number">2.</span> <span class="toc-text">整数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#浮点数"><span class="toc-number">3.</span> <span class="toc-text">浮点数</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -1087,9 +1103,10 @@ top:50vh;
     
     
     
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 38
+        Total : 39
         </div>
         <!-- search  -->
         
@@ -1102,6 +1119,11 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2019/10/10/CSAPP-Chapter-3-Notes/">CSAPP 程序的机器级表示 笔记</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1195,12 +1217,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
@@ -1219,12 +1241,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
         </li>
     
     
@@ -1309,27 +1331,29 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
-    
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
-        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
-        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
-        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
@@ -1338,8 +1362,6 @@ top:50vh;
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
-    
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
