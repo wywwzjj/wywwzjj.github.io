@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">423</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">790</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -401,7 +401,64 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="信息-位-上下文"><a href="#信息-位-上下文" class="headerlink" title="信息 = 位 + 上下文"></a>信息 = 位 + 上下文</h2><p>编码是一切信息处理的基础。</p>
+        <blockquote>
+<p>我听到的我会忘记</p>
+<p>我看到的我能记住</p>
+<p>只有我做过的，我才能理解</p>
+</blockquote>
+<p>CSAPP 最大的魅力在于，每章的前言会站在程序员的角度跟你分析，为什么要学这些知识，然后在正文里清晰的阐述这些问题的答案。</p>
+<p><strong>操作系统是什么？提供了什么功能？</strong></p>
+<ul>
+<li><p>用户角度：操作系统是一个控制软件</p>
+<ul>
+<li>管理应用程序</li>
+<li>为应用程序提供公共服务（比如底层的 IO、以及网络协议栈等各种底层 API）</li>
+<li>进程管理</li>
+</ul>
+</li>
+<li><p>硬件角度：资源管理</p>
+<ul>
+<li>管理外设、分配资源<ul>
+<li>CPU 调度器</li>
+<li>物理内存管理</li>
+<li>虚拟内存管理</li>
+<li>文件系统管理</li>
+<li>中断处理与设备驱动</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>所处位置：硬件之上，应用程序之下</p>
+</li>
+<li><p>操作系统内核特征</p>
+<ul>
+<li>并发（注意区分并发与并行，并发强调的是一段时间，并行是一个时间点，所以并行必须是多核）</li>
+<li>共享：<ul>
+<li>“同时”访问</li>
+<li>互斥共享</li>
+</ul>
+</li>
+<li>虚拟（为上层提供底层的抽象）</li>
+<li>异步</li>
+</ul>
+</li>
+<li><p>内核时被信任的第三方</p>
+</li>
+<li><p>只有内核可以执行特权指令</p>
+</li>
+</ul>
+<p>操作系统实验：</p>
+<ul>
+<li>系统启动及中断</li>
+<li>物理内存管理</li>
+<li>虚拟内存管理</li>
+<li>内核线程管理</li>
+<li>用户进程管理</li>
+<li>CPU 调度</li>
+<li>同步与互斥</li>
+<li>文件系统</li>
+</ul>
+<h2 id="信息-位-上下文"><a href="#信息-位-上下文" class="headerlink" title="信息 = 位 + 上下文"></a>信息 = 位 + 上下文</h2><p>编码是一切信息处理的基础。</p>
 <h2 id="程序被其他程序翻译成不同的格式"><a href="#程序被其他程序翻译成不同的格式" class="headerlink" title="程序被其他程序翻译成不同的格式"></a>程序被其他程序翻译成不同的格式</h2><p><strong>编译过程：</strong></p>
 <p>源程序（hello.c）=&gt; 预处理器 （hello.i） =&gt;  编译器（hello.s）  =&gt;  汇编器（hello.o）  =&gt;  链接器（可执行）</p>
 <ul>
@@ -431,7 +488,10 @@ height:50vh;
 <h3 id="运行-hello-程序"><a href="#运行-hello-程序" class="headerlink" title="运行 hello 程序"></a>运行 hello 程序</h3><h2 id="高速缓存至关重要"><a href="#高速缓存至关重要" class="headerlink" title="高速缓存至关重要"></a>高速缓存至关重要</h2><h2 id="存储设备形成层次结构"><a href="#存储设备形成层次结构" class="headerlink" title="存储设备形成层次结构"></a>存储设备形成层次结构</h2><h2 id="操作系统管理硬件"><a href="#操作系统管理硬件" class="headerlink" title="操作系统管理硬件"></a>操作系统管理硬件</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>一个进程可以由多个线程构成，每个线程都运行在进程的上下文中，并共享同样的代码和全局数据。</p>
 <h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p>为每个进程提供了一个假象，就好像每个进程都独占了主存。</p>
 <p>每个程序执行时，内存起点都是一样的。</p>
-<h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><h2 id="系统之间利用网络通信"><a href="#系统之间利用网络通信" class="headerlink" title="系统之间利用网络通信"></a>系统之间利用网络通信</h2><h2 id="Amdahl-定律"><a href="#Amdahl-定律" class="headerlink" title="Amdahl 定律"></a>Amdahl 定律</h2><h2 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h2><h2 id="抽象的重要性"><a href="#抽象的重要性" class="headerlink" title="抽象的重要性"></a>抽象的重要性</h2>
+<h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><h2 id="系统之间利用网络通信"><a href="#系统之间利用网络通信" class="headerlink" title="系统之间利用网络通信"></a>系统之间利用网络通信</h2><h2 id="Amdahl-定律"><a href="#Amdahl-定律" class="headerlink" title="Amdahl 定律"></a>Amdahl 定律</h2><h2 id="并发和并行"><a href="#并发和并行" class="headerlink" title="并发和并行"></a>并发和并行</h2><h2 id="抽象的重要性"><a href="#抽象的重要性" class="headerlink" title="抽象的重要性"></a>抽象的重要性</h2><p>CPU =&gt; 进程</p>
+<p>磁盘 =&gt; 文件</p>
+<p>内存 =&gt; 地址空间</p>
+
     </article>
     <!-- license  -->
     
@@ -439,7 +499,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/">https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/">September 1st 2019, 5:08:23 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/">November 4th 2019, 10:40:33 am</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/">December 19th 2019, 2:28:44 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1203,9 +1263,66 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 42
+        Total : 47
         </div>
         <!-- search  -->
         
@@ -1218,6 +1335,31 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span><a class="archive-post-title" href="/2019/12/16/CSAPP-Chapter-12-Notes/">CSAPP 并发编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2019/12/07/java-security-calendar-2019/">java-security-calendar-2019</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2019/12/02/CSAPP-Chapter-11-Notes/">CSAPP 网络编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href="/2019/11/25/CSAPP-Chapter-10-Notes/">CSAPP 系统级IO 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href="/2019/11/20/Solr-RCE-via-Velocity-Template/">Solr-RCE-via-Velocity-Template</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1400,12 +1542,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
@@ -1443,39 +1585,39 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
-    
-        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
-        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
-    
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     

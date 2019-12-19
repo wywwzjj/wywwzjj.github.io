@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">232</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">706</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -408,7 +408,40 @@ height:50vh;
 <li>它为每个进程提供了一致的地址空间，从而简化了内存管理。</li>
 <li>它保护了每个进程的地址空间不被其他进程破坏。</li>
 </ul>
-<h2 id="物理和虚拟寻址"><a href="#物理和虚拟寻址" class="headerlink" title="物理和虚拟寻址"></a>物理和虚拟寻址</h2><h2 id="地址空间"><a href="#地址空间" class="headerlink" title="地址空间"></a>地址空间</h2><h2 id="虚拟内存作为缓存的工具"><a href="#虚拟内存作为缓存的工具" class="headerlink" title="虚拟内存作为缓存的工具"></a>虚拟内存作为缓存的工具</h2><h2 id="虚拟内存作为内存管理的工具"><a href="#虚拟内存作为内存管理的工具" class="headerlink" title="虚拟内存作为内存管理的工具"></a>虚拟内存作为内存管理的工具</h2><h2 id="虚拟内存作为内存保护的工具"><a href="#虚拟内存作为内存保护的工具" class="headerlink" title="虚拟内存作为内存保护的工具"></a>虚拟内存作为内存保护的工具</h2><h2 id="地址翻译"><a href="#地址翻译" class="headerlink" title="地址翻译"></a>地址翻译</h2><h2 id="内存映射"><a href="#内存映射" class="headerlink" title="内存映射"></a>内存映射</h2><h2 id="动态内存分配"><a href="#动态内存分配" class="headerlink" title="动态内存分配"></a>动态内存分配</h2><h2 id="垃圾收集"><a href="#垃圾收集" class="headerlink" title="垃圾收集"></a>垃圾收集</h2>
+<h2 id="物理和虚拟寻址"><a href="#物理和虚拟寻址" class="headerlink" title="物理和虚拟寻址"></a>物理和虚拟寻址</h2><p>计算机系统的主存被组织成一个由 M 个连续的字节大小的单元组成的数组。每个字节都有一个唯一的物理地址。</p>
+<p>在物理地址与虚拟地址间加个地址翻译就构成了虚拟寻址。</p>
+<h2 id="地址空间"><a href="#地址空间" class="headerlink" title="地址空间"></a>地址空间</h2><p>地址空间是一个非负整数地址的有序集合。</p>
+<p>地址空间的概念是很重要的，因为它清楚地区分了数据对象（字节）和他们的属性（地址）。</p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><p>内存成了对硬盘的缓存，虚拟页面可划分为未分配的、未缓存的和已缓存的。</p>
+<h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><ul>
+<li>简化链接</li>
+<li>简化加载</li>
+<li>简化共享</li>
+<li>简化内存分配</li>
+</ul>
+<h2 id="内存保护"><a href="#内存保护" class="headerlink" title="内存保护"></a>内存保护</h2><ul>
+<li><h2 id="地址翻译"><a href="#地址翻译" class="headerlink" title="地址翻译"></a>地址翻译</h2></li>
+</ul>
+<p>逻辑地址到物理地址</p>
+<h2 id="内存映射"><a href="#内存映射" class="headerlink" title="内存映射"></a>内存映射</h2><p>回到本章前言，“虚拟内存是强大的”。</p>
+<ul>
+<li>你知道可以通过读写内存位置读或者修改一个磁盘文件的内容吗？</li>
+<li>可以加载一个文件的内容到内存中，而不需要进行任何显示地复制吗？</li>
+</ul>
+<p>将一个文件或其他对象映射到进程的地址空间，实现文件磁盘地址和进程地址空间中一段虚拟地址的一一对应。</p>
+<p>实现了这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用 read、write 等系统调用函数。</p>
+<p>相反，内核空间对这段区域的修改也直接反应用户空间，从而可以实现不同进程的文件共享。</p>
+<p>简单总结，有如下特点：</p>
+<ul>
+<li>提高数据的读、写和传输的时间性能<ul>
+<li>减少了数据拷贝次数</li>
+<li>用户空间和内核空间的高效交互（通过映射区域直接交互）</li>
+<li>用内存读写代替 I/O 读写</li>
+</ul>
+</li>
+<li>提高内存利用率：通过虚拟内存、共享对象</li>
+</ul>
+<h2 id="动态内存分配"><a href="#动态内存分配" class="headerlink" title="动态内存分配"></a>动态内存分配</h2><h2 id="垃圾收集"><a href="#垃圾收集" class="headerlink" title="垃圾收集"></a>垃圾收集</h2>
     </article>
     <!-- license  -->
     
@@ -416,13 +449,18 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/">https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/">November 11th 2019, 10:57:57 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/">November 17th 2019, 11:04:04 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/">December 19th 2019, 2:21:56 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
     <!-- paginator  -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019/11/20/Solr-RCE-via-Velocity-Template/" title="Solr-RCE-via-Velocity-Template">
+                    <div class="nextTitle">Solr-RCE-via-Velocity-Template</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -558,7 +596,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#物理和虚拟寻址"><span class="toc-number">1.</span> <span class="toc-text">物理和虚拟寻址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#地址空间"><span class="toc-number">2.</span> <span class="toc-text">地址空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟内存作为缓存的工具"><span class="toc-number">3.</span> <span class="toc-text">虚拟内存作为缓存的工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟内存作为内存管理的工具"><span class="toc-number">4.</span> <span class="toc-text">虚拟内存作为内存管理的工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟内存作为内存保护的工具"><span class="toc-number">5.</span> <span class="toc-text">虚拟内存作为内存保护的工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#地址翻译"><span class="toc-number">6.</span> <span class="toc-text">地址翻译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存映射"><span class="toc-number">7.</span> <span class="toc-text">内存映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态内存分配"><span class="toc-number">8.</span> <span class="toc-text">动态内存分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集"><span class="toc-number">9.</span> <span class="toc-text">垃圾收集</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#物理和虚拟寻址"><span class="toc-number">1.</span> <span class="toc-text">物理和虚拟寻址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#地址空间"><span class="toc-number">2.</span> <span class="toc-text">地址空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存"><span class="toc-number">3.</span> <span class="toc-text">缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存管理"><span class="toc-number">4.</span> <span class="toc-text">内存管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存保护"><span class="toc-number">5.</span> <span class="toc-text">内存保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#地址翻译"><span class="toc-number">6.</span> <span class="toc-text">地址翻译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存映射"><span class="toc-number">7.</span> <span class="toc-text">内存映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态内存分配"><span class="toc-number">8.</span> <span class="toc-text">动态内存分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集"><span class="toc-number">9.</span> <span class="toc-text">垃圾收集</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -1175,9 +1213,66 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 42
+        Total : 47
         </div>
         <!-- search  -->
         
@@ -1190,6 +1285,31 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span><a class="archive-post-title" href="/2019/12/16/CSAPP-Chapter-12-Notes/">CSAPP 并发编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2019/12/07/java-security-calendar-2019/">java-security-calendar-2019</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2019/12/02/CSAPP-Chapter-11-Notes/">CSAPP 网络编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href="/2019/11/25/CSAPP-Chapter-10-Notes/">CSAPP 系统级IO 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href="/2019/11/20/Solr-RCE-via-Velocity-Template/">Solr-RCE-via-Velocity-Template</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1372,12 +1492,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
@@ -1415,39 +1535,39 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
-    
-        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
-        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
-    
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     

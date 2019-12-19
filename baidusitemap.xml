@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/</loc>
+    <lastmod>2019-12-19</lastmod>
+  </url>  <url>
     <loc>https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/</loc>
-    <lastmod>2019-11-17</lastmod>
+    <lastmod>2019-12-19</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/12/16/CSAPP-Chapter-12-Notes/</loc>
+    <lastmod>2019-12-16</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/12/02/CSAPP-Chapter-11-Notes/</loc>
+    <lastmod>2019-12-16</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/11/25/CSAPP-Chapter-10-Notes/</loc>
+    <lastmod>2019-12-16</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/12/07/java-security-calendar-2019/</loc>
+    <lastmod>2019-12-10</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/05/17/Redis-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E7%9B%B8%E5%85%B3%E5%88%A9%E7%94%A8/</loc>
+    <lastmod>2019-12-08</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/05/18/Phar-%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2019-11-26</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/11/20/Solr-RCE-via-Velocity-Template/</loc>
+    <lastmod>2019-11-20</lastmod>
   </url>  <url>
     <loc>https://wywwzjj.top/2019/10/28/CSAPP-Chapter-8-Notes/</loc>
     <lastmod>2019-11-17</lastmod>
   </url>  <url>
     <loc>https://wywwzjj.top/2019/10/21/CSAPP-Chapter-6-Notes/</loc>
     <lastmod>2019-11-17</lastmod>
-  </url>  <url>
-    <loc>https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/</loc>
-    <lastmod>2019-11-04</lastmod>
-  </url>  <url>
-    <loc>https://wywwzjj.top/2019/05/18/Phar-%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2019-11-04</lastmod>
   </url>  <url>
     <loc>https://wywwzjj.top/2019/10/06/BalsnCTF-2019-%E4%B8%A4%E9%81%93web%E9%A2%98/</loc>
     <lastmod>2019-11-04</lastmod>
@@ -45,9 +63,6 @@
   </url>  <url>
     <loc>https://wywwzjj.top/2019/07/11/PHP-%E5%86%99%E5%85%A5%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%BB%8F%E5%85%B8%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2019-08-26</lastmod>
-  </url>  <url>
-    <loc>https://wywwzjj.top/2019/05/17/Redis-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E7%9B%B8%E5%85%B3%E5%88%A9%E7%94%A8/</loc>
-    <lastmod>2019-08-11</lastmod>
   </url>  <url>
     <loc>https://wywwzjj.top/2019/07/18/Discuz%20ML!%20V3.X%20RCE%20%E5%88%86%E6%9E%90/</loc>
     <lastmod>2019-08-01</lastmod>
