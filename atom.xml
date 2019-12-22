@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wywwzjj.top/"/>
-  <updated>2019-12-16T13:47:25.474Z</updated>
+  <updated>2019-12-22T15:58:28.931Z</updated>
   <id>https://wywwzjj.top/</id>
   
   <author>
@@ -21,9 +21,18 @@
     <link href="https://wywwzjj.top/2019/12/16/CSAPP-Chapter-12-Notes/"/>
     <id>https://wywwzjj.top/2019/12/16/CSAPP-Chapter-12-Notes/</id>
     <published>2019-12-16T12:47:57.000Z</published>
-    <updated>2019-12-16T13:47:25.474Z</updated>
+    <updated>2019-12-22T15:58:28.931Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="基于进程的并发"><a href="#基于进程的并发" class="headerlink" title="基于进程的并发"></a>基于进程的并发</h2><p>基于进程的并发服务器</p><p>进程的优劣</p><h2 id="基于-I-O-多路复用的并发"><a href="#基于-I-O-多路复用的并发" class="headerlink" title="基于 I/O 多路复用的并发"></a>基于 I/O 多路复用的并发</h2><p>基于 I/O 多路复用的并发事件驱动服务器</p><p>I/O 多路复用技术的优劣</p><h2 id="基于线程的并发"><a href="#基于线程的并发" class="headerlink" title="基于线程的并发"></a>基于线程的并发</h2><p>线程执行模型</p><p>POSIX 线程</p><p>创建线程</p><p>终止线程</p><p>回收已终止线程的资源</p><p>分离线程</p><p>初始化线程</p><p>基于线程的并发服务器</p><h2 id="多线程程序中的共享变量"><a href="#多线程程序中的共享变量" class="headerlink" title="多线程程序中的共享变量"></a>多线程程序中的共享变量</h2><p>线程内存模型</p><p>将变量映射到内存</p><p>共享变量</p><h2 id="用信号量同步线程"><a href="#用信号量同步线程" class="headerlink" title="用信号量同步线程"></a>用信号量同步线程</h2><h3 id="进度图"><a href="#进度图" class="headerlink" title="进度图"></a>进度图</h3><p>信号量</p><p>使用信号量实现互斥</p><p>利用信号量来调度共享资源</p><p>综合：基于预线程化的并发服务器</p><h2 id="使用线程提供并行性"><a href="#使用线程提供并行性" class="headerlink" title="使用线程提供并行性"></a>使用线程提供并行性</h2><h2 id="其他线程并发问题"><a href="#其他线程并发问题" class="headerlink" title="其他线程并发问题"></a>其他线程并发问题</h2><p>线程安全</p><p>可重入性</p><p>在线程化的程序中使用已存在的库函数</p><p>竞争</p><p>死锁</p>]]></content>
     
     <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;基于进程的并发&quot;&gt;&lt;a href=&quot;#基于进程的并发&quot; class=&quot;headerlink&quot; title=&quot;基于进程的并发&quot;&gt;&lt;/a&gt;基于进程的并发&lt;/h2&gt;&lt;p&gt;基于进程的并发服务器&lt;/p&gt;
+&lt;p&gt;进程的优劣&lt;/p&gt;
+&lt;h2 id=&quot;基于-I-O-多路复用的并发
+      
     
     </summary>
     
