@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>java-security-calendar-2019 · wywwzjj&#39;s Blog</title>
+    <title>Java security calendar 2019 · wywwzjj&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/">wywwzjj&#39;s Blog.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">java-security-calendar-2019</a>
+                <a href="#" class="post-name">Java security calendar 2019</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            java-security-calendar-2019
+            Java security calendar 2019
             <!-- 404 -->
             
         </h1>
@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">134</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">152</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -401,7 +401,11 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="Candy-Cane"><a href="#Candy-Cane" class="headerlink" title="Candy Cane"></a>Candy Cane</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.jdom2.Content;</span><br><span class="line"><span class="keyword">import</span> org.jdom2.Document;</span><br><span class="line"><span class="keyword">import</span> org.jdom2.JDOMException;</span><br><span class="line"><span class="keyword">import</span> org.jdom2.input.SAXBuilder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImportDocument</span> </span>&#123;</span><br><span class="line">    <span class="comment">// This function extracts the text of an OpenOffice document</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">extractString</span><span class="params">()</span> <span class="keyword">throws</span> IOException, JDOMException </span>&#123;</span><br><span class="line">        File initialFile = <span class="keyword">new</span> File(<span class="string">"uploaded_office_doc.odt"</span>);</span><br><span class="line">        InputStream in = <span class="keyword">new</span> FileInputStream(initialFile);</span><br><span class="line">        <span class="keyword">final</span> ZipInputStream zis = <span class="keyword">new</span> ZipInputStream(in);</span><br><span class="line">        ZipEntry entry;</span><br><span class="line">        List&lt;Content&gt; content = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">while</span> ((entry = zis.getNextEntry()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (entry.getName().equals(<span class="string">"content.xml"</span>)) &#123;</span><br><span class="line">                <span class="keyword">final</span> SAXBuilder sax = <span class="keyword">new</span> org.jdom2.input.SAXBuilder();</span><br><span class="line">                sax.setFeature(<span class="string">"http://javax.xml.XMLConstants/feature/secure-processing"</span>, <span class="keyword">true</span>);</span><br><span class="line">                Document doc = sax.build(zis);</span><br><span class="line">                content = doc.getContent();</span><br><span class="line">                zis.close();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">if</span> (content != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (Content item : content) &#123;</span><br><span class="line">                sb.append(item.getValue());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sb.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <blockquote>
+<p><a href="https://www.ripstech.com/java-security-calendar-2019" target="_blank" rel="noopener">https://www.ripstech.com/java-security-calendar-2019</a></p>
+<p>精力有限，Java 暂时放一放</p>
+</blockquote>
+<h2 id="Candy-Cane"><a href="#Candy-Cane" class="headerlink" title="Candy Cane"></a>Candy Cane</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.jdom2.Content;</span><br><span class="line"><span class="keyword">import</span> org.jdom2.Document;</span><br><span class="line"><span class="keyword">import</span> org.jdom2.JDOMException;</span><br><span class="line"><span class="keyword">import</span> org.jdom2.input.SAXBuilder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImportDocument</span> </span>&#123;</span><br><span class="line">    <span class="comment">// This function extracts the text of an OpenOffice document</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">extractString</span><span class="params">()</span> <span class="keyword">throws</span> IOException, JDOMException </span>&#123;</span><br><span class="line">        File initialFile = <span class="keyword">new</span> File(<span class="string">"uploaded_office_doc.odt"</span>);</span><br><span class="line">        InputStream in = <span class="keyword">new</span> FileInputStream(initialFile);</span><br><span class="line">        <span class="keyword">final</span> ZipInputStream zis = <span class="keyword">new</span> ZipInputStream(in);</span><br><span class="line">        ZipEntry entry;</span><br><span class="line">        List&lt;Content&gt; content = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">while</span> ((entry = zis.getNextEntry()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (entry.getName().equals(<span class="string">"content.xml"</span>)) &#123;</span><br><span class="line">                <span class="keyword">final</span> SAXBuilder sax = <span class="keyword">new</span> org.jdom2.input.SAXBuilder();</span><br><span class="line">                sax.setFeature(<span class="string">"http://javax.xml.XMLConstants/feature/secure-processing"</span>, <span class="keyword">true</span>);</span><br><span class="line">                Document doc = sax.build(zis);</span><br><span class="line">                content = doc.getContent();</span><br><span class="line">                zis.close();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">if</span> (content != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (Content item : content) &#123;</span><br><span class="line">                sb.append(item.getValue());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sb.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="Eggnog-Madness"><a href="#Eggnog-Madness" class="headerlink" title="Eggnog Madness"></a>Eggnog Madness</h2>
     </article>
@@ -411,7 +415,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/12/07/java-security-calendar-2019/">https://wywwzjj.top/2019/12/07/java-security-calendar-2019/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/12/07/java-security-calendar-2019/">December 7th 2019, 7:38:18 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/12/07/java-security-calendar-2019/">December 10th 2019, 2:58:31 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/12/07/java-security-calendar-2019/">January 23rd 2020, 11:28:03 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -420,9 +424,9 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2019/12/16/CSAPP-Chapter-12-Notes/" title="CSAPP 并发编程 笔记">
-                    <div class="nextTitle">CSAPP 并发编程 笔记</div>
-                </a>
+                <a href="/2019/12/15/Smarty-3.1.31-RCE/" title="Smarty <= 3.1.31 RCE">
+                    <div class="nextTitle">Smarty <= 3.1.31 rce< div>
+                </=></div></a>
             
         </li>
         <li class="previous">
@@ -1291,9 +1295,205 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 48
+        Total : 60
         </div>
         <!-- search  -->
         
@@ -1309,7 +1509,42 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/17</span><a class="archive-post-title" href="/2020/01/17/thinkphp-6.0-任意文件写入/">ThinkPHP 6.0 任意文件写入</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2020/01/30/ThinkPHP-3.x-5.x-order-by-注入/">ThinkPHP 3.x / 5.x order by 注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/28</span><a class="archive-post-title" href="/2020/01/28/ThinkPHP-5.0.0~5.0.23-RCE/">ThinkPHP 5.0.0~5.0.23 RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href="/2020/01/24/Go-学习/">Go 学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href="/2020/01/23/Exploiting-a-bug-in-php-fpm-via-single-byte-write-to-RCE/">Exploiting a bug in php-fpm via single byte write to RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href="/2020/01/21/ThinkPHP-5.0.x-反序列化/">ThinkPHP 5.0.x 反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href="/2020/01/21/ThinkPHP-6.0.x-反序列化/">ThinkPHP 6.0.x 反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href="/2020/01/21/Typecho-1.0-RCE/">Typecho 1.0 RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href="/2020/01/17/ThinkPHP-6.0-任意文件写入/">ThinkPHP 6.0 任意文件写入</a>
         </li>
     
     
@@ -1328,7 +1563,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2019/12/07/java-security-calendar-2019/">java-security-calendar-2019</a>
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href="/2019/12/15/Smarty-3.1.31-RCE/">Smarty <= 3.1.31 rce< a>
+        </=></a></li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2019/12/07/java-security-calendar-2019/">Java security calendar 2019</a>
         </li>
     
     
@@ -1343,7 +1583,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/20</span><a class="archive-post-title" href="/2019/11/20/Solr-RCE-via-Velocity-Template/">Solr-RCE-via-Velocity-Template</a>
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href="/2019/11/21/ThinkCMF-RCE/">ThinkCMF 任意文件包含</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href="/2019/11/21/ThinkCMF-任意文件包含/">ThinkCMF 任意文件包含</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href="/2019/11/20/Solr-RCE-via-Velocity-Template/">Solr RCE via Velocity Template</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href="/2019/11/18/深入学习Thinkphp/">深入学习 ThinkPHP</a>
         </li>
     
     
@@ -1399,6 +1654,11 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写入配置文件经典问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/21</span><a class="archive-post-title" href="/2019/05/21/PHP-内核学习/">PHP 内核学习</a>
         </li>
     
     
@@ -1492,12 +1752,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
         </li>
     
     
@@ -1527,12 +1787,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
@@ -1572,17 +1832,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
-        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+    
+        <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
     
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
@@ -1590,21 +1852,25 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
-        <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
+        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
+    
+        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
     
         <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
-        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
-    
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
-        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+    
+        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     

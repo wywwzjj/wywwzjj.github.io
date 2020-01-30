@@ -268,11 +268,13 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags="漏洞分析">漏洞分析</a>
     
+        <a class="post-tag" href="javascript:void(0);" data-tags="PHP">PHP</a>
+    
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">776</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">779</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -403,10 +405,11 @@ height:50vh;
     <article class="article-entry">
         <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Discuz！ML 是一个由 CodersClub.org 创建的多语言，集成，功能齐全的开源网络平台，用于构建像 “社交网络” 这样的互联网社区。该引擎基于 Comsenz Inc. 创建的着名的 Discuz！X 引擎开发。</p>
 <p>但是，这与常见的 Discuz 论坛还是没多大关系。</p>
-<h3 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h3><p>Discuz! ML v.3.4</p>
+<p><strong>影响版本</strong></p>
+<p>Discuz! ML v.3.4</p>
 <p>Discuz! ML v.3.3</p>
 <p>Discuz! ML v.3.2</p>
-<h3 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h3><p>简单来说，没有经过任何处理的 cookie 直接被拼接进模板，该模板被 include 后自然就执行了。</p>
+<h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><p>简单来说，没有经过任何处理的 cookie 直接被拼接进模板，该模板被 include 后自然就执行了。</p>
 <p>（不愧是官方的 Demo）</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g58e9notqaj216u07wwfy.jpg" alt></p>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>主入口是 upload 目录下的 index.php，没有任何参数的情况下直接载入 forum.php</p>
@@ -467,7 +470,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/07/18/Discuz ML! V3.X RCE/">https://wywwzjj.top/2019/07/18/Discuz ML! V3.X RCE/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/07/18/Discuz ML! V3.X RCE/">July 18th 2019, 11:34:37 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/07/18/Discuz ML! V3.X RCE/">January 11th 2020, 12:45:55 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/07/18/Discuz ML! V3.X RCE/">January 21st 2020, 11:06:29 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -614,7 +617,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#条件"><span class="toc-number">1.1.</span> <span class="toc-text">条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POC"><span class="toc-number">1.2.</span> <span class="toc-text">POC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PoC"><span class="toc-number">3.</span> <span class="toc-text">PoC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复现"><span class="toc-number">2.</span> <span class="toc-text">复现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-number">3.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PoC"><span class="toc-number">4.</span> <span class="toc-text">PoC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -1347,9 +1350,205 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 48
+        Total : 60
         </div>
         <!-- search  -->
         
@@ -1365,7 +1564,42 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/17</span><a class="archive-post-title" href="/2020/01/17/thinkphp-6.0-任意文件写入/">ThinkPHP 6.0 任意文件写入</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2020/01/30/ThinkPHP-3.x-5.x-order-by-注入/">ThinkPHP 3.x / 5.x order by 注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/28</span><a class="archive-post-title" href="/2020/01/28/ThinkPHP-5.0.0~5.0.23-RCE/">ThinkPHP 5.0.0~5.0.23 RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href="/2020/01/24/Go-学习/">Go 学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href="/2020/01/23/Exploiting-a-bug-in-php-fpm-via-single-byte-write-to-RCE/">Exploiting a bug in php-fpm via single byte write to RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href="/2020/01/21/ThinkPHP-5.0.x-反序列化/">ThinkPHP 5.0.x 反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href="/2020/01/21/ThinkPHP-6.0.x-反序列化/">ThinkPHP 6.0.x 反序列化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/21</span><a class="archive-post-title" href="/2020/01/21/Typecho-1.0-RCE/">Typecho 1.0 RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href="/2020/01/17/ThinkPHP-6.0-任意文件写入/">ThinkPHP 6.0 任意文件写入</a>
         </li>
     
     
@@ -1384,7 +1618,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2019/12/07/java-security-calendar-2019/">java-security-calendar-2019</a>
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href="/2019/12/15/Smarty-3.1.31-RCE/">Smarty <= 3.1.31 rce< a>
+        </=></a></li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span><a class="archive-post-title" href="/2019/12/07/java-security-calendar-2019/">Java security calendar 2019</a>
         </li>
     
     
@@ -1399,7 +1638,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/20</span><a class="archive-post-title" href="/2019/11/20/Solr-RCE-via-Velocity-Template/">Solr-RCE-via-Velocity-Template</a>
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href="/2019/11/21/ThinkCMF-RCE/">ThinkCMF 任意文件包含</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href="/2019/11/21/ThinkCMF-任意文件包含/">ThinkCMF 任意文件包含</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span><a class="archive-post-title" href="/2019/11/20/Solr-RCE-via-Velocity-Template/">Solr RCE via Velocity Template</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href="/2019/11/18/深入学习Thinkphp/">深入学习 ThinkPHP</a>
         </li>
     
     
@@ -1455,6 +1709,11 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写入配置文件经典问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/21</span><a class="archive-post-title" href="/2019/05/21/PHP-内核学习/">PHP 内核学习</a>
         </li>
     
     
@@ -1548,12 +1807,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
         </li>
     
     
@@ -1583,12 +1842,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
@@ -1628,17 +1887,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
-        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+    
+        <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
     
         <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
@@ -1646,21 +1907,25 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
-        <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
+        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
+    
+        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
     
         <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
-        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
-    
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
-        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+    
+        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
