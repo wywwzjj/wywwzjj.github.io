@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">5k</span>阅读时长: <span class="post-count reading-time">21 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">5.1k</span>阅读时长: <span class="post-count reading-time">21 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -413,7 +413,8 @@ height:50vh;
 <p><img src="https://static001.geekbang.org/resource/image/03/f7/03ea333bf7b7bb2fe350c4f433047df7.png" alt="img"></p>
 <p>（图片来自 Medium：Why should you learn Go?）</p>
 <p>所以，即便 Go 语言存在诸多的问题，比如垃圾回收、异常处理、泛型编程等，但相较于上面这几个优势，我认为这些问题都是些小问题。于是就毫不犹豫地入坑了。</p>
-<h3 id="学习资源"><a href="#学习资源" class="headerlink" title="学习资源"></a>学习资源</h3><p>首推 <a href="https://gobyexample.com/" target="_blank" rel="noopener">Go by Example</a> 作为你的入门教程。然后，<a href="https://go101.org/article/101.html" target="_blank" rel="noopener">Go 101</a> 也是一个很不错的在线电子书。如果你想看纸书的话，<a href="https://book.douban.com/subject/26337545/" target="_blank" rel="noopener">The Go Programming Language</a> 一书在豆瓣上有 9.2 分，但是国内没有卖的。（当然，我以前也写过两篇入门的供你参考 “<a href="https://coolshell.cn/articles/8460.html" target="_blank" rel="noopener">GO 语言简介（上）- 语法 </a>” 和 “<a href="https://coolshell.cn/articles/8489.html" target="_blank" rel="noopener">GO 语言简介（下）- 特性</a>”）。</p>
+<h3 id="学习资源"><a href="#学习资源" class="headerlink" title="学习资源"></a>学习资源</h3><p>首首推，通过 TDD 学习 Go <a href="https://studygolang.gitbook.io/learn-go-with-tests/" target="_blank" rel="noopener">https://studygolang.gitbook.io/learn-go-with-tests/</a></p>
+<p>首推 <a href="https://gobyexample.com/" target="_blank" rel="noopener">Go by Example</a> 作为你的入门教程。然后，<a href="https://go101.org/article/101.html" target="_blank" rel="noopener">Go 101</a> 也是一个很不错的在线电子书。如果你想看纸书的话，<a href="https://book.douban.com/subject/26337545/" target="_blank" rel="noopener">The Go Programming Language</a> 一书在豆瓣上有 9.2 分，但是国内没有卖的。（当然，我以前也写过两篇入门的供你参考 “<a href="https://coolshell.cn/articles/8460.html" target="_blank" rel="noopener">GO 语言简介（上）- 语法 </a>” 和 “<a href="https://coolshell.cn/articles/8489.html" target="_blank" rel="noopener">GO 语言简介（下）- 特性</a>”）。</p>
 <p>另外，Go 语言官方的 <a href="https://golang.org/doc/effective_go.html" target="_blank" rel="noopener">Effective Go</a> 是必读的，这篇文章告诉你如何更好地使用 Go 语言，以及 Go 语言中的一些原理。</p>
 <p>Go 语言最突出之处是并发编程，Unix 老牌黑客罗勃・派克（Rob Pike）在 Google I/O 上的两个分享，可以让你学习到一些并发编程的模式。</p>
 <ul>
@@ -427,6 +428,9 @@ height:50vh;
 <li><a href="https://github.com/golang/go/wiki/GoTalks" target="_blank" rel="noopener">Go Talks</a>。</li>
 </ul>
 <p>此外，还有个内容丰富的 Go 资源列表 <a href="https://github.com/avelino/awesome-go" target="_blank" rel="noopener">Awesome Go</a>，推荐看看。</p>
+<p>类似 awesome-go <a href="https://github.com/hackstoic/golang-open-source-projects" target="_blank" rel="noopener">https://github.com/hackstoic/golang-open-source-projects</a></p>
+<p>Go roadmap <a href="https://github.com/Alikhll/golang-developer-roadmap" target="_blank" rel="noopener">https://github.com/Alikhll/golang-developer-roadmap</a></p>
+<p><a href="http://tmrts.com/go-patterns/" target="_blank" rel="noopener">http://tmrts.com/go-patterns/</a></p>
 <h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>每个类型都有默认的初值，比如 0，“”，false</p>
 <p>定义的变量必须要用到，实在不用的可以用 “_”</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a, b, c <span class="keyword">int</span> = <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a, b, c = <span class="number">1</span>, <span class="string">'a'</span>, <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">    home = os.Getenv(<span class="string">"HOME"</span>)</span><br><span class="line">    user = os.Getenv(<span class="string">"USER"</span>)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">a, b, c := <span class="number">1</span>, <span class="string">'a'</span>, <span class="literal">false</span>  <span class="comment">// 只能在函数内使用</span></span><br></pre></td></tr></table></figure>
@@ -619,7 +623,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2020/01/24/Go-学习/">https://wywwzjj.top/2020/01/24/Go-学习/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2020/01/24/Go-学习/">January 24th 2020, 12:12:07 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2020/01/24/Go-学习/">January 27th 2020, 12:14:44 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2020/01/24/Go-学习/">January 31st 2020, 9:06:18 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1508,36 +1512,9 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 48
+        Total : 49
         </div>
         <!-- search  -->
         
@@ -1588,6 +1565,11 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">11/25</span><a class="archive-post-title" href="/2019/11/25/CSAPP-Chapter-10-Notes/">CSAPP 系统级IO 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href="/2019/11/21/ThinkCMF-RCE/">ThinkCMF 前台 RCE</a>
         </li>
     
     
@@ -1647,7 +1629,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/Phar-与反序列化学习/">phar 与反序列化学习</a>
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/Phar-与反序列化学习/">Phar 与反序列化学习</a>
         </li>
     
     
@@ -1712,12 +1694,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
@@ -1771,12 +1753,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
@@ -1814,43 +1796,43 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
         <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
     
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
-    
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
-    
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
-    
-        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
         <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
-        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
