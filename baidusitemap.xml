@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/</loc>
+    <lastmod>2020-02-01</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/10/28/CSAPP-Chapter-8-Notes/</loc>
+    <lastmod>2020-02-01</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/12/16/CSAPP-Chapter-12-Notes/</loc>
+    <lastmod>2020-02-01</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/12/02/CSAPP-Chapter-11-Notes/</loc>
+    <lastmod>2020-02-01</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2018/11/02/Sqli-labs-%E9%80%9A%E5%85%B3%E8%AE%B0%E5%BD%95/</loc>
+    <lastmod>2020-02-01</lastmod>
+  </url>  <url>
+    <loc>https://wywwzjj.top/2019/05/17/Redis-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E7%9B%B8%E5%85%B3%E5%88%A9%E7%94%A8/</loc>
+    <lastmod>2020-02-01</lastmod>
+  </url>  <url>
     <loc>https://wywwzjj.top/2020/01/24/Go-%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2020-02-01</lastmod>
   </url>  <url>
@@ -34,26 +52,11 @@
     <loc>https://wywwzjj.top/2019/04/07/vulnhub-%E9%9D%B6%E6%9C%BA%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97-HackInOS/</loc>
     <lastmod>2019-12-24</lastmod>
   </url>  <url>
-    <loc>https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/</loc>
-    <lastmod>2019-12-24</lastmod>
-  </url>  <url>
-    <loc>https://wywwzjj.top/2019/12/16/CSAPP-Chapter-12-Notes/</loc>
-    <lastmod>2019-12-22</lastmod>
-  </url>  <url>
     <loc>https://wywwzjj.top/2019/09/01/CSAPP-Chapter-1-Notes/</loc>
     <lastmod>2019-12-19</lastmod>
   </url>  <url>
-    <loc>https://wywwzjj.top/2019/12/02/CSAPP-Chapter-11-Notes/</loc>
-    <lastmod>2019-12-16</lastmod>
-  </url>  <url>
     <loc>https://wywwzjj.top/2019/11/25/CSAPP-Chapter-10-Notes/</loc>
     <lastmod>2019-12-16</lastmod>
-  </url>  <url>
-    <loc>https://wywwzjj.top/2019/05/17/Redis-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E7%9B%B8%E5%85%B3%E5%88%A9%E7%94%A8/</loc>
-    <lastmod>2019-12-08</lastmod>
-  </url>  <url>
-    <loc>https://wywwzjj.top/2019/10/28/CSAPP-Chapter-8-Notes/</loc>
-    <lastmod>2019-11-17</lastmod>
   </url>  <url>
     <loc>https://wywwzjj.top/2019/10/21/CSAPP-Chapter-6-Notes/</loc>
     <lastmod>2019-11-17</lastmod>
@@ -96,9 +99,6 @@
   </url>  <url>
     <loc>https://wywwzjj.top/2018/05/16/%E5%8D%81%E5%B9%B4%E5%AD%A6%E4%BC%9A%E7%BC%96%E7%A8%8B/</loc>
     <lastmod>2019-05-19</lastmod>
-  </url>  <url>
-    <loc>https://wywwzjj.top/2018/11/02/Sqli-labs-%E9%80%9A%E5%85%B3%E8%AE%B0%E5%BD%95/</loc>
-    <lastmod>2019-05-16</lastmod>
   </url>  <url>
     <loc>https://wywwzjj.top/2018/11/23/%E6%BC%8F%E6%B4%9E%E7%BB%83%E4%B9%A0%E5%B9%B3%E5%8F%B0%E5%8F%8A%E5%B7%A5%E5%85%B7/</loc>
     <lastmod>2019-05-16</lastmod>

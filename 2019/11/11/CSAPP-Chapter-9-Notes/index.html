@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">706</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -409,6 +409,138 @@ height:50vh;
 <li>它保护了每个进程的地址空间不被其他进程破坏。</li>
 </ul>
 <p><img src="CSAPP-Chapter-9-Notes.assets/de75fd55gy1ga7ke1rrzxj20hu0g7gn7.jpg" alt="image.png"></p>
+<h2 id="内存管理要干些啥？"><a href="#内存管理要干些啥？" class="headerlink" title="内存管理要干些啥？"></a>内存管理要干些啥？</h2><ul>
+<li><p>内存空间的分配与回收</p>
+</li>
+<li><p>内存空间的扩充</p>
+<ul>
+<li>覆盖技术</li>
+<li>交换技术</li>
+<li>虚拟存储</li>
+</ul>
+</li>
+<li><p>地址转换：逻辑 =&gt; 物理</p>
+</li>
+<li><p>存储保护：保证各进程只在自己的内存空间访问，不会越界</p>
+<ul>
+<li>上下界寄存器</li>
+<li>重定位寄存器 + 界地址寄存器</li>
+</ul>
+</li>
+</ul>
+<h3 id="资源推荐"><a href="#资源推荐" class="headerlink" title="资源推荐"></a>资源推荐</h3><p>LWN.net 上有一系列的 “<strong>What every programmer should know about memory</strong>” 文章你需要读一下。当然，你可以直接访问一个完整的 <a href="http://futuretech.blinkenlights.nl/misc/cpumemory.pdf" target="_blank" rel="noopener">PDF 文档</a>。下面是这个系列文章的网页版列表。读完这个列表的内容，你基本上就对内存有了一个比较好的知识体系了。</p>
+<ul>
+<li><a href="https://lwn.net/Articles/250967/" target="_blank" rel="noopener">Part 1: Introduction</a> ，中译版为 “<a href="https://www.oschina.net/translate/what-every-programmer-should-know-about-memory-part1" target="_blank" rel="noopener">每个程序员都应该了解的内存知识【第一部分】</a>”</li>
+<li><a href="https://lwn.net/Articles/252125/" target="_blank" rel="noopener">Part 2: CPU caches</a></li>
+<li><a href="http://lwn.net/Articles/253361/" target="_blank" rel="noopener">Part 3 (Virtual memory)</a></li>
+<li><a href="http://lwn.net/Articles/254445/" target="_blank" rel="noopener">Part 4 (NUMA systems)</a></li>
+<li><a href="http://lwn.net/Articles/255364/" target="_blank" rel="noopener">Part 5 (What programmers can do - cache optimization)</a></li>
+<li><a href="http://lwn.net/Articles/256433/" target="_blank" rel="noopener">Part 6 (What programmers can do - multi-threaded optimizations)</a></li>
+<li><a href="http://lwn.net/Articles/257209/" target="_blank" rel="noopener">Part 7 (Memory performance tools)</a></li>
+<li><a href="https://lwn.net/Articles/258154/" target="_blank" rel="noopener">Part 8 (Future technologies)</a></li>
+<li><a href="https://lwn.net/Articles/258188/" target="_blank" rel="noopener">Part 9 (Appendices and bibliography)</a></li>
+</ul>
+<h2 id="连续分配"><a href="#连续分配" class="headerlink" title="连续分配"></a>连续分配</h2><p>分类：</p>
+<ul>
+<li>单一连续：只支持单道程序，内存分为系统区和用户区</li>
+<li>固定分区</li>
+<li>动态分区：在程序被装入内存时，根据进程的大小动态调整分区<ul>
+<li>首次适应</li>
+<li>最佳适应</li>
+<li>最坏适应</li>
+<li>邻近适应</li>
+</ul>
+</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>分配给一个程序的物理内存是连续的</li>
+<li>内存利用率低</li>
+<li>有内外碎片问题</li>
+</ul>
+<h2 id="非连续分配"><a href="#非连续分配" class="headerlink" title="非连续分配"></a>非连续分配</h2><p>优点：</p>
+<ul>
+<li>一个程序的物理地址空间是非连续的</li>
+<li>更好的内存利用和管理</li>
+<li>允许共享代码与数据（共享库等）</li>
+<li>支持动态加载和动态链接</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>如何建立虚拟地址和物理地址之间的转换<ul>
+<li>软件方案</li>
+<li>硬件方案</li>
+</ul>
+</li>
+</ul>
+<h2 id="分段"><a href="#分段" class="headerlink" title="分段"></a>分段</h2><p>段是信息的逻辑单位。</p>
+<p>分段的目的是更好地满足用户需求。</p>
+<p>一个段通常包含着一组属于一个逻辑模块的信息，更容易实现信息的共享和保护。</p>
+<p>分段对用户是可见的，用户编程时需要显式给出段名。</p>
+<p>段的大小不固定，取决于用户编写的程序（低级语言）。</p>
+<ul>
+<li><p>程序text段</p>
+<ul>
+<li>库</li>
+<li>用户代码</li>
+</ul>
+</li>
+<li><p>程序数据段</p>
+</li>
+<li><p>运行栈</p>
+</li>
+<li><p>堆</p>
+</li>
+</ul>
+<p>段表：段号、段长、基址</p>
+<h2 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h2><p>页是信息的物理单位。分页的目的是为了实现离散分配，提高内存利用率。</p>
+<p>分页仅仅是系统管理上的需要，完全是系统行为，对用户不可见。</p>
+<h3 id="页表"><a href="#页表" class="headerlink" title="页表"></a>页表</h3><p>作用：记录进程中各个页与所占用内存块的关系，形成映射。</p>
+<h3 id="快表"><a href="#快表" class="headerlink" title="快表"></a>快表</h3><h3 id="多级页表"><a href="#多级页表" class="headerlink" title="多级页表"></a>多级页表</h3><p>单页表遇到的问题：</p>
+<ul>
+<li>页表必须连续存放，若页表项小，总的页表太占空间；页表项过大，内碎片影响大。</li>
+<li>没有必要让所有页表常驻内存，进程在一段时间内可能只需要访问几个特定的页面。</li>
+</ul>
+<p>实现对页表本身的虚拟存储。</p>
+<p>注意：</p>
+<ul>
+<li>各级页表的大小不能超过一个页面。若两级不够，可分成多级</li>
+<li>多级页表访存次数（无快表） = 页表级数 + 1</li>
+</ul>
+<h2 id="段页"><a href="#段页" class="headerlink" title="段页"></a>段页</h2><p>进程分段 =》段分页 =》内存分块</p>
+<p>维护一个段表和若干个页表</p>
+<h2 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h2><p>程序不需全部装入即可运行，运行时根据需要动态调入数据，若内存不够，还需换出一些数据。</p>
+<h3 id="请求调页"><a href="#请求调页" class="headerlink" title="请求调页"></a>请求调页</h3><p>访问的信息不在内存时，由操作系统负责将所需信息从外存调入内存</p>
+<p>页表结构：内存块号    中断位P    访问位A    修改位M    外存地址</p>
+<p>缺页中断与一般的 I/O 中断区别：</p>
+<ul>
+<li>缺页中断是指令执行时中断，而普通的是两条指令执行之间。</li>
+<li>缺页中断是运行状态，而普通的是阻塞态。</li>
+</ul>
+<h3 id="页面置换"><a href="#页面置换" class="headerlink" title="页面置换"></a>页面置换</h3><p>内存空间不够时，将内存中暂时用不到的信息换出到外存，换出时注意清掉快表中的缓存。</p>
+<p>理想置换算法要求：被换出的页面在以后的运行中不需要。</p>
+<ul>
+<li><p>先进先出（FIFS）</p>
+<p>  往下挤。实现简单，性能差，可能出现 Belady 现象，即增加内存块后，缺页中断却增加。</p>
+</li>
+<li><p>最近最久未使用（LRU）</p>
+<p>  依然是往下挤，区别在于，一旦命中，提到栈顶。</p>
+</li>
+<li><p>最近最不常用（LFU）</p>
+<p>  记录访问次数，淘汰访问次数最小的，但这样实现太麻烦，所以直接在对应的内存块上计数。</p>
+</li>
+<li><p>最近未使用（NRU）</p>
+<p>  搞一个定时器，定期清除访问位。</p>
+</li>
+<li><p>二次机会（Second Chance）</p>
+<p>  一般来说不用管改进算法，只要 A</p>
+<p>  请求调页时，不算访问，之后的命中才算，而且从时间最久开始，遇到0就直接淘汰，遇1置0。</p>
+<p>  置换掉的页作为最新页放顶上，注意是按时钟旋转，而不是直接往下挤。</p>
+<p>  改进后的算法加了一个判断位——修改位M，减少了I/O，也降低了抖动现象。</p>
+</li>
+<li><p>页缓冲</p>
+</li>
+</ul>
 <h2 id="物理和虚拟寻址"><a href="#物理和虚拟寻址" class="headerlink" title="物理和虚拟寻址"></a>物理和虚拟寻址</h2><p>计算机系统的主存被组织成一个由 M 个连续的字节大小的单元组成的数组。每个字节都有一个唯一的物理地址。</p>
 <p>在物理地址与虚拟地址间加个地址翻译就构成了虚拟寻址。</p>
 <h2 id="地址空间"><a href="#地址空间" class="headerlink" title="地址空间"></a>地址空间</h2><p>地址空间是一个非负整数地址的有序集合。</p>
@@ -420,10 +552,7 @@ height:50vh;
 <li>简化共享</li>
 <li>简化内存分配</li>
 </ul>
-<h2 id="内存保护"><a href="#内存保护" class="headerlink" title="内存保护"></a>内存保护</h2><ul>
-<li><h2 id="地址翻译"><a href="#地址翻译" class="headerlink" title="地址翻译"></a>地址翻译</h2></li>
-</ul>
-<p>逻辑地址到物理地址</p>
+<h2 id="内存保护"><a href="#内存保护" class="headerlink" title="内存保护"></a>内存保护</h2><h2 id="地址翻译"><a href="#地址翻译" class="headerlink" title="地址翻译"></a>地址翻译</h2><p>逻辑地址到物理地址</p>
 <h2 id="内存映射"><a href="#内存映射" class="headerlink" title="内存映射"></a>内存映射</h2><p>回到本章前言，“虚拟内存是强大的”。</p>
 <ul>
 <li>你知道可以通过读写内存位置读或者修改一个磁盘文件的内容吗？</li>
@@ -450,7 +579,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/">https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/">November 11th 2019, 10:57:57 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/">December 24th 2019, 9:40:40 am</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/11/11/CSAPP-Chapter-9-Notes/">February 1st 2020, 9:48:07 am</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -597,7 +726,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#物理和虚拟寻址"><span class="toc-number">1.</span> <span class="toc-text">物理和虚拟寻址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#地址空间"><span class="toc-number">2.</span> <span class="toc-text">地址空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存"><span class="toc-number">3.</span> <span class="toc-text">缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存管理"><span class="toc-number">4.</span> <span class="toc-text">内存管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存保护"><span class="toc-number">5.</span> <span class="toc-text">内存保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#地址翻译"><span class="toc-number">6.</span> <span class="toc-text">地址翻译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存映射"><span class="toc-number">7.</span> <span class="toc-text">内存映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态内存分配"><span class="toc-number">8.</span> <span class="toc-text">动态内存分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集"><span class="toc-number">9.</span> <span class="toc-text">垃圾收集</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#内存管理要干些啥？"><span class="toc-number">1.</span> <span class="toc-text">内存管理要干些啥？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#资源推荐"><span class="toc-number">1.1.</span> <span class="toc-text">资源推荐</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#连续分配"><span class="toc-number">2.</span> <span class="toc-text">连续分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非连续分配"><span class="toc-number">3.</span> <span class="toc-text">非连续分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分段"><span class="toc-number">4.</span> <span class="toc-text">分段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分页"><span class="toc-number">5.</span> <span class="toc-text">分页</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#页表"><span class="toc-number">5.1.</span> <span class="toc-text">页表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#快表"><span class="toc-number">5.2.</span> <span class="toc-text">快表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多级页表"><span class="toc-number">5.3.</span> <span class="toc-text">多级页表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#段页"><span class="toc-number">6.</span> <span class="toc-text">段页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟内存"><span class="toc-number">7.</span> <span class="toc-text">虚拟内存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#请求调页"><span class="toc-number">7.1.</span> <span class="toc-text">请求调页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#页面置换"><span class="toc-number">7.2.</span> <span class="toc-text">页面置换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#物理和虚拟寻址"><span class="toc-number">8.</span> <span class="toc-text">物理和虚拟寻址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#地址空间"><span class="toc-number">9.</span> <span class="toc-text">地址空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存"><span class="toc-number">10.</span> <span class="toc-text">缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存管理"><span class="toc-number">11.</span> <span class="toc-text">内存管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存保护"><span class="toc-number">12.</span> <span class="toc-text">内存保护</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#地址翻译"><span class="toc-number">13.</span> <span class="toc-text">地址翻译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存映射"><span class="toc-number">14.</span> <span class="toc-text">内存映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态内存分配"><span class="toc-number">15.</span> <span class="toc-text">动态内存分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集"><span class="toc-number">16.</span> <span class="toc-text">垃圾收集</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -610,46 +739,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -1563,12 +1652,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
         </li>
     
     
@@ -1598,12 +1687,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
@@ -1641,8 +1730,6 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
@@ -1651,15 +1738,17 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
         <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
     
-        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
-    
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
