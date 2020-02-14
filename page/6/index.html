@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Leetcode 322.Coin Change[DP] · wywwzjj&#39;s Blog</title>
+    <title>wywwzjj&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -77,8 +77,6 @@
 
     <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
-    
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
@@ -203,23 +201,14 @@
 </head>
 
     
-        <body class="post-body">
+        <body class="home-body">
     
     
-<header class="header">
+<header class="header index-header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
-    
-    <div class="banner">
-            <div class="blog-title">
-                <a href="/">wywwzjj&#39;s Blog</a>
-            </div>
-            <div class="post-title">
-                <a href="#" class="post-name">Leetcode 322.Coin Change[DP]</a>
-            </div>
-    </div>
     
     <a class="home-link" href="/">wywwzjj's Blog</a>
 </header>
@@ -238,17 +227,17 @@ height:50vh;
     <!-- 主页  -->
     
     
-    <!-- 404页  -->
+    <!-- 文章页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Leetcode 322.Coin Change[DP]
-            <!-- 404 -->
+            wywwzjj's Blog
+            <!-- 文章页  -->
             
         </h1>
         <!-- 副标题 -->
@@ -256,49 +245,12 @@ height:50vh;
             <!-- 主页副标题  -->
             
             
-            <!-- 404 -->
+                Know it, then hack it.
+            
+            <!-- 文章页  -->
             
         </p>
         <!-- 文章页meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class="post-intro-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="算法">算法</a>
-    
-</div>
-                
-                
-                    <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">298</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2019/04/04</span>
-                    
-                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                        <span class="iconfont-archer">&#xe602;</span>
-                        <span id="busuanzi_value_page_pv"></span>
-                    </span>
-                    
-                    <span class="shareWrapper">
-                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
-                        <span class="shareText">Share</span>
-                        <ul class="shareList">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -399,72 +351,162 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main post-page">
-    <article class="article-entry">
-        <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 <code>-1</code>。</p>
-<p><strong>示例 1:</strong></p>
-<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: coins = [1, 2, 5], amount = 11</span><br><span class="line">输出:<span class="number"> 3 </span></span><br><span class="line">解释:<span class="number"> 11 </span>=<span class="number"> 5 </span>+<span class="number"> 5 </span>+ 1</span><br></pre></td></tr></table></figure>
-
-<p><strong>示例 2:</strong></p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">输入: coins = [2], amount = 3</span></span><br><span class="line"><span class="section">输出: -1</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>考虑状态方程，需描述出组合成总金额所花最少的硬币个数。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dp[i][j] 表示使用前 i 种硬币表示总额 j 所用的最少硬币数</span></span><br><span class="line"><span class="comment"># 初始状态 dp[-1][j] = ∞  dp[i][0] = 0</span></span><br><span class="line">dp[i][j] = min(dp[i][j], dp[i<span class="number">-1</span>][j-coin_i*k] + k)</span><br><span class="line">		 = min(dp[i][j], dp[i][j-coin_i] + <span class="number">1</span>)</span><br><span class="line"><span class="comment"># 观察发现都具有 dp[i]，进一步压缩，使用滚动数组</span></span><br><span class="line">dp[j] = min(dp[j], dp[j-coin_i] + <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-
-<p>以*<em>示例 1 *</em>为例</p>
-<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g1qceh5ejjj20qb035gll.jpg" alt></p>
-<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><p><strong>DP</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 执行用时：1672 ms，击败了 39.85% 的用户</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">coinChange</span><span class="params">(self, coins: List[int], amount: int)</span> -&gt; int:</span></span><br><span class="line">    dp = [amount+<span class="number">1</span>] * (amount + <span class="number">5</span>)</span><br><span class="line">    dp[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> coin <span class="keyword">in</span> coins:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(amount+<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> (i - coin &gt;= <span class="number">0</span>):</span><br><span class="line">            	dp[i] = min(dp[i], dp[i-coin] + <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span> <span class="keyword">if</span> dp[amount] &gt;= amount + <span class="number">1</span> <span class="keyword">else</span> dp[amount]</span><br></pre></td></tr></table></figure>
-
-<p><strong>DFS + greedy + pruning</strong></p>
-<p>待补充</p>
-
-    </article>
-    <!-- license  -->
+            <main class="main index-page">
     
-        <div class="license-wrapper">
-            <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
-            </p><p>原文链接：<a href="https://wywwzjj.top/2019/04/04/Leetcode-322-Coin-Change/">https://wywwzjj.top/2019/04/04/Leetcode-322-Coin-Change/</a>
-            </p><p>发表日期：<a href="https://wywwzjj.top/2019/04/04/Leetcode-322-Coin-Change/">April 4th 2019, 9:07:35 am</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/04/04/Leetcode-322-Coin-Change/">April 4th 2019, 9:57:42 am</a>
-            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/01/25/Hello-World/">
+            
+                <span>Hello World</span>
+        </a>
+        <div class="abstract-content">
+            我的第一篇博客
         </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/25</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
     
     <!-- paginator  -->
-    <ul class="post-paginator">
-        <li class="next">
-            
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2019/04/07/vulnhub-靶机实战系列-HackInOS/" title="vulnhub 靶机实战系列 HackInOS">
-                    <div class="nextTitle">vulnhub 靶机实战系列 HackInOS</div>
-                </a>
-            
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href="/2019/04/02/无字母数字-webshell/" title="无字母数字 webshell">
-                    <div class="prevTitle">无字母数字 webshell</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
-
-<!-- City版安装代码已完成 -->
     
+    <nav class="page-nav">
+        <a class="extend prev" rel="prev" href="/page/5/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+    </nav>
     
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-
-    <!-- 评论 -->
 </main>
             <!-- profile -->
+            
+            <div class="profile">
+    <img class="profile-avatar" alt="avatar" src="/avatar/A.png">
+    <div class="profile-name">wywwzjj</div>
+    
+    <div class="profile-signature">
+        Shell is only the beginning.
+    </div>
+    
+    
+    <div class="profile-social">
+        
+    
+        
+            
+                <a href="//github.com/wywwzjj" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title="qq">
+                  
+                  <img class="profile-qr" src="/assets/QQ.png">
+                </span>
+            
+        
+    
+        
+    
+        
+            
+                <a href="mailto:wywwzjj@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    
+        <div class="friends">
+            <div>FRIENDS</div>
+            
+                
+                    <span>
+                        <a href="//https://blog.cloudyu.me/" target="_black">cloudyu</a>
+                    </span>
+                
+            
+                
+                    <span>
+                        <a href="//https://blog.zsxsoft.com/" target="_black">zsx</a>
+                    </span>
+                
+            
+                
+                    <span>
+                        <a href="//https://blog.cal1.cn/" target="_black">超威蓝猫</a>
+                    </span>
+                
+            
+                
+                    <span>
+                        <a href="//https://museljh.github.io" target="_black">museljh</a>
+                    </span>
+                
+            
+                
+                    <span>
+                        <a href="//https://r1dd1er.top/" target="_black">r1dd1er</a>
+                    </span>
+                
+            
+                
+                    <span>
+                        <a href="//https://blog.szfszf.top" target="_black">JrXnm</a>
+                    </span>
+                
+            
+        </div>
+    
+    
+        <div class="about-me">
+            <a href="/about">ABOUT ME</a>
+        </div>
+    
+</div>
             
         </div>
         <footer class="footer footer-unloaded">
@@ -557,24 +599,6 @@ height:50vh;
 </footer>
     </div>
     <!-- toc -->
-    
-    <div class="toc-wrapper" style=
-    
-
-
-
-
-
-
-
-top:50vh;
-
-    >
-        <div class="toc-catalog">
-            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-        </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#题目描述"><span class="toc-number">1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#code"><span class="toc-number">3.</span> <span class="toc-text">code</span></a></li></ol>
-    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1762,8 +1786,6 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
-    
-        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

