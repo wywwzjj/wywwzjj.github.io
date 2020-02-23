@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>POJ 1321 棋盘问题[DFS] · wywwzjj&#39;s Blog</title>
+    <title>LeetCode Weekly Contest 177 · wywwzjj&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/">wywwzjj&#39;s Blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">POJ 1321 棋盘问题[DFS]</a>
+                <a href="#" class="post-name">LeetCode Weekly Contest 177</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            POJ 1321 棋盘问题[DFS]
+            LeetCode Weekly Contest 177
             <!-- 404 -->
             
         </h1>
@@ -272,12 +272,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">407</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/10/28</span>
+                    <span class="post-intro-time">2020/02/23</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -401,18 +401,101 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p> <a href="http://poj.org/problem?id=1321" target="_blank" rel="noopener">原题链接</a></p>
-<p>在一个给定形状的棋盘（形状可能是不规则的）上面摆放棋子，棋子没有区别。要求摆放时任意的两个棋子不能放在棋盘中的同一行或者同一列，请编程求解对于给定形状和大小的棋盘，摆放k个棋子的所有可行的摆放方案C。</p>
-<p>这个题非常经典，深搜的回溯，细细品尝，必有所获。<br>每次遇到合适的位置，立即钻进去，转而进入下一个深搜，直到棋子完全拜完，此深搜结束，回到上一个深搜状态，再进行恢复现场，恢复完后先到下一列，下一列可行又继续前面的状态，换列不能解决就换行，直到行数跑完，行数跑完则结束当前深搜，继续改变上一个深搜状态。“第一个”深搜以最后一行作为起点，才真正结束。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> sf scanf</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> pf printf</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> rep(i,a,b) for(int i=a;i&lt;(b);++i)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> G[<span class="number">10</span>][<span class="number">10</span>];</span><br><span class="line"><span class="keyword">bool</span> fg[<span class="number">10</span>] = &#123;<span class="number">0</span>&#125;;  <span class="comment">// 走过为真</span></span><br><span class="line"><span class="keyword">int</span> ans = <span class="number">0</span>, n, k;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> cur, <span class="keyword">int</span> x)</span> </span>&#123;  <span class="comment">// cur为已摆的棋子数， x 为行数</span></span><br><span class="line">    <span class="keyword">if</span>(cur == k) &#123;</span><br><span class="line">        ans++;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    rep(i, x, n)</span><br><span class="line">        rep(j, <span class="number">0</span>, n)</span><br><span class="line">            <span class="keyword">if</span>(G[i][j] == <span class="string">'#'</span> &amp;&amp; !fg[j]) &#123;</span><br><span class="line">                fg[j] = <span class="literal">true</span>;</span><br><span class="line">                dfs(cur+<span class="number">1</span>, i+<span class="number">1</span>);  <span class="comment">// 下一行继续摆下一个棋子</span></span><br><span class="line">                fg[j] = <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(sf(<span class="string">"%d%d"</span>, &amp;n, &amp;k) == <span class="number">2</span> &amp;&amp; n != <span class="number">-1</span> &amp;&amp; k != <span class="number">-1</span>) &#123;</span><br><span class="line">        rep(i,<span class="number">0</span>,n) sf(<span class="string">"%s"</span>,G[i]);</span><br><span class="line">        dfs(<span class="number">0</span>, <span class="number">0</span>);  <span class="comment">// 第一行开始摆</span></span><br><span class="line">        pf(<span class="string">"%d\n"</span>, ans); ans = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h2 id="日期之间隔几天"><a href="#日期之间隔几天" class="headerlink" title="日期之间隔几天"></a><a href="https://leetcode-cn.com/problems/number-of-days-between-two-dates/" target="_blank" rel="noopener">日期之间隔几天</a></h2><h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>请你编写一个程序来计算两个日期之间隔了多少天。</p>
+<p>日期以字符串形式给出，格式为 YYYY-MM-DD，如示例所示。</p>
+<p><strong>示例 1：</strong></p>
+<p>输入：date1 = “2019-06-29”, date2 = “2019-06-30”<br>输出：1</p>
+<p><strong>示例 2：</strong></p>
+<p>输入：date1 = “2020-01-15”, date2 = “2019-12-31”<br>输出：15</p>
+<p><strong>提示：</strong></p>
+<p>给定的日期是 1971 年到 2100 年之间的有效日期。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>直接调用库函数了。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">daysBetweenDates</span><span class="params">(date1 <span class="keyword">string</span>, date2 <span class="keyword">string</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	t1, _ := time.Parse(<span class="string">"2006-01-02"</span>, date1)</span><br><span class="line">	t2, _ := time.Parse(<span class="string">"2006-01-02"</span>, date2)</span><br><span class="line">	ans := t1.Sub(t2).Hours()</span><br><span class="line">	<span class="keyword">if</span> ans &gt; <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">int</span>(ans) / <span class="number">24</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> -<span class="keyword">int</span>(ans) / <span class="number">24</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="验证二叉树"><a href="#验证二叉树" class="headerlink" title="验证二叉树"></a><a href="https://leetcode-cn.com/problems/validate-binary-tree-nodes/" target="_blank" rel="noopener">验证二叉树</a></h2><h3 id="题目描述-1"><a href="#题目描述-1" class="headerlink" title="题目描述"></a>题目描述</h3><p>二叉树上有 <code>n</code> 个节点，按从 <code>0</code> 到 <code>n - 1</code> 编号，其中节点 <code>i</code> 的两个子节点分别是 <code>leftChild[i]</code> 和 <code>rightChild[i]</code>。</p>
+<p>只有 <strong>所有</strong> 节点能够形成且 <strong>只</strong> 形成 <strong>一颗</strong> 有效的二叉树时，返回 <code>true</code>；否则返回 <code>false</code>。</p>
+<p>如果节点 <code>i</code> 没有左子节点，那么 <code>leftChild[i]</code> 就等于 <code>-1</code>。右子节点也符合该规则。</p>
+<p>注意：节点没有值，本问题中仅仅使用节点编号。</p>
+<p><strong>示例 1：</strong></p>
+<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/02/23/1503_ex1.png" alt="img"></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：n = <span class="number">4</span>, leftChild = [<span class="number">1</span>,<span class="number">-1</span>,<span class="number">3</span>,<span class="number">-1</span>], rightChild = [<span class="number">2</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="number">-1</span>]</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/02/23/1503_ex2.png" alt="img"></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：n = <span class="number">4</span>, leftChild = [<span class="number">1</span>,<span class="number">-1</span>,<span class="number">3</span>,<span class="number">-1</span>], rightChild = [<span class="number">2</span>,<span class="number">3</span>,<span class="number">-1</span>,<span class="number">-1</span>]</span><br><span class="line">输出：false</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/02/23/1503_ex3.png" alt="img"></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：n = <span class="number">2</span>, leftChild = [<span class="number">1</span>,<span class="number">0</span>], rightChild = [<span class="number">-1</span>,<span class="number">-1</span>]</span><br><span class="line">输出：false</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 4：</strong></p>
+<p><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2020/02/23/1503_ex4.png" alt="img"></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：n = <span class="number">6</span>, leftChild = [<span class="number">1</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="number">4</span>,<span class="number">-1</span>,<span class="number">-1</span>], rightChild = [<span class="number">2</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="number">5</span>,<span class="number">-1</span>,<span class="number">-1</span>]</span><br><span class="line">输出：false</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= n &lt;= 10^4</code></li>
+<li><code>leftChild.length == rightChild.length == n</code></li>
+<li><code>-1 &lt;= leftChild[i], rightChild[i] &lt;= n - 1</code></li>
+</ul>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TODO</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="最接近的因数"><a href="#最接近的因数" class="headerlink" title="最接近的因数"></a><a href="https://leetcode-cn.com/problems/closest-divisors/" target="_blank" rel="noopener">最接近的因数</a></h2><h3 id="题目描述-2"><a href="#题目描述-2" class="headerlink" title="题目描述"></a>题目描述</h3><p>给你一个整数 <code>num</code>，请你找出同时满足下面全部要求的两个整数：</p>
+<ul>
+<li><p>两数乘积等于  <code>num + 1</code> 或 <code>num + 2</code></p>
+</li>
+<li><p>以绝对差进行度量，两数大小最接近</p>
+</li>
+</ul>
+<p>你可以按任意顺序返回这两个整数。</p>
+<p><strong>示例 1：</strong></p>
+<p>输入：num = 8<br>输出：[3,3]<br>解释：对于 num + 1 = 9，最接近的两个因数是 3 &amp; 3；对于 num + 2 = 10, 最接近的两个因数是 2 &amp; 5，因此返回 3 &amp; 3 。</p>
+<p><strong>示例 2：</strong></p>
+<p>输入：num = 123<br>输出：[5,25]</p>
+<p><strong>示例 3：</strong></p>
+<p>输入：num = 999<br>输出：[40,25]</p>
+<p><strong>提示：</strong></p>
+<p>1 &lt;= num &lt;= 10^9</p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><p>最简单的思路，从平方根开始，两数之差一定是最小的。不够优雅。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">closestDivisors</span><span class="params">(num <span class="keyword">int</span>)</span> []<span class="title">int</span></span> &#123;</span><br><span class="line">	num1, num2 := num+<span class="number">1</span>, num+<span class="number">2</span></span><br><span class="line">	<span class="keyword">for</span> ans := <span class="keyword">int</span>(math.Sqrt(<span class="keyword">float64</span>(num2))); ans &gt; <span class="number">0</span>; ans-- &#123;</span><br><span class="line">		<span class="keyword">if</span> (num1)%ans == <span class="number">0</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> []<span class="keyword">int</span>&#123;ans, num1 / ans&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (num2)%ans == <span class="number">0</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> []<span class="keyword">int</span>&#123;ans, num2 / ans&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> []<span class="keyword">int</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="形成三的最大倍数"><a href="#形成三的最大倍数" class="headerlink" title="形成三的最大倍数"></a><a href="https://leetcode-cn.com/problems/largest-multiple-of-three/" target="_blank" rel="noopener">形成三的最大倍数</a></h2><h3 id="题目描述-3"><a href="#题目描述-3" class="headerlink" title="题目描述"></a>题目描述</h3><p>给你一个整数数组 <code>digits</code>，你可以通过按任意顺序连接其中某些数字来形成 <strong>3</strong> 的倍数，请你返回所能得到的最大的 3 的倍数。</p>
+<p>由于答案可能不在整数数据类型范围内，请以字符串形式返回答案。</p>
+<p>如果无法得到答案，请返回一个空字符串。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：digits = [<span class="number">8</span>,<span class="number">1</span>,<span class="number">9</span>]</span><br><span class="line">输出：<span class="string">"981"</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：digits = [<span class="number">8</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">1</span>,<span class="number">0</span>]</span><br><span class="line">输出：<span class="string">"8760"</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：digits = <span class="string">[1]</span></span><br><span class="line">输出：<span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 4：</strong></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：digits = [<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">输出：<span class="string">"0"</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= digits.length &lt;= 10^4</code></li>
+<li><code>0 &lt;= digits[i] &lt;= 9</code></li>
+<li>返回的结果不应包含不必要的前导零。</li>
+</ul>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><p>一开始想了好久用 DP 做，后面发现只是个普通的数学题 。</p>
+<p>如果一个数的各位数之和相加是 3 的倍数，则它本身就是 3 的倍数，然后从大到小排序即可。</p>
+<p>剩下的问题就变成，在数组中找到尽可能多的数且数值最大。</p>
+<p>数组中的所有数可分成三类：num % 3 == 0, 1, 2。</p>
+<p>若和模 3 余 1，则去掉余数为 1 的那类数里最小的一个数即可，不行就删两个余 2 的。余 2 同理。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">largestMultipleOfThree</span><span class="params">(digits []<span class="keyword">int</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="comment">// 先处理特殊情况</span></span><br><span class="line">	s := sum(digits)</span><br><span class="line">	<span class="keyword">if</span> s == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"0"</span></span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> s%<span class="number">3</span> == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> genMaxString(digits)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	remainder := <span class="built_in">make</span>([][]<span class="keyword">int</span>, <span class="number">3</span>) <span class="comment">// 余数分类</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> remainder &#123;</span><br><span class="line">		remainder[i] = []<span class="keyword">int</span>&#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 按余数分类</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> digits &#123;</span><br><span class="line">		mod := digits[i] % <span class="number">3</span></span><br><span class="line">		remainder[mod] = <span class="built_in">append</span>(remainder[mod], digits[i])</span><br><span class="line">	&#125;</span><br><span class="line">	len1, len2 := <span class="built_in">len</span>(remainder[<span class="number">1</span>]), <span class="built_in">len</span>(remainder[<span class="number">2</span>])</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 在可拿的情况下，保证拿的都是最大的</span></span><br><span class="line">	sort.Sort(sort.IntSlice(remainder[<span class="number">1</span>]))</span><br><span class="line">	sort.Sort(sort.IntSlice(remainder[<span class="number">2</span>]))</span><br><span class="line"></span><br><span class="line">	resDigits := remainder[<span class="number">0</span>] <span class="comment">// 以余 0 为基础</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 尽可能的多拿，[1,1,1,2]</span></span><br><span class="line">	<span class="keyword">if</span> s%<span class="number">3</span> == <span class="number">1</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> len1 &gt; <span class="number">0</span> &#123;</span><br><span class="line">			remainder[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">-1</span> <span class="comment">// -1 代表删除</span></span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> len2 &gt; <span class="number">1</span> &#123;</span><br><span class="line">			remainder[<span class="number">2</span>][<span class="number">0</span>] = <span class="number">-1</span></span><br><span class="line">			remainder[<span class="number">2</span>][<span class="number">1</span>] = <span class="number">-1</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> len2 &gt; <span class="number">0</span> &#123;</span><br><span class="line">			remainder[<span class="number">2</span>][<span class="number">0</span>] = <span class="number">-1</span></span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> len1 &gt; <span class="number">1</span> &#123;</span><br><span class="line">			remainder[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">-1</span></span><br><span class="line">			remainder[<span class="number">1</span>][<span class="number">1</span>] = <span class="number">-1</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	resDigits = <span class="built_in">append</span>(resDigits, remainder[<span class="number">1</span>]...)</span><br><span class="line">	resDigits = <span class="built_in">append</span>(resDigits, remainder[<span class="number">2</span>]...)</span><br><span class="line">	<span class="keyword">return</span> genMaxString(resDigits)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">sum</span><span class="params">(nums []<span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	ans := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> nums &#123;</span><br><span class="line">		ans += nums[i]</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">genMaxString</span><span class="params">(nums []<span class="keyword">int</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	ans := <span class="string">""</span></span><br><span class="line">	sort.Sort(sort.IntSlice(nums))</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(nums); i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> nums[i] == <span class="number">-1</span> &#123; <span class="comment">// -1 代表删除</span></span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		ans = strconv.Itoa(nums[i]) + ans</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
-            </p><p>原文链接：<a href="https://wywwzjj.top/2018/10/28/POJ-1321-棋盘问题-DFS/">https://wywwzjj.top/2018/10/28/POJ-1321-棋盘问题-DFS/</a>
-            </p><p>发表日期：<a href="https://wywwzjj.top/2018/10/28/POJ-1321-棋盘问题-DFS/">October 28th 2018, 1:15:07 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2018/10/28/POJ-1321-棋盘问题-DFS/">May 2nd 2019, 11:19:10 am</a>
+            </p><p>原文链接：<a href="https://wywwzjj.top/2020/02/23/LeetCode-Weekly-Contest-177/">https://wywwzjj.top/2020/02/23/LeetCode-Weekly-Contest-177/</a>
+            </p><p>发表日期：<a href="https://wywwzjj.top/2020/02/23/LeetCode-Weekly-Contest-177/">February 23rd 2020, 12:34:38 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2020/02/23/LeetCode-Weekly-Contest-177/">February 23rd 2020, 9:11:38 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -420,17 +503,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2018/11/02/Sqli-labs-通关记录/" title="Sqli-labs 通关笔记">
-                    <div class="nextTitle">Sqli-labs 通关笔记</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2018/10/28/POJ-3984-迷宫问题-BFS/" title="POJ 3984 迷宫问题[BFS]">
-                    <div class="prevTitle">POJ 3984 迷宫问题[BFS]</div>
+                <a href="/2020/01/30/ThinkPHP-3-X-5-X-order-by-注入/" title="ThinkPHP 3.X / 5.X order by 注入">
+                    <div class="prevTitle">ThinkPHP 3.X / 5.X order by 注入</div>
                 </a>
             
         </li>
@@ -563,7 +641,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#日期之间隔几天"><span class="toc-number">1.</span> <span class="toc-text">日期之间隔几天</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目描述"><span class="toc-number">1.1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-number">1.2.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#验证二叉树"><span class="toc-number">2.</span> <span class="toc-text">验证二叉树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目描述-1"><span class="toc-number">2.1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码-1"><span class="toc-number">2.2.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最接近的因数"><span class="toc-number">3.</span> <span class="toc-text">最接近的因数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目描述-2"><span class="toc-number">3.1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码-2"><span class="toc-number">3.2.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#形成三的最大倍数"><span class="toc-number">4.</span> <span class="toc-text">形成三的最大倍数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目描述-3"><span class="toc-number">4.1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码-3"><span class="toc-number">4.2.</span> <span class="toc-text">代码</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
