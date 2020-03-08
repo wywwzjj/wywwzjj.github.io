@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>wywwzjj&#39;s Blog</title>
+    <title>LeetCode Weekly Contest 21（双周赛） · wywwzjj&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -203,12 +203,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">wywwzjj&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">LeetCode Weekly Contest 21（双周赛）</a>
+            </div>
+    </div>
     
     <a class="home-link" href="/">wywwzjj's Blog</a>
 </header>
@@ -220,24 +231,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            LeetCode Weekly Contest 21（双周赛）
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="算法">算法</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">681</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/03/08</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -338,161 +399,71 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/02/26/Jarvis-OJ-inject/">
-            
-                <span>Jarvis OJ inject</span>
-        </a>
-        <div class="abstract-content">
-            带反引号的 SQLi
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/26</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Writeup">Writeup</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="SQLi">SQLi</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="上升下降字符串"><a href="#上升下降字符串" class="headerlink" title="上升下降字符串"></a><a href="https://leetcode-cn.com/problems/increasing-decreasing-string/" target="_blank" rel="noopener">上升下降字符串</a></h2><p>先从小到大选一波，再从大到小选一波，重复上述步骤，直到选完。</p>
+<p>直接模拟一下。（数据量大的话不要直接用 <code>+</code> 拼接，效率太低，而且浪费内存）</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">sortString</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	m := [<span class="number">26</span>]<span class="keyword">uint8</span>&#123;&#125;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> s &#123;</span><br><span class="line">		m[s[i]<span class="number">-97</span>]++</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">var</span> ans strings.Builder</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(s); &#123;</span><br><span class="line">		<span class="keyword">for</span> j := <span class="number">0</span>; j &lt; <span class="number">26</span>; j++ &#123;</span><br><span class="line">			<span class="keyword">if</span> m[j] &gt; <span class="number">0</span> &#123;</span><br><span class="line">				ans.WriteString(<span class="keyword">string</span>(j+<span class="number">97</span>))</span><br><span class="line">				m[j]--</span><br><span class="line">				i++</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span> j := <span class="number">25</span>; j &gt;= <span class="number">0</span>; j-- &#123;</span><br><span class="line">			<span class="keyword">if</span> m[j] &gt; <span class="number">0</span> &#123;</span><br><span class="line">                ans.WriteString(<span class="keyword">string</span>(j+<span class="number">97</span>))</span><br><span class="line">				m[j]--</span><br><span class="line">				i++</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans.String()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="每个元音包含偶数次的最长子字符串"><a href="#每个元音包含偶数次的最长子字符串" class="headerlink" title="每个元音包含偶数次的最长子字符串"></a><a href="https://leetcode-cn.com/problems/find-the-longest-substring-containing-vowels-in-even-counts/" target="_blank" rel="noopener">每个元音包含偶数次的最长子字符串</a></h2><p>给你一个字符串 <code>s</code> ，请你返回满足以下条件的最长子字符串的长度：每个元音字母，即 ‘a’，’e’，’i’，’o’，’u’ ，在子字符串中都恰好出现了偶数次（含 0 次）。</p>
+<p>这题卡了很久，如果暴力做的话肯定会超时，这个状态表示太妙了。</p>
+<p>每个元音字母出现次数是否为偶数次可用 0、1 来表示，那么 5 个元音字母就 32 个状态，其中题目要求的全为偶数次的状态——<code>00000</code>。</p>
+<p>如果 <code>s[0…i]</code> 与 <code>s[0…j]</code> 状态相同，那么 <code>s[i+1...j]</code> 的状态一定是 <code>00000</code>。</p>
+<p>由于求的是最长子串，那么记录一下每个状态出现的第一次位置，再次出现该状态时做差取最大值即可。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findTheLongestSubstring</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	first := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">32</span>)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> first &#123;</span><br><span class="line">		first[i] = math.MinInt32</span><br><span class="line">	&#125;</span><br><span class="line">    first[<span class="number">0</span>] = <span class="number">-1</span>  <span class="comment">// 特殊处理，如果出现 s[0...i] 状态为 0，那么其长度为 i + 1。</span></span><br><span class="line">	ans, cur := <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> s &#123;</span><br><span class="line">		<span class="keyword">switch</span> s[i] &#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="string">'a'</span>:</span><br><span class="line">			cur ^= <span class="number">1</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">'e'</span>:</span><br><span class="line">			cur ^= <span class="number">2</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">'i'</span>:</span><br><span class="line">			cur ^= <span class="number">4</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">'o'</span>:</span><br><span class="line">			cur ^= <span class="number">8</span></span><br><span class="line">		<span class="keyword">case</span> <span class="string">'u'</span>:</span><br><span class="line">			cur ^= <span class="number">16</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> first[cur] == math.MinInt32 &#123;</span><br><span class="line">			first[cur] = i</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> i-first[cur] &gt; ans &#123;</span><br><span class="line">				ans = i - first[cur]</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二叉树中的最长交错路径"><a href="#二叉树中的最长交错路径" class="headerlink" title="二叉树中的最长交错路径"></a><a href="https://leetcode-cn.com/problems/longest-zigzag-path-in-a-binary-tree/" target="_blank" rel="noopener">二叉树中的最长交错路径</a></h2><p>记录一下来源方向，交错路径加一，相同方向置零。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * type TreeNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val int</span></span><br><span class="line"><span class="comment"> *     Left *TreeNode</span></span><br><span class="line"><span class="comment"> *     Right *TreeNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> maxLen <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">longestZigZag</span><span class="params">(root *TreeNode)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	maxLen = <span class="number">0</span></span><br><span class="line">	helper(root.Right, <span class="number">0</span>, <span class="literal">false</span>)</span><br><span class="line">	helper(root.Left, <span class="number">0</span>, <span class="literal">true</span>)</span><br><span class="line">	<span class="keyword">return</span> maxLen</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">helper</span><span class="params">(root *TreeNode, cnt <span class="keyword">int</span>, dir <span class="keyword">bool</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> root == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">    cnt++</span><br><span class="line">	<span class="keyword">if</span> cnt &gt; maxLen &#123;</span><br><span class="line">		maxLen = cnt</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> dir &#123;</span><br><span class="line">		helper(root.Right, cnt, <span class="literal">false</span>)</span><br><span class="line">		helper(root.Left, <span class="number">0</span>, <span class="literal">true</span>)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		helper(root.Left, cnt, <span class="literal">true</span>)</span><br><span class="line">		helper(root.Right, <span class="number">0</span>, <span class="literal">false</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二叉搜索子树的最大键值和"><a href="#二叉搜索子树的最大键值和" class="headerlink" title="二叉搜索子树的最大键值和"></a><a href="https://leetcode-cn.com/problems/maximum-sum-bst-in-binary-tree/" target="_blank" rel="noopener">二叉搜索子树的最大键值和</a></h2><p>给你一棵树的根结点，请在符合二叉搜索树要求的子树中求出其最大键值和。</p>
+<p>首先得判断该子树是否为二叉搜索树，记录下键值和，还要尽可能减少重复计算。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
     </article>
+    <!-- license  -->
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/02/25/Jarvis-OJ-phpinfo/">
-            
-                <span>Jarvis OJ phpinfo</span>
-        </a>
-        <div class="abstract-content">
-            session 序列化方法使用不当导致任意对象注入
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
+            </p><p>原文链接：<a href="https://wywwzjj.top/2020/03/08/LeetCode-Weekly-Contest-21/">https://wywwzjj.top/2020/03/08/LeetCode-Weekly-Contest-21/</a>
+            </p><p>发表日期：<a href="https://wywwzjj.top/2020/03/08/LeetCode-Weekly-Contest-21/">March 8th 2020, 12:30:38 am</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2020/03/08/LeetCode-Weekly-Contest-21/">March 8th 2020, 3:21:39 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/25</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Writeup">Writeup</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="反序列化">反序列化</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/02/02/Hackme-Writeup/">
-            
-                <span>Hackme-Web-Writeup</span>
-        </a>
-        <div class="abstract-content">
-            闲来无事刷刷题，题目设计的非常精巧，值得一做
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Writeup">Writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/02/02/Jarvis-OJ-Writeup/">
-            
-                <span>Jarvis OJ Writeup</span>
-        </a>
-        <div class="abstract-content">
-            很有意思的 CTF OJ
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/02</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Writeup">Writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/02/01/Prompt-1-xss-通关记录/">
-            
-                <span>Prompt 1 to win 通关记录</span>
-        </a>
-        <div class="abstract-content">
-            适合新手玩的 xss 挑战赛。
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Writeup">Writeup</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="xss">xss</a>
-    
-</div>
-            
-        </div>
-    </article>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2020/03/08/LeetCode-Weekly-Contest-179/" title="LeetCode Weekly Contest 179">
+                    <div class="nextTitle">LeetCode Weekly Contest 179</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/02/23/LeetCode-Weekly-Contest-177/" title="LeetCode Weekly Contest 177">
+                    <div class="prevTitle">LeetCode Weekly Contest 177</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -591,6 +562,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#上升下降字符串"><span class="toc-number">1.</span> <span class="toc-text">上升下降字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#每个元音包含偶数次的最长子字符串"><span class="toc-number">2.</span> <span class="toc-text">每个元音包含偶数次的最长子字符串</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二叉树中的最长交错路径"><span class="toc-number">3.</span> <span class="toc-text">二叉树中的最长交错路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二叉搜索子树的最大键值和"><span class="toc-number">4.</span> <span class="toc-text">二叉搜索子树的最大键值和</span></a></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1868,6 +1857,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>
