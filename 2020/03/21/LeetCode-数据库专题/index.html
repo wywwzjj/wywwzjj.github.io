@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="wywwzjj">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="wywwzjj">
+    
+    <meta name="keywords" content="wywwzjj,wywwzjj blog,wywwzjj ctf,wywwzjj web security">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>LeetCode 数据库专题 · wywwzjj&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/B.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">wywwzjj&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">LeetCode 数据库专题</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">wywwzjj's Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            LeetCode 数据库专题
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="SQL">SQL</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4.1k</span>阅读时长: <span class="post-count reading-time">20 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/03/21</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p><strong>以下题目从易到难。</strong></p>
+<h2 id="1378-使用唯一标识码替换员工ID"><a href="#1378-使用唯一标识码替换员工ID" class="headerlink" title="1378. 使用唯一标识码替换员工ID"></a><a href="https://leetcode-cn.com/problems/replace-employee-id-with-the-unique-identifier/" target="_blank" rel="noopener">1378. 使用唯一标识码替换员工ID</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> Employees (<span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">20</span>))</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> EmployeeUNI (<span class="keyword">id</span> <span class="built_in">int</span>, unique_id <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Employees</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employees (<span class="keyword">id</span>, <span class="keyword">name</span>) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'Alice'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employees (<span class="keyword">id</span>, <span class="keyword">name</span>) <span class="keyword">values</span> (<span class="string">'7'</span>, <span class="string">'Bob'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employees (<span class="keyword">id</span>, <span class="keyword">name</span>) <span class="keyword">values</span> (<span class="string">'11'</span>, <span class="string">'Meir'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employees (<span class="keyword">id</span>, <span class="keyword">name</span>) <span class="keyword">values</span> (<span class="string">'90'</span>, <span class="string">'Winston'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employees (<span class="keyword">id</span>, <span class="keyword">name</span>) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'Jonathan'</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> EmployeeUNI</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> EmployeeUNI (<span class="keyword">id</span>, unique_id) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'1'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> EmployeeUNI (<span class="keyword">id</span>, unique_id) <span class="keyword">values</span> (<span class="string">'11'</span>, <span class="string">'2'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> EmployeeUNI (<span class="keyword">id</span>, unique_id) <span class="keyword">values</span> (<span class="string">'90'</span>, <span class="string">'3'</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>Employees</code> 表：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------------+---------+</span><br><span class="line">| Column Name   | Type    |</span><br><span class="line">+---------------+---------+</span><br><span class="line">| id            | int     |</span><br><span class="line">| name          | varchar |</span><br><span class="line">+---------------+---------+</span><br><span class="line">id 是这张表的主键。</span><br><span class="line">这张表的每一行分别代表了某公司其中一位员工的名字和 ID 。</span><br></pre></td></tr></table></figure>
+
+<p><code>EmployeeUNI</code> 表：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------------+---------+</span><br><span class="line">| Column Name   | Type    |</span><br><span class="line">+---------------+---------+</span><br><span class="line">| id            | int     |</span><br><span class="line">| unique_id     | int     |</span><br><span class="line">+---------------+---------+</span><br><span class="line">(id, unique_id) 是这张表的主键。</span><br><span class="line">这张表的每一行包含了该公司某位员工的 ID 和他的唯一标识码（unique ID）。</span><br></pre></td></tr></table></figure>
+
+<p>写一段SQL查询来展示每位用户的 <strong>唯一标识码（unique ID ）</strong>；如果某位员工没有唯一标识码，使用 null 填充即可。你可以以 <strong>任意</strong> 顺序返回结果表。查询结果的格式如下例所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Employees table:</span><br><span class="line">+----+----------+</span><br><span class="line">| id | name     |</span><br><span class="line">+----+----------+</span><br><span class="line">| 1  | Alice    |</span><br><span class="line">| 7  | Bob      |</span><br><span class="line">| 11 | Meir     |</span><br><span class="line">| 90 | Winston  |</span><br><span class="line">| 3  | Jonathan |</span><br><span class="line">+----+----------+</span><br><span class="line"></span><br><span class="line">EmployeeUNI table:</span><br><span class="line">+----+-----------+</span><br><span class="line">| id | unique_id |</span><br><span class="line">+----+-----------+</span><br><span class="line">| 3  | 1         |</span><br><span class="line">| 11 | 2         |</span><br><span class="line">| 90 | 3         |</span><br><span class="line">+----+-----------+</span><br><span class="line"></span><br><span class="line">EmployeeUNI table:</span><br><span class="line">+-----------+----------+</span><br><span class="line">| unique_id | name     |</span><br><span class="line">+-----------+----------+</span><br><span class="line">| null      | Alice    |</span><br><span class="line">| null      | Bob      |</span><br><span class="line">| 2         | Meir     |</span><br><span class="line">| 3         | Winston  |</span><br><span class="line">| 1         | Jonathan |</span><br><span class="line">+-----------+----------+</span><br><span class="line"></span><br><span class="line">Alice and Bob 没有唯一标识码, 因此我们使用 null 替代。</span><br><span class="line">Meir 的唯一标识码是 2 。</span><br><span class="line">Winston 的唯一标识码是 3 。</span><br><span class="line">Jonathan 唯一标识码是 1 。</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句"><a href="#SQL-语句" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> unique_id, <span class="keyword">name</span></span><br><span class="line"><span class="keyword">from</span> Employees</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> EmployeeUNI</span><br><span class="line"><span class="keyword">on</span> Employees.id = EmployeeUNI.id;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1350-院系无效的学生"><a href="#1350-院系无效的学生" class="headerlink" title="1350. 院系无效的学生"></a><a href="https://leetcode-cn.com/problems/students-with-invalid-departments/" target="_blank" rel="noopener">1350. 院系无效的学生</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> Departments (<span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">30</span>))</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> Students (<span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">30</span>), department_id <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Departments</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Departments (<span class="keyword">id</span>, <span class="keyword">name</span>) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'Electrical Engineering'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Departments (<span class="keyword">id</span>, <span class="keyword">name</span>) <span class="keyword">values</span> (<span class="string">'7'</span>, <span class="string">'Computer Engineering'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Departments (<span class="keyword">id</span>, <span class="keyword">name</span>) <span class="keyword">values</span> (<span class="string">'13'</span>, <span class="string">'Bussiness Administration'</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Students</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'23'</span>, <span class="string">'Alice'</span>, <span class="string">'1'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'Bob'</span>, <span class="string">'7'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'5'</span>, <span class="string">'Jennifer'</span>, <span class="string">'13'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'John'</span>, <span class="string">'14'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'4'</span>, <span class="string">'Jasmine'</span>, <span class="string">'77'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'Steve'</span>, <span class="string">'74'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'6'</span>, <span class="string">'Luis'</span>, <span class="string">'1'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'8'</span>, <span class="string">'Jonathan'</span>, <span class="string">'7'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'7'</span>, <span class="string">'Daiana'</span>, <span class="string">'33'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Students (<span class="keyword">id</span>, <span class="keyword">name</span>, department_id) <span class="keyword">values</span> (<span class="string">'11'</span>, <span class="string">'Madelynn'</span>, <span class="string">'1'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>院系表: <code>Departments</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------------+---------+</span><br><span class="line">| Column Name   | Type    |</span><br><span class="line">+---------------+---------+</span><br><span class="line">| id            | int     |</span><br><span class="line">| name          | varchar |</span><br><span class="line">+---------------+---------+</span><br><span class="line">id 是该表的主键</span><br><span class="line">该表包含一所大学每个院系的 id 信息</span><br></pre></td></tr></table></figure>
+
+<p>学生表: <code>Students</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------------+---------+</span><br><span class="line">| Column Name   | Type    |</span><br><span class="line">+---------------+---------+</span><br><span class="line">| id            | int     |</span><br><span class="line">| name          | varchar |</span><br><span class="line">| department_id | int     |</span><br><span class="line">+---------------+---------+</span><br><span class="line">id 是该表的主键</span><br><span class="line">该表包含一所大学每个学生的 id 和他/她就读的院系信息</span><br></pre></td></tr></table></figure>
+
+<p>写一条 SQL 语句以查询那些所在院系不存在的学生的 id 和姓名。</p>
+<p>可以以任何顺序返回结果，下面是返回结果格式的例子</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Departments 表:</span><br><span class="line">+------+--------------------------+</span><br><span class="line">| id   | name                     |</span><br><span class="line">+------+--------------------------+</span><br><span class="line">| 1    | Electrical Engineering   |</span><br><span class="line">| 7    | Computer Engineering     |</span><br><span class="line">| 13   | Bussiness Administration |</span><br><span class="line">+------+--------------------------+</span><br><span class="line"></span><br><span class="line">Students 表:</span><br><span class="line">+------+----------+---------------+</span><br><span class="line">| id   | name     | department_id |</span><br><span class="line">+------+----------+---------------+</span><br><span class="line">| 23   | Alice    | 1             |</span><br><span class="line">| 1    | Bob      | 7             |</span><br><span class="line">| 5    | Jennifer | 13            |</span><br><span class="line">| 2    | John     | 14            |</span><br><span class="line">| 4    | Jasmine  | 77            |</span><br><span class="line">| 3    | Steve    | 74            |</span><br><span class="line">| 6    | Luis     | 1             |</span><br><span class="line">| 8    | Jonathan | 7             |</span><br><span class="line">| 7    | Daiana   | 33            |</span><br><span class="line">| 11   | Madelynn | 1             |</span><br><span class="line">+------+----------+---------------+</span><br><span class="line"></span><br><span class="line">结果表:</span><br><span class="line">+------+----------+</span><br><span class="line">| id   | name     |</span><br><span class="line">+------+----------+</span><br><span class="line">| 2    | John     |</span><br><span class="line">| 7    | Daiana   |</span><br><span class="line">| 4    | Jasmine  |</span><br><span class="line">| 3    | Steve    |</span><br><span class="line">+------+----------+</span><br><span class="line"></span><br><span class="line">John, Daiana, Steve 和 Jasmine 所在的院系分别是 14, 33, 74 和 77， 其中 14, 33, 74 和 77 并不存在于院系表</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-1"><a href="#SQL-语句-1" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>, <span class="string">`name`</span></span><br><span class="line"><span class="keyword">from</span> Students</span><br><span class="line"><span class="keyword">where</span> department_id <span class="keyword">not</span> <span class="keyword">in</span> ( <span class="keyword">select</span> <span class="keyword">id</span> <span class="keyword">from</span> Departments)</span><br></pre></td></tr></table></figure>
+
+<h2 id="1068-产品销售分析-I"><a href="#1068-产品销售分析-I" class="headerlink" title="1068. 产品销售分析 I"></a><a href="https://leetcode-cn.com/problems/product-sales-analysis-i/" target="_blank" rel="noopener">1068. 产品销售分析 I</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> Sales (sale_id <span class="built_in">int</span>, product_id <span class="built_in">int</span>, <span class="keyword">year</span> <span class="built_in">int</span>, quantity <span class="built_in">int</span>, price <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> Product (product_id <span class="built_in">int</span>, product_name <span class="built_in">varchar</span>(<span class="number">10</span>))</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Sales</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Sales (sale_id, product_id, <span class="keyword">year</span>, quantity, price) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'100'</span>, <span class="string">'2008'</span>, <span class="string">'10'</span>, <span class="string">'5000'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Sales (sale_id, product_id, <span class="keyword">year</span>, quantity, price) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'100'</span>, <span class="string">'2009'</span>, <span class="string">'12'</span>, <span class="string">'5000'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Sales (sale_id, product_id, <span class="keyword">year</span>, quantity, price) <span class="keyword">values</span> (<span class="string">'7'</span>, <span class="string">'200'</span>, <span class="string">'2011'</span>, <span class="string">'15'</span>, <span class="string">'9000'</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Product</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Product (product_id, product_name) <span class="keyword">values</span> (<span class="string">'100'</span>, <span class="string">'Nokia'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Product (product_id, product_name) <span class="keyword">values</span> (<span class="string">'200'</span>, <span class="string">'Apple'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Product (product_id, product_name) <span class="keyword">values</span> (<span class="string">'300'</span>, <span class="string">'Samsung'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>销售表 <code>Sales</code>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-------------+-------+</span><br><span class="line">| Column Name | Type  |</span><br><span class="line">+-------------+-------+</span><br><span class="line">| sale_id     | int   |</span><br><span class="line">| product_id  | int   |</span><br><span class="line">| year        | int   |</span><br><span class="line">| quantity    | int   |</span><br><span class="line">| price       | int   |</span><br><span class="line">+-------------+-------+</span><br><span class="line">(sale_id, year) 是销售表 Sales 的主键.</span><br><span class="line">product_id 是产品表 Product 的外键.</span><br><span class="line">注意: price 表示每单位价格</span><br></pre></td></tr></table></figure>
+
+<p>产品表 <code>Product</code>：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+--------------+---------+</span><br><span class="line">| Column Name  | Type    |</span><br><span class="line">+--------------+---------+</span><br><span class="line">| product_id   | int     |</span><br><span class="line">| product_name | varchar |</span><br><span class="line">+--------------+---------+</span><br><span class="line">product_id 是表的主键.</span><br></pre></td></tr></table></figure>
+
+<p>写一条SQL 查询语句获取产品表 <code>Product</code> 中所有的 <strong>产品名称 product name</strong> 以及 该产品在 <code>Sales</code> 表中相对应的 <strong>上市年份 year</strong> 和 <strong>价格 price</strong>。</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Sales 表：</span><br><span class="line">+---------+------------+------+----------+-------+</span><br><span class="line">| sale_id | product_id | year | quantity | price |</span><br><span class="line">+---------+------------+------+----------+-------+ </span><br><span class="line">| 1       | 100        | 2008 | 10       | 5000  |</span><br><span class="line">| 2       | 100        | 2009 | 12       | 5000  |</span><br><span class="line">| 7       | 200        | 2011 | 15       | 9000  |</span><br><span class="line">+---------+------------+------+----------+-------+</span><br><span class="line"></span><br><span class="line">Product 表：</span><br><span class="line">+------------+--------------+</span><br><span class="line">| product_id | product_name |</span><br><span class="line">+------------+--------------+</span><br><span class="line">| 100        | Nokia        |</span><br><span class="line">| 200        | Apple        |</span><br><span class="line">| 300        | Samsung      |</span><br><span class="line">+------------+--------------+</span><br><span class="line"></span><br><span class="line">Result 表：</span><br><span class="line">+--------------+-------+-------+</span><br><span class="line">| product_name | year  | price |</span><br><span class="line">+--------------+-------+-------+</span><br><span class="line">| Nokia        | 2008  | 5000  |</span><br><span class="line">| Nokia        | 2009  | 5000  |</span><br><span class="line">| Apple        | 2011  | 9000  |</span><br><span class="line">+--------------+-------+-------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-2"><a href="#SQL-语句-2" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> product_name, <span class="string">`year`</span>, price</span><br><span class="line"><span class="keyword">from</span> Sales s</span><br><span class="line"><span class="keyword">join</span> Product p </span><br><span class="line"><span class="keyword">on</span> s.product_id = p.product_id;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> product_name, <span class="string">`year`</span>, price</span><br><span class="line"><span class="keyword">from</span> Sales s</span><br><span class="line"><span class="keyword">join</span> Product <span class="keyword">using</span>(product_id);</span><br></pre></td></tr></table></figure>
+
+<h2 id="1303-求团队人数"><a href="#1303-求团队人数" class="headerlink" title="1303. 求团队人数"></a><a href="https://leetcode-cn.com/problems/find-the-team-size/" target="_blank" rel="noopener">1303. 求团队人数</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> Employee (employee_id <span class="built_in">int</span>, team_id <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Employee</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employee (employee_id, team_id) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'8'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employee (employee_id, team_id) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'8'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employee (employee_id, team_id) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'8'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employee (employee_id, team_id) <span class="keyword">values</span> (<span class="string">'4'</span>, <span class="string">'7'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employee (employee_id, team_id) <span class="keyword">values</span> (<span class="string">'5'</span>, <span class="string">'9'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Employee (employee_id, team_id) <span class="keyword">values</span> (<span class="string">'6'</span>, <span class="string">'9'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>员工表：<code>Employee</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------------+---------+</span><br><span class="line">| Column Name   | Type    |</span><br><span class="line">+---------------+---------+</span><br><span class="line">| employee_id   | int     |</span><br><span class="line">| team_id       | int     |</span><br><span class="line">+---------------+---------+</span><br><span class="line">employee_id 字段是这张表的主键，表中的每一行都包含每个员工的 ID 和他们所属的团队。</span><br></pre></td></tr></table></figure>
+
+<p>编写一个 SQL 查询，以求得每个员工所在团队的总人数。</p>
+<p>查询结果中的顺序无特定要求。查询结果格式示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Employee Table:</span><br><span class="line">+-------------+------------+</span><br><span class="line">| employee_id | team_id    |</span><br><span class="line">+-------------+------------+</span><br><span class="line">|     1       |     8      |</span><br><span class="line">|     2       |     8      |</span><br><span class="line">|     3       |     8      |</span><br><span class="line">|     4       |     7      |</span><br><span class="line">|     5       |     9      |</span><br><span class="line">|     6       |     9      |</span><br><span class="line">+-------------+------------+</span><br><span class="line">Result table:</span><br><span class="line">+-------------+------------+</span><br><span class="line">| employee_id | team_size  |</span><br><span class="line">+-------------+------------+</span><br><span class="line">|     1       |     3      |</span><br><span class="line">|     2       |     3      |</span><br><span class="line">|     3       |     3      |</span><br><span class="line">|     4       |     1      |</span><br><span class="line">|     5       |     2      |</span><br><span class="line">|     6       |     2      |</span><br><span class="line">+-------------+------------+</span><br><span class="line">ID 为 1、2、3 的员工是 team_id 为 8 的团队的成员，</span><br><span class="line">ID 为 4 的员工是 team_id 为 7 的团队的成员，</span><br><span class="line">ID 为 5、6 的员工是 team_id 为 9 的团队的成员。</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-3"><a href="#SQL-语句-3" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> a.employee_id, b.team_size</span><br><span class="line"><span class="keyword">from</span> Employee a</span><br><span class="line"><span class="keyword">join</span> (<span class="keyword">select</span> team_id, <span class="keyword">count</span>(employee_id) team_size <span class="keyword">from</span> Employee <span class="keyword">group</span> <span class="keyword">by</span> team_id) b</span><br><span class="line"><span class="keyword">on</span> a.team_id = b.team_id</span><br></pre></td></tr></table></figure>
+
+<h2 id="1069-产品销售分析-II"><a href="#1069-产品销售分析-II" class="headerlink" title="1069. 产品销售分析 II"></a><a href="https://leetcode-cn.com/problems/product-sales-analysis-ii/" target="_blank" rel="noopener">1069. 产品销售分析 II</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> Sales (sale_id <span class="built_in">int</span>, product_id <span class="built_in">int</span>, <span class="keyword">year</span> <span class="built_in">int</span>, quantity <span class="built_in">int</span>, price <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> Product (product_id <span class="built_in">int</span>, product_name <span class="built_in">varchar</span>(<span class="number">10</span>))</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Sales</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Sales (sale_id, product_id, <span class="keyword">year</span>, quantity, price) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'100'</span>, <span class="string">'2008'</span>, <span class="string">'10'</span>, <span class="string">'5000'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Sales (sale_id, product_id, <span class="keyword">year</span>, quantity, price) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'100'</span>, <span class="string">'2009'</span>, <span class="string">'12'</span>, <span class="string">'5000'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Sales (sale_id, product_id, <span class="keyword">year</span>, quantity, price) <span class="keyword">values</span> (<span class="string">'7'</span>, <span class="string">'200'</span>, <span class="string">'2011'</span>, <span class="string">'15'</span>, <span class="string">'9000'</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Product</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Product (product_id, product_name) <span class="keyword">values</span> (<span class="string">'100'</span>, <span class="string">'Nokia'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Product (product_id, product_name) <span class="keyword">values</span> (<span class="string">'200'</span>, <span class="string">'Apple'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Product (product_id, product_name) <span class="keyword">values</span> (<span class="string">'300'</span>, <span class="string">'Samsung'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>销售表：<code>Sales</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-------------+-------+</span><br><span class="line">| Column Name | Type  |</span><br><span class="line">+-------------+-------+</span><br><span class="line">| sale_id     | int   |</span><br><span class="line">| product_id  | int   |</span><br><span class="line">| year        | int   |</span><br><span class="line">| quantity    | int   |</span><br><span class="line">| price       | int   |</span><br><span class="line">+-------------+-------+</span><br><span class="line">sale_id 是这个表的主键。</span><br><span class="line">product_id 是 Product 表的外键。</span><br><span class="line">请注意价格是每单位的。</span><br></pre></td></tr></table></figure>
+
+<p>产品表：<code>Product</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+--------------+---------+</span><br><span class="line">| Column Name  | Type    |</span><br><span class="line">+--------------+---------+</span><br><span class="line">| product_id   | int     |</span><br><span class="line">| product_name | varchar |</span><br><span class="line">+--------------+---------+</span><br><span class="line">product_id 是这个表的主键。</span><br></pre></td></tr></table></figure>
+
+<p>编写一个 SQL 查询，按产品 id <code>product_id</code> 来统计每个产品的销售总量。</p>
+<p>查询结果格式如下面例子所示:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Sales 表：</span><br><span class="line">+---------+------------+------+----------+-------+</span><br><span class="line">| sale_id | product_id | year | quantity | price |</span><br><span class="line">+---------+------------+------+----------+-------+ </span><br><span class="line">| 1       | 100        | 2008 | 10       | 5000  |</span><br><span class="line">| 2       | 100        | 2009 | 12       | 5000  |</span><br><span class="line">| 7       | 200        | 2011 | 15       | 9000  |</span><br><span class="line">+---------+------------+------+----------+-------+</span><br><span class="line"></span><br><span class="line">Product 表：</span><br><span class="line">+------------+--------------+</span><br><span class="line">| product_id | product_name |</span><br><span class="line">+------------+--------------+</span><br><span class="line">| 100        | Nokia        |</span><br><span class="line">| 200        | Apple        |</span><br><span class="line">| 300        | Samsung      |</span><br><span class="line">+------------+--------------+</span><br><span class="line"></span><br><span class="line">Result 表：</span><br><span class="line">+--------------+----------------+</span><br><span class="line">| product_id   | total_quantity |</span><br><span class="line">+--------------+----------------+</span><br><span class="line">| 100          | 22             |</span><br><span class="line">| 200          | 15             |</span><br><span class="line">+--------------+----------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-4"><a href="#SQL-语句-4" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> product_id, <span class="keyword">sum</span>(quantity) total_quantity</span><br><span class="line"><span class="keyword">from</span> Sales</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> product_id</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 显示 product_name</span></span><br><span class="line"><span class="keyword">select</span> product_id, product_name, <span class="keyword">sum</span>(quantity) total_quantity</span><br><span class="line"><span class="keyword">from</span> Sales</span><br><span class="line"><span class="keyword">join</span> Product <span class="keyword">using</span>(product_id)</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> product_id</span><br></pre></td></tr></table></figure>
+
+<h2 id="613-直线上的最近距离"><a href="#613-直线上的最近距离" class="headerlink" title="613. 直线上的最近距离"></a><a href="https://leetcode-cn.com/problems/shortest-distance-in-a-line/" target="_blank" rel="noopener">613. 直线上的最近距离</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> point (x <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>, <span class="keyword">UNIQUE</span> <span class="keyword">INDEX</span> x_UNIQUE (x <span class="keyword">ASC</span>))</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> point</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> point (x) <span class="keyword">values</span> (<span class="string">'-1'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> point (x) <span class="keyword">values</span> (<span class="string">'0'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> point (x) <span class="keyword">values</span> (<span class="string">'2'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>表 <code>point</code> 保存了一些点在 x 轴上的坐标，这些坐标都是整数。</p>
+<p>写一个查询语句，找到这些点中最近两个点之间的距离。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">| x   |</span><br><span class="line">|-----|</span><br><span class="line">| -1  |</span><br><span class="line">| 0   |</span><br><span class="line">| 2   |</span><br></pre></td></tr></table></figure>
+
+<p>最近距离显然是 ‘1’ ，是点 ‘-1’ 和 ‘0’ 之间的距离。所以输出应该如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">| shortest|</span><br><span class="line">|---------|</span><br><span class="line">| 1       |</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>每个点都与其他点坐标不同，表 <code>table</code> 不会有重复坐标出现。</p>
+<p><strong>进阶：</strong>如果这些点在 x 轴上从左到右都有一个编号，输出结果时需要输出最近点对的编号呢？</p>
+<h3 id="SQL-语句-5"><a href="#SQL-语句-5" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">min</span>(<span class="keyword">abs</span>(p1.x - p2.x)) shortest</span><br><span class="line"><span class="keyword">from</span> point p1, point p2</span><br><span class="line"><span class="keyword">where</span> p1.x != p2.x</span><br></pre></td></tr></table></figure>
+
+<h2 id="182-查找重复的电子邮箱"><a href="#182-查找重复的电子邮箱" class="headerlink" title="182. 查找重复的电子邮箱"></a><a href="https://leetcode-cn.com/problems/duplicate-emails/" target="_blank" rel="noopener">182. 查找重复的电子邮箱</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> Person (<span class="keyword">Id</span> <span class="built_in">int</span>, Email <span class="built_in">varchar</span>(<span class="number">255</span>))</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Person</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Person (<span class="keyword">Id</span>, Email) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'a@b.com'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Person (<span class="keyword">Id</span>, Email) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'c@d.com'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Person (<span class="keyword">Id</span>, Email) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'a@b.com'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>编写一个 SQL 查询，查找 <code>Person</code> 表中所有重复的电子邮箱。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+----+---------+</span><br><span class="line">| Id | Email   |</span><br><span class="line">+----+---------+</span><br><span class="line">| 1  | a@b.com |</span><br><span class="line">| 2  | c@d.com |</span><br><span class="line">| 3  | a@b.com |</span><br><span class="line">+----+---------+</span><br></pre></td></tr></table></figure>
+
+<p>根据以上输入，你的查询应返回以下结果：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------+</span><br><span class="line">| Email   |</span><br><span class="line">+---------+</span><br><span class="line">| a@b.com |</span><br><span class="line">+---------+</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong>所有电子邮箱都是小写字母。</p>
+<h3 id="SQL-语句-6"><a href="#SQL-语句-6" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> Email</span><br><span class="line"><span class="keyword">from</span> Person</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> Email</span><br><span class="line"><span class="keyword">having</span> <span class="keyword">count</span>(Email) &gt; <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="595-大的国家"><a href="#595-大的国家" class="headerlink" title="595. 大的国家"></a><a href="https://leetcode-cn.com/problems/big-countries/" target="_blank" rel="noopener">595. 大的国家</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> World (<span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">255</span>), continent <span class="built_in">varchar</span>(<span class="number">255</span>), area <span class="built_in">int</span>, population <span class="built_in">int</span>, gdp <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> World</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> World (<span class="keyword">name</span>, continent, area, population, gdp) <span class="keyword">values</span> (<span class="string">'Afghanistan'</span>, <span class="string">'Asia'</span>, <span class="string">'652230'</span>, <span class="string">'25500100'</span>, <span class="string">'20343000000'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> World (<span class="keyword">name</span>, continent, area, population, gdp) <span class="keyword">values</span> (<span class="string">'Albania'</span>, <span class="string">'Europe'</span>, <span class="string">'28748'</span>, <span class="string">'2831741'</span>, <span class="string">'12960000000'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> World (<span class="keyword">name</span>, continent, area, population, gdp) <span class="keyword">values</span> (<span class="string">'Algeria'</span>, <span class="string">'Africa'</span>, <span class="string">'2381741'</span>, <span class="string">'37100000'</span>, <span class="string">'188681000000'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> World (<span class="keyword">name</span>, continent, area, population, gdp) <span class="keyword">values</span> (<span class="string">'Andorra'</span>, <span class="string">'Europe'</span>, <span class="string">'468'</span>, <span class="string">'78115'</span>, <span class="string">'3712000000'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> World (<span class="keyword">name</span>, continent, area, population, gdp) <span class="keyword">values</span> (<span class="string">'Angola'</span>, <span class="string">'Africa'</span>, <span class="string">'1246700'</span>, <span class="string">'20609294'</span>, <span class="string">'100990000000'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这里有张 <code>World</code> 表</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-----------------+------------+------------+--------------+---------------+</span><br><span class="line">| name            | continent  | area       | population   | gdp           |</span><br><span class="line">+-----------------+------------+------------+--------------+---------------+</span><br><span class="line">| Afghanistan     | Asia       | 652230     | 25500100     | 20343000      |</span><br><span class="line">| Albania         | Europe     | 28748      | 2831741      | 12960000      |</span><br><span class="line">| Algeria         | Africa     | 2381741    | 37100000     | 188681000     |</span><br><span class="line">| Andorra         | Europe     | 468        | 78115        | 3712000       |</span><br><span class="line">| Angola          | Africa     | 1246700    | 20609294     | 100990000     |</span><br><span class="line">+-----------------+------------+------------+--------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<p>如果一个国家的面积超过300万平方公里，或者人口超过2500万，那么这个国家就是大国家。</p>
+<p>编写一个SQL查询，输出表中所有大国家的名称、人口和面积。</p>
+<p>例如，根据上表，我们应该输出:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+--------------+-------------+--------------+</span><br><span class="line">| name         | population  | area         |</span><br><span class="line">+--------------+-------------+--------------+</span><br><span class="line">| Afghanistan  | 25500100    | 652230       |</span><br><span class="line">| Algeria      | 37100000    | 2381741      |</span><br><span class="line">+--------------+-------------+--------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-7"><a href="#SQL-语句-7" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="string">`name`</span>, population, <span class="string">`area`</span></span><br><span class="line"><span class="keyword">from</span> World</span><br><span class="line"><span class="keyword">where</span> population &gt; <span class="number">25000000</span> <span class="keyword">or</span> <span class="string">`area`</span> &gt; <span class="number">3000000</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1251-平均售价"><a href="#1251-平均售价" class="headerlink" title="1251. 平均售价"></a><a href="https://leetcode-cn.com/problems/average-selling-price/" target="_blank" rel="noopener">1251. 平均售价</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> Prices (product_id <span class="built_in">int</span>, start_date <span class="built_in">date</span>, end_date <span class="built_in">date</span>, price <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> UnitsSold (product_id <span class="built_in">int</span>, purchase_date <span class="built_in">date</span>, units <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Prices</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Prices (product_id, start_date, end_date, price) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'2019-02-17'</span>, <span class="string">'2019-02-28'</span>, <span class="string">'5'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Prices (product_id, start_date, end_date, price) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'2019-03-01'</span>, <span class="string">'2019-03-22'</span>, <span class="string">'20'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Prices (product_id, start_date, end_date, price) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'2019-02-01'</span>, <span class="string">'2019-02-20'</span>, <span class="string">'15'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Prices (product_id, start_date, end_date, price) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'2019-02-21'</span>, <span class="string">'2019-03-31'</span>, <span class="string">'30'</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> UnitsSold</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> UnitsSold (product_id, purchase_date, units) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'2019-02-25'</span>, <span class="string">'100'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> UnitsSold (product_id, purchase_date, units) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'2019-03-01'</span>, <span class="string">'15'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> UnitsSold (product_id, purchase_date, units) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'2019-02-10'</span>, <span class="string">'200'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> UnitsSold (product_id, purchase_date, units) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'2019-03-22'</span>, <span class="string">'30'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Table: <code>Prices</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------------+---------+</span><br><span class="line">| Column Name   | Type    |</span><br><span class="line">+---------------+---------+</span><br><span class="line">| product_id    | int     |</span><br><span class="line">| start_date    | date    |</span><br><span class="line">| end_date      | date    |</span><br><span class="line">| price         | int     |</span><br><span class="line">+---------------+---------+</span><br><span class="line">(product_id，start_date，end_date) 是 Prices 表的主键。</span><br><span class="line">Prices 表的每一行表示的是某个产品在一段时期内的价格。</span><br><span class="line">每个产品的对应时间段是不会重叠的，这也意味着同一个产品的价格时段不会出现交叉。</span><br></pre></td></tr></table></figure>
+
+<p>Table: <code>UnitsSold</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------------+---------+</span><br><span class="line">| Column Name   | Type    |</span><br><span class="line">+---------------+---------+</span><br><span class="line">| product_id    | int     |</span><br><span class="line">| purchase_date | date    |</span><br><span class="line">| units         | int     |</span><br><span class="line">+---------------+---------+</span><br><span class="line">UnitsSold 表没有主键，它可能包含重复项。</span><br><span class="line">UnitsSold 表的每一行表示的是每种产品的出售日期，单位和产品 id。</span><br></pre></td></tr></table></figure>
+
+<p>编写SQL查询以查找每种产品的平均售价。 average_price 应该四舍五入到小数点后两位。</p>
+<p>查询结果格式如下例所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Prices table:</span><br><span class="line">+------------+------------+------------+--------+</span><br><span class="line">| product_id | start_date | end_date   | price  |</span><br><span class="line">+------------+------------+------------+--------+</span><br><span class="line">| 1          | 2019-02-17 | 2019-02-28 | 5      |</span><br><span class="line">| 1          | 2019-03-01 | 2019-03-22 | 20     |</span><br><span class="line">| 2          | 2019-02-01 | 2019-02-20 | 15     |</span><br><span class="line">| 2          | 2019-02-21 | 2019-03-31 | 30     |</span><br><span class="line">+------------+------------+------------+--------+</span><br><span class="line"> </span><br><span class="line">UnitsSold table:</span><br><span class="line">+------------+---------------+-------+</span><br><span class="line">| product_id | purchase_date | units |</span><br><span class="line">+------------+---------------+-------+</span><br><span class="line">| 1          | 2019-02-25    | 100   |</span><br><span class="line">| 1          | 2019-03-01    | 15    |</span><br><span class="line">| 2          | 2019-02-10    | 200   |</span><br><span class="line">| 2          | 2019-03-22    | 30    |</span><br><span class="line">+------------+---------------+-------+</span><br><span class="line"></span><br><span class="line">Result table:</span><br><span class="line">+------------+---------------+</span><br><span class="line">| product_id | average_price |</span><br><span class="line">+------------+---------------+</span><br><span class="line">| 1          | 6.96          |</span><br><span class="line">| 2          | 16.96         |</span><br><span class="line">+------------+---------------+</span><br><span class="line">平均售价 = 产品总价 / 销售的产品数量。</span><br><span class="line">产品 1 的平均售价 = ((100 * 5)+(15 * 20) )/ 115 = 6.96</span><br><span class="line">产品 2 的平均售价 = ((200 * 15)+(30 * 30) )/ 230 = 16.96</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-8"><a href="#SQL-语句-8" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><p>先查出当时候的价格，再总的进行处理。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span></span><br><span class="line">    product_id, <span class="keyword">round</span>(<span class="keyword">sum</span>(price*units)/<span class="keyword">sum</span>(units), <span class="number">2</span>) average_price</span><br><span class="line"><span class="keyword">from</span> (</span><br><span class="line">    <span class="keyword">select</span></span><br><span class="line">        u.product_id product_id, price, units</span><br><span class="line">    <span class="keyword">from</span> UnitsSold u</span><br><span class="line">    <span class="keyword">left</span> <span class="keyword">join</span> Prices p</span><br><span class="line">    <span class="keyword">on</span> p.product_id=u.product_id</span><br><span class="line">    <span class="keyword">and</span> u.purchase_date &gt;= p.start_date</span><br><span class="line">    <span class="keyword">and</span> u.purchase_date &lt;= p.end_date</span><br><span class="line">) res <span class="keyword">group</span> <span class="keyword">by</span> product_id;</span><br></pre></td></tr></table></figure>
+
+<h2 id="584-寻找用户推荐人"><a href="#584-寻找用户推荐人" class="headerlink" title="584. 寻找用户推荐人"></a><a href="https://leetcode-cn.com/problems/find-customer-referee/" target="_blank" rel="noopener">584. 寻找用户推荐人</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> customer (<span class="keyword">id</span> <span class="built_in">INT</span>,<span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">25</span>),referee_id <span class="built_in">INT</span>);</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> customer</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> customer (<span class="keyword">id</span>, <span class="keyword">name</span>, referee_id) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'Will'</span>, <span class="string">'None'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> customer (<span class="keyword">id</span>, <span class="keyword">name</span>, referee_id) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'Jane'</span>, <span class="string">'None'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> customer (<span class="keyword">id</span>, <span class="keyword">name</span>, referee_id) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'Alex'</span>, <span class="string">'2'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> customer (<span class="keyword">id</span>, <span class="keyword">name</span>, referee_id) <span class="keyword">values</span> (<span class="string">'4'</span>, <span class="string">'Bill'</span>, <span class="string">'None'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> customer (<span class="keyword">id</span>, <span class="keyword">name</span>, referee_id) <span class="keyword">values</span> (<span class="string">'5'</span>, <span class="string">'Zack'</span>, <span class="string">'1'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> customer (<span class="keyword">id</span>, <span class="keyword">name</span>, referee_id) <span class="keyword">values</span> (<span class="string">'6'</span>, <span class="string">'Mark'</span>, <span class="string">'2'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>给定表 <code>customer</code> ，里面保存了所有客户信息和他们的推荐人。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+------+------+-----------+</span><br><span class="line">| id   | name | referee_id|</span><br><span class="line">+------+------+-----------+</span><br><span class="line">|    1 | Will |      NULL |</span><br><span class="line">|    2 | Jane |      NULL |</span><br><span class="line">|    3 | Alex |         2 |</span><br><span class="line">|    4 | Bill |      NULL |</span><br><span class="line">|    5 | Zack |         1 |</span><br><span class="line">|    6 | Mark |         2 |</span><br><span class="line">+------+------+-----------+</span><br></pre></td></tr></table></figure>
+
+<p>写一个查询语句，返回一个编号列表，列表中编号的推荐人的编号都 <strong>不是</strong> 2。</p>
+<p>对于上面的示例数据，结果为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+------+</span><br><span class="line">| name |</span><br><span class="line">+------+</span><br><span class="line">| Will |</span><br><span class="line">| Jane |</span><br><span class="line">| Bill |</span><br><span class="line">| Zack |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-9"><a href="#SQL-语句-9" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span></span><br><span class="line"><span class="keyword">from</span> customer</span><br><span class="line"><span class="keyword">where</span> referee_id != <span class="number">2</span> <span class="keyword">or</span> referee_id <span class="keyword">is</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="627-交换工资"><a href="#627-交换工资" class="headerlink" title="627. 交换工资"></a><a href="https://leetcode-cn.com/problems/swap-salary/" target="_blank" rel="noopener">627. 交换工资</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> salary(<span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">100</span>), sex <span class="built_in">char</span>(<span class="number">1</span>), salary <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> salary</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> salary (<span class="keyword">id</span>, <span class="keyword">name</span>, sex, salary) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'A'</span>, <span class="string">'m'</span>, <span class="string">'2500'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> salary (<span class="keyword">id</span>, <span class="keyword">name</span>, sex, salary) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'B'</span>, <span class="string">'f'</span>, <span class="string">'1500'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> salary (<span class="keyword">id</span>, <span class="keyword">name</span>, sex, salary) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'C'</span>, <span class="string">'m'</span>, <span class="string">'5500'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> salary (<span class="keyword">id</span>, <span class="keyword">name</span>, sex, salary) <span class="keyword">values</span> (<span class="string">'4'</span>, <span class="string">'D'</span>, <span class="string">'f'</span>, <span class="string">'500'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>给定一个 <code>salary</code> 表，如下所示，有 m = 男性 和 f = 女性 的值。交换所有的 f 和 m 值（例如，将所有 f 值更改为 m，反之亦然）。要求只使用一个更新（Update）语句，并且没有中间的临时表。</p>
+<p>注意，您必只能写一个 Update 语句，请不要编写任何 Select 语句。</p>
+<p><strong>例如：</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">| id | name | sex | salary |</span><br><span class="line">|----|------|-----|--------|</span><br><span class="line">| 1  | A    | m   | 2500   |</span><br><span class="line">| 2  | B    | f   | 1500   |</span><br><span class="line">| 3  | C    | m   | 5500   |</span><br><span class="line">| 4  | D    | f   | 500    |</span><br></pre></td></tr></table></figure>
+
+<p>运行你所编写的更新语句之后，将会得到以下表:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">| id | name | sex | salary |</span><br><span class="line">|----|------|-----|--------|</span><br><span class="line">| 1  | A    | f   | 2500   |</span><br><span class="line">| 2  | B    | m   | 1500   |</span><br><span class="line">| 3  | C    | f   | 5500   |</span><br><span class="line">| 4  | D    | m   | 500    |</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-10"><a href="#SQL-语句-10" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">update</span> salary <span class="keyword">set</span> sex = <span class="keyword">if</span>(sex=<span class="string">'m'</span>, <span class="string">'f'</span>, <span class="string">'m'</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="1173-即时食物配送-I"><a href="#1173-即时食物配送-I" class="headerlink" title="1173. 即时食物配送 I"></a><a href="https://leetcode-cn.com/problems/immediate-food-delivery-i/" target="_blank" rel="noopener">1173. 即时食物配送 I</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> Delivery (delivery_id <span class="built_in">int</span>, customer_id <span class="built_in">int</span>, order_date <span class="built_in">date</span>, customer_pref_delivery_date <span class="built_in">date</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Delivery</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'1'</span>, <span class="string">'2019-08-01'</span>, <span class="string">'2019-08-02'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'5'</span>, <span class="string">'2019-08-02'</span>, <span class="string">'2019-08-02'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'1'</span>, <span class="string">'2019-08-11'</span>, <span class="string">'2019-08-11'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) <span class="keyword">values</span> (<span class="string">'4'</span>, <span class="string">'3'</span>, <span class="string">'2019-08-24'</span>, <span class="string">'2019-08-26'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) <span class="keyword">values</span> (<span class="string">'5'</span>, <span class="string">'4'</span>, <span class="string">'2019-08-21'</span>, <span class="string">'2019-08-22'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date) <span class="keyword">values</span> (<span class="string">'6'</span>, <span class="string">'2'</span>, <span class="string">'2019-08-11'</span>, <span class="string">'2019-08-13'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>配送表: <code>Delivery</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-----------------------------+---------+</span><br><span class="line">| Column Name                 | Type    |</span><br><span class="line">+-----------------------------+---------+</span><br><span class="line">| delivery_id                 | int     |</span><br><span class="line">| customer_id                 | int     |</span><br><span class="line">| order_date                  | date    |</span><br><span class="line">| customer_pref_delivery_date | date    |</span><br><span class="line">+-----------------------------+---------+</span><br><span class="line">delivery_id 是表的主键。</span><br><span class="line">该表保存着顾客的食物配送信息，顾客在某个日期下了订单，并指定了一个期望的配送日期（和下单日期相同或者在那之后）。</span><br></pre></td></tr></table></figure>
+
+<p>如果顾客期望的配送日期和下单日期相同，则该订单称为 「即时订单」，否则称为「计划订单」。</p>
+<p>写一条 SQL 查询语句获取即时订单所占的比例， <strong>保留两位小数。</strong></p>
+<p>查询结果如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Delivery 表:</span><br><span class="line">+-------------+-------------+------------+-----------------------------+</span><br><span class="line">| delivery_id | customer_id | order_date | customer_pref_delivery_date |</span><br><span class="line">+-------------+-------------+------------+-----------------------------+</span><br><span class="line">| 1           | 1           | 2019-08-01 | 2019-08-02                  |</span><br><span class="line">| 2           | 5           | 2019-08-02 | 2019-08-02                  |</span><br><span class="line">| 3           | 1           | 2019-08-11 | 2019-08-11                  |</span><br><span class="line">| 4           | 3           | 2019-08-24 | 2019-08-26                  |</span><br><span class="line">| 5           | 4           | 2019-08-21 | 2019-08-22                  |</span><br><span class="line">| 6           | 2           | 2019-08-11 | 2019-08-13                  |</span><br><span class="line">+-------------+-------------+------------+-----------------------------+</span><br><span class="line"></span><br><span class="line">Result 表:</span><br><span class="line">+----------------------+</span><br><span class="line">| immediate_percentage |</span><br><span class="line">+----------------------+</span><br><span class="line">| 33.33                |</span><br><span class="line">+----------------------+</span><br><span class="line">2 和 3 号订单为即时订单，其他的为计划订单。</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-11"><a href="#SQL-语句-11" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">round</span>(<span class="keyword">sum</span>(<span class="keyword">if</span>(order_date = customer_pref_delivery_date, <span class="number">1</span>, <span class="number">0</span>))/<span class="keyword">count</span>(delivery_id)*<span class="number">100</span>, <span class="number">2</span>) immediate_percentage</span><br><span class="line"><span class="keyword">from</span> Delivery</span><br></pre></td></tr></table></figure>
+
+<h2 id="620-有趣的电影"><a href="#620-有趣的电影" class="headerlink" title="620. 有趣的电影"></a><a href="https://leetcode-cn.com/problems/not-boring-movies/" target="_blank" rel="noopener">620. 有趣的电影</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> cinema (<span class="keyword">id</span> <span class="built_in">int</span>, movie <span class="built_in">varchar</span>(<span class="number">255</span>), description <span class="built_in">varchar</span>(<span class="number">255</span>), rating <span class="built_in">float</span>(<span class="number">2</span>, <span class="number">1</span>))</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> cinema</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> cinema (<span class="keyword">id</span>, movie, description, rating) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'War'</span>, <span class="string">'great 3D'</span>, <span class="string">'8.9'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> cinema (<span class="keyword">id</span>, movie, description, rating) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'Science'</span>, <span class="string">'fiction'</span>, <span class="string">'8.5'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> cinema (<span class="keyword">id</span>, movie, description, rating) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'irish'</span>, <span class="string">'boring'</span>, <span class="string">'6.2'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> cinema (<span class="keyword">id</span>, movie, description, rating) <span class="keyword">values</span> (<span class="string">'4'</span>, <span class="string">'Ice song'</span>, <span class="string">'Fantacy'</span>, <span class="string">'8.6'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> cinema (<span class="keyword">id</span>, movie, description, rating) <span class="keyword">values</span> (<span class="string">'5'</span>, <span class="string">'House card'</span>, <span class="string">'Interesting'</span>, <span class="string">'9.1'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>某城市开了一家新的电影院，吸引了很多人过来看电影。该电影院特别注意用户体验，专门有个 LED显示板做电影推荐，上面公布着影评和相关电影描述。</p>
+<p>作为该电影院的信息部主管，您需要编写一个 SQL查询，找出所有影片描述为<strong>非</strong> <code>boring</code> (不无聊) 的并且 <strong>id 为奇数</strong> 的影片，结果请按等级 <code>rating</code> 排列。</p>
+<p>例如，下表 <code>cinema</code>:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------+-----------+--------------+-----------+</span><br><span class="line">|   id    | movie     |  description |  rating   |</span><br><span class="line">+---------+-----------+--------------+-----------+</span><br><span class="line">|   1     | War       |   great 3D   |   8.9     |</span><br><span class="line">|   2     | Science   |   fiction    |   8.5     |</span><br><span class="line">|   3     | irish     |   boring     |   6.2     |</span><br><span class="line">|   4     | Ice song  |   Fantacy    |   8.6     |</span><br><span class="line">|   5     | House card|   Interesting|   9.1     |</span><br><span class="line">+---------+-----------+--------------+-----------+</span><br></pre></td></tr></table></figure>
+
+<p>对于上面的例子，则正确的输出是为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------+-----------+--------------+-----------+</span><br><span class="line">|   id    | movie     |  description |  rating   |</span><br><span class="line">+---------+-----------+--------------+-----------+</span><br><span class="line">|   5     | House card|   Interesting|   9.1     |</span><br><span class="line">|   1     | War       |   great 3D   |   8.9     |</span><br><span class="line">+---------+-----------+--------------+-----------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-12"><a href="#SQL-语句-12" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> *</span><br><span class="line"><span class="keyword">from</span> cinema</span><br><span class="line"><span class="keyword">where</span> description != <span class="string">'boring'</span> <span class="keyword">and</span> <span class="keyword">mod</span>(<span class="keyword">id</span>, <span class="number">2</span>) = <span class="number">1</span>  <span class="comment">-- id%2 = 1 / id&amp;1 = 1</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> rating <span class="keyword">desc</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="1148-文章浏览-I"><a href="#1148-文章浏览-I" class="headerlink" title="1148. 文章浏览 I"></a><a href="https://leetcode-cn.com/problems/article-views-i/" target="_blank" rel="noopener">1148. 文章浏览 I</a></h2><p>SQL架构</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">Create</span> <span class="keyword">table</span> <span class="keyword">If</span> <span class="keyword">Not</span> <span class="keyword">Exists</span> Views (article_id <span class="built_in">int</span>, author_id <span class="built_in">int</span>, viewer_id <span class="built_in">int</span>, view_date <span class="built_in">date</span>)</span><br><span class="line"><span class="keyword">Truncate</span> <span class="keyword">table</span> Views</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Views (article_id, author_id, viewer_id, view_date) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'3'</span>, <span class="string">'5'</span>, <span class="string">'2019-08-01'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Views (article_id, author_id, viewer_id, view_date) <span class="keyword">values</span> (<span class="string">'1'</span>, <span class="string">'3'</span>, <span class="string">'6'</span>, <span class="string">'2019-08-02'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Views (article_id, author_id, viewer_id, view_date) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'7'</span>, <span class="string">'7'</span>, <span class="string">'2019-08-01'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Views (article_id, author_id, viewer_id, view_date) <span class="keyword">values</span> (<span class="string">'2'</span>, <span class="string">'7'</span>, <span class="string">'6'</span>, <span class="string">'2019-08-02'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Views (article_id, author_id, viewer_id, view_date) <span class="keyword">values</span> (<span class="string">'4'</span>, <span class="string">'7'</span>, <span class="string">'1'</span>, <span class="string">'2019-07-22'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Views (article_id, author_id, viewer_id, view_date) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'4'</span>, <span class="string">'4'</span>, <span class="string">'2019-07-21'</span>)</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Views (article_id, author_id, viewer_id, view_date) <span class="keyword">values</span> (<span class="string">'3'</span>, <span class="string">'4'</span>, <span class="string">'4'</span>, <span class="string">'2019-07-21'</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>Views</code> 表：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+---------------+---------+</span><br><span class="line">| Column Name   | Type    |</span><br><span class="line">+---------------+---------+</span><br><span class="line">| article_id    | int     |</span><br><span class="line">| author_id     | int     |</span><br><span class="line">| viewer_id     | int     |</span><br><span class="line">| view_date     | date    |</span><br><span class="line">+---------------+---------+</span><br><span class="line">此表无主键，因此可能会存在重复行。</span><br><span class="line">此表的每一行都表示某人在某天浏览了某位作者的某篇文章。</span><br><span class="line">请注意，同一人的 author_id 和 viewer_id 是相同的。</span><br></pre></td></tr></table></figure>
+
+<p>请编写一条 SQL 查询以找出所有浏览过自己文章的作者，结果按照 id 升序排列。查询结果的格式如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Views 表：</span><br><span class="line">+------------+-----------+-----------+------------+</span><br><span class="line">| article_id | author_id | viewer_id | view_date  |</span><br><span class="line">+------------+-----------+-----------+------------+</span><br><span class="line">| 1          | 3         | 5         | 2019-08-01 |</span><br><span class="line">| 1          | 3         | 6         | 2019-08-02 |</span><br><span class="line">| 2          | 7         | 7         | 2019-08-01 |</span><br><span class="line">| 2          | 7         | 6         | 2019-08-02 |</span><br><span class="line">| 4          | 7         | 1         | 2019-07-22 |</span><br><span class="line">| 3          | 4         | 4         | 2019-07-21 |</span><br><span class="line">| 3          | 4         | 4         | 2019-07-21 |</span><br><span class="line">+------------+-----------+-----------+------------+</span><br><span class="line"></span><br><span class="line">结果表：</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">| 4    |</span><br><span class="line">| 7    |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-13"><a href="#SQL-语句-13" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="SQL-语句-14"><a href="#SQL-语句-14" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-15"><a href="#SQL-语句-15" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-16"><a href="#SQL-语句-16" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-17"><a href="#SQL-语句-17" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-18"><a href="#SQL-语句-18" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-19"><a href="#SQL-语句-19" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-20"><a href="#SQL-语句-20" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-21"><a href="#SQL-语句-21" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-22"><a href="#SQL-语句-22" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-23"><a href="#SQL-语句-23" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-24"><a href="#SQL-语句-24" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-25"><a href="#SQL-语句-25" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-26"><a href="#SQL-语句-26" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-27"><a href="#SQL-语句-27" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-28"><a href="#SQL-语句-28" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-29"><a href="#SQL-语句-29" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-30"><a href="#SQL-语句-30" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-31"><a href="#SQL-语句-31" class="headerlink" title="SQL 语句"></a>SQL 语句</h3><h3 id="SQL-语句-32"><a href="#SQL-语句-32" class="headerlink" title="SQL 语句"></a>SQL 语句</h3>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
+            </p><p>原文链接：<a href="https://wywwzjj.top/2020/03/21/LeetCode-数据库专题/">https://wywwzjj.top/2020/03/21/LeetCode-数据库专题/</a>
+            </p><p>发表日期：<a href="https://wywwzjj.top/2020/03/21/LeetCode-数据库专题/">March 21st 2020, 10:27:38 am</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2020/03/21/LeetCode-数据库专题/">March 22nd 2020, 6:11:48 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2020/03/22/LeetCode-Weekly-Contest-22/" title="LeetCode Weekly Contest 22（双周赛）">
+                    <div class="nextTitle">LeetCode Weekly Contest 22（双周赛）</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/03/08/LeetCode-Weekly-Contest-179/" title="LeetCode Weekly Contest 179">
+                    <div class="prevTitle">LeetCode Weekly Contest 179</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="//github.com/wywwzjj" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <a href="//twitter.com/wywwzjj" class="iconfont-archer twitter" target="_blank" title="twitter"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title="qq">
+                  
+                  <img class="profile-qr" src="/assets/QQ.png">
+                </span>
+            
+        
+    
+        
+    
+        
+            
+                <a href="mailto:wywwzjj@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        
+        
+        <span id="busuanzi_container_site_pv" class="theme-info">
+            |&nbsp;&nbsp;总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;&nbsp;次
+        </span>
+        <span id="busuanzi_container_site_uv" class="theme-info">
+            &nbsp;&nbsp;|&nbsp;&nbsp;访客数&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;人次&nbsp;&nbsp;|
+        </span>
+        <!-- <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span> -->
+        
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1378-使用唯一标识码替换员工ID"><span class="toc-number">1.</span> <span class="toc-text">1378. 使用唯一标识码替换员工ID</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句"><span class="toc-number">1.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1350-院系无效的学生"><span class="toc-number">2.</span> <span class="toc-text">1350. 院系无效的学生</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-1"><span class="toc-number">2.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1068-产品销售分析-I"><span class="toc-number">3.</span> <span class="toc-text">1068. 产品销售分析 I</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-2"><span class="toc-number">3.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1303-求团队人数"><span class="toc-number">4.</span> <span class="toc-text">1303. 求团队人数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-3"><span class="toc-number">4.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1069-产品销售分析-II"><span class="toc-number">5.</span> <span class="toc-text">1069. 产品销售分析 II</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-4"><span class="toc-number">5.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#613-直线上的最近距离"><span class="toc-number">6.</span> <span class="toc-text">613. 直线上的最近距离</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-5"><span class="toc-number">6.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#182-查找重复的电子邮箱"><span class="toc-number">7.</span> <span class="toc-text">182. 查找重复的电子邮箱</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-6"><span class="toc-number">7.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#595-大的国家"><span class="toc-number">8.</span> <span class="toc-text">595. 大的国家</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-7"><span class="toc-number">8.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1251-平均售价"><span class="toc-number">9.</span> <span class="toc-text">1251. 平均售价</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-8"><span class="toc-number">9.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#584-寻找用户推荐人"><span class="toc-number">10.</span> <span class="toc-text">584. 寻找用户推荐人</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-9"><span class="toc-number">10.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#627-交换工资"><span class="toc-number">11.</span> <span class="toc-text">627. 交换工资</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-10"><span class="toc-number">11.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1173-即时食物配送-I"><span class="toc-number">12.</span> <span class="toc-text">1173. 即时食物配送 I</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-11"><span class="toc-number">12.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#620-有趣的电影"><span class="toc-number">13.</span> <span class="toc-text">620. 有趣的电影</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-12"><span class="toc-number">13.1.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1148-文章浏览-I"><span class="toc-number">14.</span> <span class="toc-text">1148. 文章浏览 I</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-13"><span class="toc-number">14.1.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-14"><span class="toc-number">14.2.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-15"><span class="toc-number">14.3.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-16"><span class="toc-number">14.4.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-17"><span class="toc-number">14.5.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-18"><span class="toc-number">14.6.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-19"><span class="toc-number">14.7.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-20"><span class="toc-number">14.8.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-21"><span class="toc-number">14.9.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-22"><span class="toc-number">14.10.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-23"><span class="toc-number">14.11.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-24"><span class="toc-number">14.12.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-25"><span class="toc-number">14.13.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-26"><span class="toc-number">14.14.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-27"><span class="toc-number">14.15.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-28"><span class="toc-number">14.16.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-29"><span class="toc-number">14.17.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-30"><span class="toc-number">14.18.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-31"><span class="toc-number">14.19.</span> <span class="toc-text">SQL 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-语句-32"><span class="toc-number">14.20.</span> <span class="toc-text">SQL 语句</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 58
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-181/">LeetCode Weekly Contest 181</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-22/">LeetCode Weekly Contest 22（双周赛）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href="/2020/03/21/LeetCode-数据库专题/">LeetCode 数据库专题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href="/2020/03/08/LeetCode-Weekly-Contest-179/">LeetCode Weekly Contest 179</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href="/2020/03/08/LeetCode-Weekly-Contest-21/">LeetCode Weekly Contest 21（双周赛）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span><a class="archive-post-title" href="/2020/02/23/LeetCode-Weekly-Contest-177/">LeetCode Weekly Contest 177</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2020/01/30/ThinkPHP-3-X-5-X-order-by-注入/">ThinkPHP 3.X / 5.X order by 注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href="/2020/01/24/Go-学习/">Go 学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href="/2020/01/23/PHP-FPM-RCE/">PHP-FPM RCE (CVE-2019-11043)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href="/2020/01/17/ThinkPHP-6.0-任意文件写入/">ThinkPHP 6.0 任意文件写入</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span><a class="archive-post-title" href="/2019/12/16/CSAPP-Chapter-12-Notes/">CSAPP 并发编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href="/2019/12/15/smarty-3.1.31-RCE/">smarty 3.1.31 RCE（CVE-2017-1000480）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2019/12/02/CSAPP-Chapter-11-Notes/">CSAPP 网络编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href="/2019/11/25/CSAPP-Chapter-10-Notes/">CSAPP 系统级 IO 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href="/2019/11/21/ThinkCMF-前台模板注入-RCE/">ThinkCMF 前台模板注入 RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2019/11/11/CSAPP-Chapter-9-Notes/">CSAPP 虚拟存储器 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2019/10/28/CSAPP-Chapter-8-Notes/">CSAPP 异常控制流 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href="/2019/10/24/Python-pickle-反序列化实例分析/">Python pickle 反序列化实例分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span><a class="archive-post-title" href="/2019/10/21/CSAPP-Chapter-6-Notes/">CSAPP 存储器层次结构 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2019/10/10/CSAPP-Chapter-3-Notes/">CSAPP 程序的机器级表示 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href="/2019/10/06/BalsnCTF-2019-web题/">Balsn CTF 2019 web 题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href="/2019/09/08/CSAPP-Chapter-2-Notes/">CSAPP 信息的表示和处理 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href="/2019/09/01/CSAPP-Chapter-1-Notes/">CSAPP 计算机系统漫游 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href="/2019/08/20/当PHP反序列化遇上SSRF/">当 PHP 反序列化遇上 SSRF</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href="/2019/07/18/Discuz-ML!-V3.X-RCE/">Discuz ML! V3.X RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写配置文件经典问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化学习/">phar 与反序列化学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入总结/">命令注入总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span><a class="archive-post-title" href="/2019/04/07/vulnhub-靶机实战系列-HackInOS/">vulnhub 靶机实战系列 HackInOS</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href="/2019/04/04/Leetcode-322-Coin-Change/">Leetcode 322.Coin Change[DP]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/无字母数字-webshell/">无字母数字 webshell</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href="/2019/03/02/PHP-SECURITY-CALENDAR-2017/">PHP SECURITY CALENDAR Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/sqlmap-tamper-列表/">sqlmap tamper 列表</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/Jarvis-OJ-inject/">Jarvis OJ inject</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2019/02/25/Jarvis-OJ-phpinfo/">Jarvis OJ phpinfo</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Hackme-Writeup/">Hackme-Web-Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Jarvis-OJ-Writeup/">Jarvis OJ Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href="/2019/02/01/Prompt-1-xss-通关记录/">Prompt 1 to win 通关记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/22</span><a class="archive-post-title" href="/2018/12/22/优雅实现哈夫曼编码/">优雅实现哈夫曼编码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href="/2018/12/08/Please_don't_stop_rua_233333/">Please don't stop rua 233333</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/30</span><a class="archive-post-title" href="/2018/11/30/Docker-常用命令/">Docker-常用命令清单</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href="/2018/11/23/漏洞练习平台及工具/">漏洞练习平台及工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span><a class="archive-post-title" href="/2018/11/02/Sqli-labs-通关记录/">Sqli-labs 通关笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href="/2018/10/23/Raccoon-Writeup/">Raccoon web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/02</span><a class="archive-post-title" href="/2018/10/02/学习一项技能要花多少时间/">学习一项技能要花多少时间？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href="/2018/09/26/Bugku-Web-Writeup/">Bugku Web 部分WP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href="/2018/07/28/ACM-常用Trick/">ACM 常用小 Trick</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href="/2018/05/16/十年学会编程/">Teach Yourself Programming in Ten Years</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href="/2018/01/25/Hello-World/">Hello World</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+    
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+    
+        <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+    
+        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
+    
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
+        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQL"><span class="iconfont-archer">&#xe606;</span>SQL</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "wywwzjj"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

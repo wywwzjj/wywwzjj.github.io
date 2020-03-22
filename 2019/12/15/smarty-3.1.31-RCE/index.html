@@ -276,7 +276,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">592</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">589</span>阅读时长: <span class="post-count reading-time">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -411,15 +411,15 @@ height:50vh;
 <p>Smarty 3 before 3.1.32 is vulnerable to a PHP code injection when calling fetch() or display() functions on custom resources that does not sanitize template name.</p>
 </blockquote>
 <p>信息的源头，更新日志：<a href="https://github.com/smarty-php/smarty/blob/master/change_log.txt" target="_blank" rel="noopener">https://github.com/smarty-php/smarty/blob/master/change_log.txt</a></p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">21.7.2017</span><br><span class="line">  - security possible PHP code injection on custom resources at display() <span class="keyword">or</span> fetch()</span><br><span class="line">    calls <span class="keyword">if</span> the<span class="built_in"> resource </span>does <span class="keyword">not</span> sanitize the template name</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">21.7.2017</span><br><span class="line">  - security possible PHP code injection on custom resources at display() or fetch()</span><br><span class="line">    calls if the resource does not sanitize the template name</span><br></pre></td></tr></table></figure>
 
 <p><strong>影响版本</strong></p>
 <p>smarty &lt;= 3.1.21</p>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>可以把项目 clone 下来，再切到 <strong>v3.1.31</strong>。我这里是用 composer 创的。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout tags/v3.1.31 -b v3.1.21-debug</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">git checkout tags/v3.1.31 -b v3.1.21-debug</span><br></pre></td></tr></table></figure>
 
 <p>Insomni’hack teaser 2018 拿这个点出了个题 <a href="https://ctftime.org/task/5185" target="_blank" rel="noopener">Smart-Y</a>，这有 wp <a href="https://ctftime.org/writeup/8552。" target="_blank" rel="noopener">https://ctftime.org/writeup/8552。</a></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// load Smarty library</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'vendor/autoload.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">news</span> <span class="keyword">extends</span> <span class="title">Smarty_Resource_Custom</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">fetch</span><span class="params">($name, &amp;$source, &amp;$mtime)</span> </span>&#123;</span><br><span class="line">        $template = <span class="string">"CVE-2017-1000480 smarty PHP code injection"</span>;</span><br><span class="line">        $source = $template;</span><br><span class="line">        $mtime = time();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Smarty configuration</span></span><br><span class="line">$smarty = <span class="keyword">new</span> Smarty();</span><br><span class="line">$my_security_policy = <span class="keyword">new</span> Smarty_Security($smarty);</span><br><span class="line">$my_security_policy-&gt;php_functions = <span class="keyword">NULL</span>;</span><br><span class="line">$my_security_policy-&gt;php_handling = Smarty::PHP_REMOVE;</span><br><span class="line">$my_security_policy-&gt;modifiers = <span class="keyword">array</span>();</span><br><span class="line">$smarty-&gt;enableSecurity($my_security_policy);</span><br><span class="line">$smarty-&gt;setCacheDir(<span class="string">'cache'</span>);</span><br><span class="line">$smarty-&gt;setCompileDir(<span class="string">'compile'</span>);</span><br><span class="line"></span><br><span class="line">$smarty-&gt;registerResource(<span class="string">'news'</span>, <span class="keyword">new</span> news);</span><br><span class="line">$smarty-&gt;display(<span class="string">'news:'</span> . $_GET[<span class="string">'j'</span>]);</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// load Smarty library</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'vendor/autoload.php'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">news</span> <span class="keyword">extends</span> <span class="title">Smarty_Resource_Custom</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">fetch</span><span class="params">($name, &amp;$source, &amp;$mtime)</span> </span>&#123;</span><br><span class="line">        $template = <span class="string">"CVE-2017-1000480 smarty PHP code injection"</span>;</span><br><span class="line">        $source = $template;</span><br><span class="line">        $mtime = time();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Smarty configuration</span></span><br><span class="line">$smarty = <span class="keyword">new</span> Smarty();</span><br><span class="line">$my_security_policy = <span class="keyword">new</span> Smarty_Security($smarty);</span><br><span class="line">$my_security_policy-&gt;php_functions = <span class="keyword">NULL</span>;</span><br><span class="line">$my_security_policy-&gt;php_handling = Smarty::PHP_REMOVE;</span><br><span class="line">$my_security_policy-&gt;modifiers = <span class="keyword">array</span>();</span><br><span class="line">$smarty-&gt;enableSecurity($my_security_policy);</span><br><span class="line">$smarty-&gt;setCacheDir(<span class="string">'cache'</span>);</span><br><span class="line">$smarty-&gt;setCompileDir(<span class="string">'compile'</span>);</span><br><span class="line"></span><br><span class="line">$smarty-&gt;registerResource(<span class="string">'news'</span>, <span class="keyword">new</span> news);</span><br><span class="line">$smarty-&gt;display(<span class="string">'news:'</span> . $_GET[<span class="string">'j'</span>]);</span><br></pre></td></tr></table></figure>
 
 <h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gb594lta6rj213g08rjsc.jpg" alt="image.png"></p>
 <p>注释符还可以用 <code>*/phpinfo();/*</code>，但 Windows 下文件名不能含有 <code>\/:*?&quot;&lt;&gt;|</code>，所以 <code>//</code> 更通用。</p>
@@ -428,10 +428,10 @@ height:50vh;
 <p><a href="https://github.com/smarty-php/smarty/commit/614ad1f8b9b00086efc123e49b7bb8efbfa81b61" target="_blank" rel="noopener">https://github.com/smarty-php/smarty/commit/614ad1f8b9b00086efc123e49b7bb8efbfa81b61</a></p>
 <p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gbgwyts9ctj20rf0l5q4u.jpg" alt="image.png"></p>
 <p>PoC 生成的临时文件如下。如果没有 PoC，那就随便输一点内容测试一下。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/* Smarty version 3.1.31, created on 2020-02-01 14:42:38</span></span><br><span class="line"><span class="comment">  from "news:*/</span>phpinfo();<span class="comment">//" */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* <span class="doctag">@var</span> Smarty_Internal_Template $_smarty_tpl */</span></span><br><span class="line">  <span class="string">'has_nocache_code'</span> =&gt; <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">'file_dependency'</span> =&gt;</span><br><span class="line">  <span class="keyword">array</span> (</span><br><span class="line">    <span class="string">'1f7fa551e77a29c48c7ac4143a2b811ca7e38ce5'</span> =&gt;</span><br><span class="line">    <span class="keyword">array</span> (</span><br><span class="line">      <span class="number">0</span> =&gt; <span class="string">'news:*/phpinfo();//'</span>,</span><br><span class="line">      <span class="number">1</span> =&gt; <span class="number">1580539358</span>,</span><br><span class="line">      <span class="number">2</span> =&gt; <span class="string">'news'</span>,</span><br><span class="line">    ),</span><br><span class="line">  ),</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">CVE<span class="number">-2017</span><span class="number">-1000480</span> smarty PHP code injection<span class="meta">&lt;?php</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/* Smarty version 3.1.31, created on 2020-02-01 14:42:38</span></span><br><span class="line"><span class="comment">  from "news:*/</span>phpinfo();<span class="comment">//" */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* <span class="doctag">@var</span> Smarty_Internal_Template $_smarty_tpl */</span></span><br><span class="line">  <span class="string">'has_nocache_code'</span> =&gt; <span class="keyword">false</span>,</span><br><span class="line">  <span class="string">'file_dependency'</span> =&gt;</span><br><span class="line">  <span class="keyword">array</span> (</span><br><span class="line">    <span class="string">'1f7fa551e77a29c48c7ac4143a2b811ca7e38ce5'</span> =&gt;</span><br><span class="line">    <span class="keyword">array</span> (</span><br><span class="line">      <span class="number">0</span> =&gt; <span class="string">'news:*/phpinfo();//'</span>,</span><br><span class="line">      <span class="number">1</span> =&gt; <span class="number">1580539358</span>,</span><br><span class="line">      <span class="number">2</span> =&gt; <span class="string">'news'</span>,</span><br><span class="line">    ),</span><br><span class="line">  ),</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">CVE<span class="number">-2017</span><span class="number">-1000480</span> smarty PHP code injection<span class="meta">&lt;?php</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>结合上面的内容来看，模板显然是从这里产生的。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$output = <span class="string">"&lt;?php\n"</span>;</span><br><span class="line">$output .= <span class="string">"/* Smarty version "</span> . Smarty::SMARTY_VERSION . <span class="string">", created on "</span> . strftime(<span class="string">"%Y-%m-%d %H:%M:%S"</span>) .</span><br><span class="line">    <span class="string">"\n  from \""</span> . $_template-&gt;source-&gt;filepath . <span class="string">"\" */\n\n"</span>;</span><br><span class="line">$output .= <span class="string">"/* @var Smarty_Internal_Template \$_smarty_tpl */\n"</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">$output = <span class="string">"&lt;?php\n"</span>;</span><br><span class="line">$output .= <span class="string">"/* Smarty version "</span> . Smarty::SMARTY_VERSION . <span class="string">", created on "</span> . strftime(<span class="string">"%Y-%m-%d %H:%M:%S"</span>) .</span><br><span class="line">    <span class="string">"\n  from \""</span> . $_template-&gt;source-&gt;filepath . <span class="string">"\" */\n\n"</span>;</span><br><span class="line">$output .= <span class="string">"/* @var Smarty_Internal_Template \$_smarty_tpl */\n"</span>;</span><br></pre></td></tr></table></figure>
 
 <p>$_template-&gt;source-&gt;filepath 这个变量的内容一旦把前面的注释符闭合，就能插入 PHP 代码。</p>
 <p>所以官方打的补丁也是针对这些输出点进行过滤。</p>
@@ -446,7 +446,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/12/15/smarty-3.1.31-RCE/">https://wywwzjj.top/2019/12/15/smarty-3.1.31-RCE/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/12/15/smarty-3.1.31-RCE/">December 15th 2019, 11:00:26 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/12/15/smarty-3.1.31-RCE/">February 9th 2020, 9:30:44 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/12/15/smarty-3.1.31-RCE/">March 22nd 2020, 6:11:48 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1390,9 +1390,93 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 54
+        Total : 58
         </div>
         <!-- search  -->
         
@@ -1405,6 +1489,21 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-181/">LeetCode Weekly Contest 181</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-22/">LeetCode Weekly Contest 22（双周赛）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href="/2020/03/21/LeetCode-数据库专题/">LeetCode 数据库专题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1527,7 +1626,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写入配置文件经典问题</a>
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写配置文件经典问题</a>
         </li>
     
     
@@ -1597,17 +1696,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
         </li>
     
     
@@ -1699,15 +1803,15 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
@@ -1725,8 +1829,6 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
@@ -1739,9 +1841,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
         <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQL"><span class="iconfont-archer">&#xe606;</span>SQL</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -402,7 +402,7 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <p>在计算机组成原理中学到过，每个机器码对应着一组控制信号，汇编代码则是机器代码的文本表示。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">gcc -Og -c hello.c  # 表示优化等级为最低，贴近原始汇编</span><br><span class="line"></span><br><span class="line">-O （同-O1）</span><br><span class="line">-O0 （不进行优化，如果未指定优化级别，则为默认值）</span><br><span class="line">-O1 （最小化优化）</span><br><span class="line">-O2 （优化更多）</span><br><span class="line">-O3 （优化更多）</span><br><span class="line">-Ofast （非常积极地进行优化以达到标准的要求）</span><br><span class="line">-Og （优化调试体验-Og支持不影响调试的优化 ）</span><br><span class="line">-Os（优化大小。-Os使所有-O2的优化，通常不会增加代码的大小也进行设计，以减少代码量进一步优化。 -Os禁用以下优化标志：-falign-functions -falign-jumps -falign-loops -falign-labels -freorder-blocks -freorder-blocks-and-partition -fprefetch-loop-arrays -ftree-vect-loop-version）</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">gcc -Og -c hello.c  # 表示优化等级为最低，贴近原始汇编</span><br><span class="line"></span><br><span class="line">-O （同-O1）</span><br><span class="line">-O0 （不进行优化，如果未指定优化级别，则为默认值）</span><br><span class="line">-O1 （最小化优化）</span><br><span class="line">-O2 （优化更多）</span><br><span class="line">-O3 （优化更多）</span><br><span class="line">-Ofast （非常积极地进行优化以达到标准的要求）</span><br><span class="line">-Og （优化调试体验-Og支持不影响调试的优化 ）</span><br><span class="line">-Os（优化大小。-Os使所有-O2的优化，通常不会增加代码的大小也进行设计，以减少代码量进一步优化。 -Os禁用以下优化标志：-falign-functions -falign-jumps -falign-loops -falign-labels -freorder-blocks -freorder-blocks-and-partition -fprefetch-loop-arrays -ftree-vect-loop-version）</span><br></pre></td></tr></table></figure>
 
 <p>对于机器级编程来说，其中两种抽象尤为重要。</p>
 <p>一个是机器级程序的格式和行为，定义为<strong>指令体系结构</strong>（Instruction Set Architecture，ISA ），它定义了处理器状态，指令的格式以及每条指令对状态的影响。大多数ISA,包括IA32和x86-64，将程序的行为描述成<strong>好像</strong>每条指令时顺序执行的。一条指令执行结束后，下一条指令开始执行。处理器的硬件远远比描述的精细复杂，它们能够并发的地执行许多指令，但是可以采取措施保证整体行为与ISA指定的顺序执行行为一致。</p>
@@ -418,7 +418,7 @@ height:50vh;
             <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
             </p><p>原文链接：<a href="https://wywwzjj.top/2019/10/10/CSAPP-Chapter-3-Notes/">https://wywwzjj.top/2019/10/10/CSAPP-Chapter-3-Notes/</a>
             </p><p>发表日期：<a href="https://wywwzjj.top/2019/10/10/CSAPP-Chapter-3-Notes/">October 10th 2019, 11:33:45 pm</a>
-            </p><p>更新日期：<a href="https://wywwzjj.top/2019/10/10/CSAPP-Chapter-3-Notes/">January 9th 2020, 4:00:46 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2019/10/10/CSAPP-Chapter-3-Notes/">March 22nd 2020, 6:11:48 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -1362,9 +1362,93 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 54
+        Total : 58
         </div>
         <!-- search  -->
         
@@ -1377,6 +1461,21 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-181/">LeetCode Weekly Contest 181</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-22/">LeetCode Weekly Contest 22（双周赛）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href="/2020/03/21/LeetCode-数据库专题/">LeetCode 数据库专题</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1499,7 +1598,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写入配置文件经典问题</a>
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写配置文件经典问题</a>
         </li>
     
     
@@ -1569,17 +1668,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
         </li>
     
     
@@ -1671,15 +1775,15 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
@@ -1697,8 +1801,6 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
@@ -1711,9 +1813,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
         <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQL"><span class="iconfont-archer">&#xe606;</span>SQL</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
