@@ -20,8 +20,40 @@
     <meta name="keywords" content="wywwzjj,wywwzjj blog,wywwzjj ctf,wywwzjj web security">
     
     <meta name="description" content>
+    <meta name="description" content="概述Discuz！ML 是一个由 CodersClub.org 创建的多语言，集成，功能齐全的开源网络平台，用于构建像 “社交网络” 这样的互联网社区。该引擎基于 Comsenz Inc. 创建的着名的 Discuz！X 引擎开发。 但是，这与常见的 Discuz 论坛还是没多大关系。 影响版本 Discuz! ML v.3.4 Discuz! ML v.3.3 Discuz! ML v.3.2">
+<meta name="keywords" content="漏洞分析,PHP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Discuz ML! V3.X RCE">
+<meta property="og:url" content="https://wywwzjj.top/2019/07/18/Discuz-ML!-V3.X-RCE/index.html">
+<meta property="og:site_name" content="wywwzjj&#39;s Blog">
+<meta property="og:description" content="概述Discuz！ML 是一个由 CodersClub.org 创建的多语言，集成，功能齐全的开源网络平台，用于构建像 “社交网络” 这样的互联网社区。该引擎基于 Comsenz Inc. 创建的着名的 Discuz！X 引擎开发。 但是，这与常见的 Discuz 论坛还是没多大关系。 影响版本 Discuz! ML v.3.4 Discuz! ML v.3.3 Discuz! ML v.3.2">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g58e9notqaj216u07wwfy.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g58ftdlnenj20kp01y3yi.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g58gas4s7mj20ea026weg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g58gezo0iij20fn05r0t1.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g58gki346wj20kz03owes.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g58gpf4h2kj20gt0200sr.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g58grpn35oj20uq0jfq50.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g5a8i1nm7dj20ib01y3yg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g5a8lkglfpj213c00wt8t.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g5dm9l9v9uj20ti02ijrz.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g5dmbin23bj212r0alaem.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g5dmmlm5z6j20i502gjrg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g5a8t4mytgj212d04fwfb.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g5dmgzw8lxj21ar0i20wh.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g5dmpsp4yej21fc04m3zq.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g5dnd8cpnrj20am03mmx3.jpg">
+<meta property="og:updated_time" content="2020-03-22T10:11:48.057Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Discuz ML! V3.X RCE">
+<meta name="twitter:description" content="概述Discuz！ML 是一个由 CodersClub.org 创建的多语言，集成，功能齐全的开源网络平台，用于构建像 “社交网络” 这样的互联网社区。该引擎基于 Comsenz Inc. 创建的着名的 Discuz！X 引擎开发。 但是，这与常见的 Discuz 论坛还是没多大关系。 影响版本 Discuz! ML v.3.4 Discuz! ML v.3.3 Discuz! ML v.3.2">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1g58e9notqaj216u07wwfy.jpg">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link rel="alternate" href="/atom.xml" title="wywwzjj&#39;s Blog" type="application/atom+xml">
+    
     <title>Discuz ML! V3.X RCE · wywwzjj&#39;s Blog</title>
     <style type="text/css">
     @font-face {
@@ -499,6 +531,10 @@ height:50vh;
 <!-- City版安装代码已完成 -->
     
     
+    <!-- gitalk评论 -->
+
+    <!-- utteranc评论 -->
+
     <!-- partial('_partial/comment/changyan') -->
     <!--PC版-->
 
@@ -590,16 +626,10 @@ height:50vh;
     <!-- 不蒜子  -->
     
     <div class="busuanzi-container">
-        
-        
-        <span id="busuanzi_container_site_pv" class="theme-info">
-            |&nbsp;&nbsp;总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;&nbsp;次
-        </span>
-        <span id="busuanzi_container_site_uv" class="theme-info">
-            &nbsp;&nbsp;|&nbsp;&nbsp;访客数&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;人次&nbsp;&nbsp;|
-        </span>
-        <!-- <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span> -->
-        
+    
+     
+    <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span>
+    
     </div>
     
 </footer>
@@ -1477,46 +1507,9 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 58
+        Total : 59
         </div>
         <!-- search  -->
         
@@ -1529,6 +1522,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href="/2020/06/23/frida初体验/">Frida 初体验</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1736,22 +1734,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
         </li>
     
     
@@ -1847,11 +1845,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
@@ -1865,25 +1865,25 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
-        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
-    
-        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
-    
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
-        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
-    
-        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
-    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
+        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="frida"><span class="iconfont-archer">&#xe606;</span>frida</span>
+    
+        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
+    
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     
-        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
-        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
         <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     

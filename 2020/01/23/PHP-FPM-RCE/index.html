@@ -20,8 +20,37 @@
     <meta name="keywords" content="wywwzjj,wywwzjj blog,wywwzjj ctf,wywwzjj web security">
     
     <meta name="description" content>
+    <meta name="description" content="概述安全研究员 Andrew Danau 在解决一道 CTF 题目时发现，向目标服务器 URL 发送 %0a 符号时，服务返回异常，疑似存在漏洞。当 Nginx 将包含 PATH_INFO 为空的参数通过 FastCGI 传递给 PHP-FPM 时，PHP-FPM 接收处理的过程中存在逻辑问题。通过精心构造恶意请求可以对 PHP-FPM 进行内存污染，进一步可以复写内存并修改 PHP-FPM 配置">
+<meta name="keywords" content="漏洞分析,PHP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP-FPM RCE (CVE-2019-11043)">
+<meta property="og:url" content="https://wywwzjj.top/2020/01/23/PHP-FPM-RCE/index.html">
+<meta property="og:site_name" content="wywwzjj&#39;s Blog">
+<meta property="og:description" content="概述安全研究员 Andrew Danau 在解决一道 CTF 题目时发现，向目标服务器 URL 发送 %0a 符号时，服务返回异常，疑似存在漏洞。当 Nginx 将包含 PATH_INFO 为空的参数通过 FastCGI 传递给 PHP-FPM 时，PHP-FPM 接收处理的过程中存在逻辑问题。通过精心构造恶意请求可以对 PHP-FPM 进行内存污染，进一步可以复写内存并修改 PHP-FPM 配置">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbjmb4q379j20he0d2wj1.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbo2q5joroj21av0f7gpv.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbk8k4lkzjj20e80exdl6.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbk8b6xunej20o90cidk2.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbi62e4czfj20jl09a789.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbi4wahg7qj20aw03nt8p.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbj2ygzztbj20x4047myb.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbk9pdbwujj20sf0ch76e.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbkeclnmadj207l07zmxk.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbj2ygzztbj20x4047myb.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbqgjhvswaj20c604qdgf.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbqf1c4y9rj21hc0u0gsz.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbpe0vddivj208n098jrw.jpg">
+<meta property="og:updated_time" content="2020-03-22T10:11:48.069Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP-FPM RCE (CVE-2019-11043)">
+<meta name="twitter:description" content="概述安全研究员 Andrew Danau 在解决一道 CTF 题目时发现，向目标服务器 URL 发送 %0a 符号时，服务返回异常，疑似存在漏洞。当 Nginx 将包含 PATH_INFO 为空的参数通过 FastCGI 传递给 PHP-FPM 时，PHP-FPM 接收处理的过程中存在逻辑问题。通过精心构造恶意请求可以对 PHP-FPM 进行内存污染，进一步可以复写内存并修改 PHP-FPM 配置">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gbjmb4q379j20he0d2wj1.jpg">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link rel="alternate" href="/atom.xml" title="wywwzjj&#39;s Blog" type="application/atom+xml">
+    
     <title>PHP-FPM RCE (CVE-2019-11043) · wywwzjj&#39;s Blog</title>
     <style type="text/css">
     @font-face {
@@ -653,6 +682,10 @@ height:50vh;
 <!-- City版安装代码已完成 -->
     
     
+    <!-- gitalk评论 -->
+
+    <!-- utteranc评论 -->
+
     <!-- partial('_partial/comment/changyan') -->
     <!--PC版-->
 
@@ -744,16 +777,10 @@ height:50vh;
     <!-- 不蒜子  -->
     
     <div class="busuanzi-container">
-        
-        
-        <span id="busuanzi_container_site_pv" class="theme-info">
-            |&nbsp;&nbsp;总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;&nbsp;次
-        </span>
-        <span id="busuanzi_container_site_uv" class="theme-info">
-            &nbsp;&nbsp;|&nbsp;&nbsp;访客数&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;人次&nbsp;&nbsp;|
-        </span>
-        <!-- <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span> -->
-        
+    
+     
+    <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span>
+    
     </div>
     
 </footer>
@@ -1631,46 +1658,9 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 58
+        Total : 59
         </div>
         <!-- search  -->
         
@@ -1683,6 +1673,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href="/2020/06/23/frida初体验/">Frida 初体验</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1890,22 +1885,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
         </li>
     
     
@@ -2001,11 +1996,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
@@ -2019,25 +2016,25 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
-        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
-    
-        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
-    
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
-        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
-    
-        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
-    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
+        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="frida"><span class="iconfont-archer">&#xe606;</span>frida</span>
+    
+        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
+    
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     
-        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
-        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
         <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     

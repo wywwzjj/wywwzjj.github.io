@@ -20,8 +20,26 @@
     <meta name="keywords" content="wywwzjj,wywwzjj blog,wywwzjj ctf,wywwzjj web security">
     
     <meta name="description" content>
+    <meta name="description" content="粗一看，是文件上传的题目。 随便传一个文件试试，测试可知，只是验证后缀，改后缀即可绕过。 问题是文件传到哪里去了，这也是本题的核心考点。 http://111.198.29.45:30117/?page=upload url 有所变化，可能任意跳转，尝试下伪协议读源码，成功。 http://111.198.29.45:30117/?page=php://filter/read=convert.ba">
+<meta name="keywords" content="Writeup,php 伪随机数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2017 NJCTF web guess">
+<meta property="og:url" content="https://wywwzjj.top/2018/12/30/2017-NJCTF-Guess/index.html">
+<meta property="og:site_name" content="wywwzjj&#39;s Blog">
+<meta property="og:description" content="粗一看，是文件上传的题目。 随便传一个文件试试，测试可知，只是验证后缀，改后缀即可绕过。 问题是文件传到哪里去了，这也是本题的核心考点。 http://111.198.29.45:30117/?page=upload url 有所变化，可能任意跳转，尝试下伪协议读源码，成功。 http://111.198.29.45:30117/?page=php://filter/read=convert.ba">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2018/12/30/5c28b5e0bea95.png">
+<meta property="og:image" content="https://i.loli.net/2018/12/30/5c28b5e1033b1.png">
+<meta property="og:updated_time" content="2020-03-22T10:11:48.047Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2017 NJCTF web guess">
+<meta name="twitter:description" content="粗一看，是文件上传的题目。 随便传一个文件试试，测试可知，只是验证后缀，改后缀即可绕过。 问题是文件传到哪里去了，这也是本题的核心考点。 http://111.198.29.45:30117/?page=upload url 有所变化，可能任意跳转，尝试下伪协议读源码，成功。 http://111.198.29.45:30117/?page=php://filter/read=convert.ba">
+<meta name="twitter:image" content="https://i.loli.net/2018/12/30/5c28b5e0bea95.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link rel="alternate" href="/atom.xml" title="wywwzjj&#39;s Blog" type="application/atom+xml">
+    
     <title>2017 NJCTF web guess · wywwzjj&#39;s Blog</title>
     <style type="text/css">
     @font-face {
@@ -484,6 +502,10 @@ height:50vh;
 <!-- City版安装代码已完成 -->
     
     
+    <!-- gitalk评论 -->
+
+    <!-- utteranc评论 -->
+
     <!-- partial('_partial/comment/changyan') -->
     <!--PC版-->
 
@@ -575,16 +597,10 @@ height:50vh;
     <!-- 不蒜子  -->
     
     <div class="busuanzi-container">
-        
-        
-        <span id="busuanzi_container_site_pv" class="theme-info">
-            |&nbsp;&nbsp;总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;&nbsp;次
-        </span>
-        <span id="busuanzi_container_site_uv" class="theme-info">
-            &nbsp;&nbsp;|&nbsp;&nbsp;访客数&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;人次&nbsp;&nbsp;|
-        </span>
-        <!-- <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span> -->
-        
+    
+     
+    <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span>
+    
     </div>
     
 </footer>
@@ -1462,46 +1478,9 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 58
+        Total : 59
         </div>
         <!-- search  -->
         
@@ -1514,6 +1493,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href="/2020/06/23/frida初体验/">Frida 初体验</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1721,22 +1705,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
         </li>
     
     
@@ -1832,11 +1816,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
     
-        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
     
         <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
     
@@ -1850,25 +1836,25 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
     
-        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
-    
-        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
-    
-        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
-    
-        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
-    
-        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
-    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
+        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="frida"><span class="iconfont-archer">&#xe606;</span>frida</span>
+    
+        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
+    
         <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
     
-        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
     
-        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
     
         <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
     
