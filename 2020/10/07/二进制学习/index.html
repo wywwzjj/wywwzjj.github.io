@@ -1,0 +1,3325 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="wywwzjj">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="wywwzjj">
+    
+    <meta name="keywords" content="wywwzjj,wywwzjj blog,wywwzjj ctf,wywwzjj web security">
+    
+    <meta name="description" content>
+    <meta name="description" content="每天学点新东西exeinfo 可以看到壳信息upx -d  upx脱壳编译x86程序依赖sudo apt-get install -y build-essential module-assistant gcc-multilib g++-multilib搜索shellcodegdb-peda$ shellcode search shConnecting to shell-storm.org...Fo">
+<meta name="keywords" content="pwn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二进制学习">
+<meta property="og:url" content="https://wywwzjj.top/2020/10/07/二进制学习/index.html">
+<meta property="og:site_name" content="wywwzjj&#39;s Blog">
+<meta property="og:description" content="每天学点新东西exeinfo 可以看到壳信息upx -d  upx脱壳编译x86程序依赖sudo apt-get install -y build-essential module-assistant gcc-multilib g++-multilib搜索shellcodegdb-peda$ shellcode search shConnecting to shell-storm.org...Fo">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://wywwzjj.oss-cn-shenzhen.aliyuncs.com/img/20200713172806.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/de75fd55gy1gjl53s0timj20j00d976w.jpg">
+<meta property="og:image" content="https://wywwzjj.oss-cn-shenzhen.aliyuncs.com/img/20200713172720.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/pwndbg/pwndbg/dev/caps/context_splitting.png">
+<meta property="og:updated_time" content="2020-10-15T15:35:50.021Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二进制学习">
+<meta name="twitter:description" content="每天学点新东西exeinfo 可以看到壳信息upx -d  upx脱壳编译x86程序依赖sudo apt-get install -y build-essential module-assistant gcc-multilib g++-multilib搜索shellcodegdb-peda$ shellcode search shConnecting to shell-storm.org...Fo">
+<meta name="twitter:image" content="https://wywwzjj.oss-cn-shenzhen.aliyuncs.com/img/20200713172806.jpg">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link rel="alternate" href="/atom.xml" title="wywwzjj&#39;s Blog" type="application/atom+xml">
+    
+    <title>二进制学习 · wywwzjj&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/B.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">wywwzjj&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">二进制学习</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">wywwzjj's Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            二进制学习
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="pwn">pwn</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">10.6k</span>阅读时长: <span class="post-count reading-time">44 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/10/07</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="每天学点新东西"><a href="#每天学点新东西" class="headerlink" title="每天学点新东西"></a>每天学点新东西</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">exeinfo 可以看到壳信息</span><br><span class="line">upx -d  upx脱壳</span><br><span class="line"></span><br><span class="line">编译x86程序依赖</span><br><span class="line">sudo apt-get install -y build-essential module-assistant gcc-multilib g++-multilib</span><br><span class="line"></span><br><span class="line">搜索shellcode</span><br><span class="line">gdb-peda$ shellcode search sh</span><br><span class="line">Connecting to shell-storm.org...</span><br><span class="line">Found 289 shellcodes</span><br><span class="line">ScId	Title</span><br><span class="line">[132]	Aix - execve /bin/sh - 88 bytes</span><br><span class="line">[134]	Alpha - /bin/sh - 80 bytes</span><br><span class="line">[107]	BSD/ppc - execve(/bin/sh) - 128 bytes</span><br><span class="line">[814]	BSD/x86 - setreuid(geteuid(), geteuid()) and execve(/bin/sh, /bin/sh, 0)</span><br><span class="line">[92]	BSD/x86 - execve(/bin/sh) &amp; setuid(0) - 29 bytes</span><br><span class="line">[601]	BSD/x86 - bindshell on port 2525 - 167 bytes</span><br><span class="line">[362]	BSD/x86 - execve /bin/sh Crypt /bin/sh - 49 bytes</span><br><span class="line">[93]	BSD/x86 - execve(/bin/sh) - 27 bytes</span><br><span class="line">[144]	Cisco IOS - Connectback shellcode v1.0</span><br><span class="line">[142]	Cisco IOS - Tiny shellcode v1.0</span><br><span class="line">[143]	Cisco IOS - Bind shellcode v1.0</span><br><span class="line">[131]	Sco/x86 - execve(/bin/sh, ..., NULL) - 43 bytes</span><br><span class="line">[106]	FreeBSD/x86-64 - exec(/bin/sh) Shellcode - 31 bytes</span><br><span class="line"></span><br><span class="line">查看 shellcode</span><br><span class="line">gdb-peda$ shellcode display 98</span><br><span class="line">Connecting to shell-storm.org...</span><br><span class="line"></span><br><span class="line">; sm4x - 2008</span><br><span class="line">; reverse portbind /bin/sh</span><br><span class="line">; NULL free if address is.</span><br><span class="line">; setuid(0); socket(); connect(); exit();</span><br><span class="line">; 89 bytes</span><br><span class="line">; FreeBSD 7.0-RELEASE</span><br><span class="line"></span><br><span class="line">global _start</span><br><span class="line">_start:</span><br><span class="line"></span><br><span class="line">xor     eax, eax</span><br><span class="line"></span><br><span class="line">; --- setuid(0)</span><br><span class="line">push    eax</span><br><span class="line">push    eax</span><br><span class="line">mov     al, 0x17</span><br><span class="line">push    eax</span><br><span class="line">int     0x80</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">socat tcp-l:4000,fork exec:./pwn</span><br><span class="line">nc 127.0.0.1 4000</span><br></pre></td></tr></table></figure>
+
+<p>libc查询 <a href="http://libcdb.com/" target="_blank" rel="noopener">http://libcdb.com/</a></p>
+<p>查找到gadget</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">objdump -d babypwn4 | egrep &quot;ret|pop&quot;</span><br></pre></td></tr></table></figure>
+
+<p>linux下shellcode的编写</p>
+<ul>
+<li>在 shellcode 中不能出现 /x00也就是NULL字符，当出现NULL字符的时候将会导致shellcode被截断，从而无法完成其应有的功能</li>
+<li>有一个int $0x80来执行系统调用</li>
+</ul>
+<p>windows shellcode</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *shellcode =</span><br><span class="line">            <span class="string">"\x33\xc9\x64\x8b\x49\x30\x8b\x49\x0c\x8b"</span></span><br><span class="line">            <span class="string">"\x49\x1c\x8b\x59\x08\x8b\x41\x20\x8b\x09"</span></span><br><span class="line">            <span class="string">"\x80\x78\x0c\x33\x75\xf2\x8b\xeb\x03\x6d"</span></span><br><span class="line">            <span class="string">"\x3c\x8b\x6d\x78\x03\xeb\x8b\x45\x20\x03"</span></span><br><span class="line">            <span class="string">"\xc3\x33\xd2\x8b\x34\x90\x03\xf3\x42\x81"</span></span><br><span class="line">            <span class="string">"\x3e\x47\x65\x74\x50\x75\xf2\x81\x7e\x04"</span></span><br><span class="line">            <span class="string">"\x72\x6f\x63\x41\x75\xe9\x8b\x75\x24\x03"</span></span><br><span class="line">            <span class="string">"\xf3\x66\x8b\x14\x56\x8b\x75\x1c\x03\xf3"</span></span><br><span class="line">            <span class="string">"\x8b\x74\x96\xfc\x03\xf3\x33\xff\x57\x68"</span></span><br><span class="line">            <span class="string">"\x61\x72\x79\x41\x68\x4c\x69\x62\x72\x68"</span></span><br><span class="line">            <span class="string">"\x4c\x6f\x61\x64\x54\x53\xff\xd6\x33\xc9"</span></span><br><span class="line">            <span class="string">"\x57\x66\xb9\x33\x32\x51\x68\x75\x73\x65"</span></span><br><span class="line">            <span class="string">"\x72\x54\xff\xd0\x57\x68\x6f\x78\x41\x01"</span></span><br><span class="line">            <span class="string">"\xfe\x4c\x24\x03\x68\x61\x67\x65\x42\x68"</span></span><br><span class="line">            <span class="string">"\x4d\x65\x73\x73\x54\x50\xff\xd6\x57\x68"</span></span><br><span class="line">            <span class="string">"\x72\x6c\x64\x21\x68\x6f\x20\x57\x6f\x68"</span></span><br><span class="line">            <span class="string">"\x48\x65\x6c\x6c\x8b\xcc\x57\x57\x51\x57"</span></span><br><span class="line">            <span class="string">"\xff\xd0\x57\x68\x65\x73\x73\x01\xfe\x4c"</span></span><br><span class="line">            <span class="string">"\x24\x03\x68\x50\x72\x6f\x63\x68\x45\x78"</span></span><br><span class="line">            <span class="string">"\x69\x74\x54\x53\xff\xd6\x57\xff\xd0"</span>;</span><br><span class="line">    DWORD why_must_this_variable;</span><br><span class="line">    BOOL ret = VirtualProtect(</span><br><span class="line">            shellcode,</span><br><span class="line">            <span class="built_in">strlen</span>(shellcode),</span><br><span class="line">            PAGE_EXECUTE_READWRITE,</span><br><span class="line">            &amp;why_must_this_variable</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">if</span> (!ret) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"VirtualProtect\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//printf("strlen(shellcode)=%d\n", strlen(shellcode));</span></span><br><span class="line">    ((<span class="keyword">void</span> (*)(<span class="keyword">void</span>)) shellcode)();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>pwn全景图</p>
+<p><img src="https://wywwzjj.oss-cn-shenzhen.aliyuncs.com/img/20200713172806.jpg" alt></p>
+<p>求余数运算反汇编，两者等价。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">v5 = 3 * v0 - 0X30 * ((unsigned __int64)(0xAAAAAAAAAAAAAAABLL * (unsigned __int128)(3 * v0) &gt;&gt; 64) &gt;&gt; 5);</span><br><span class="line"></span><br><span class="line">v5 = 3 * v0 % 0x30;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Assembly"><a href="#Assembly" class="headerlink" title="Assembly"></a>Assembly</h1><h2 id="Intel-vs-AT-amp-T"><a href="#Intel-vs-AT-amp-T" class="headerlink" title="Intel vs AT&amp;T"></a>Intel vs AT&amp;T</h2><ul>
+<li>操作数顺序不同</li>
+<li>寄存器记法有差异</li>
+<li>立即数记法有差异</li>
+<li>访存寻址计法不同</li>
+<li>操作码助记符不同</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/de75fd55gy1gjl53s0timj20j00d976w.jpg" alt="image.png"></p>
+<h2 id="程序模板"><a href="#程序模板" class="headerlink" title="程序模板"></a>程序模板</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">TITLE Program Template  ; 标题可有可无</span><br><span class="line"></span><br><span class="line">include irvine32.inc  ; 包含头文件</span><br><span class="line"></span><br><span class="line">.data</span><br><span class="line">; 数据区，声明全局变量</span><br><span class="line">val1 dword 10000h</span><br><span class="line">val2 dword 40000h</span><br><span class="line">val3 dword 20000h</span><br><span class="line">finalVal dword ?</span><br><span class="line"></span><br><span class="line">.code</span><br><span class="line">; 代码区</span><br><span class="line">main PROC</span><br><span class="line">	mov eax, val1		; start with 10000h</span><br><span class="line">	add eax, val2		; add 40000h</span><br><span class="line">	sub eax, val3		; subtract 20000h</span><br><span class="line">	mov finalVal, eax	; store the result (30000h)</span><br><span class="line">	call DumpRegs		; display the registers</span><br><span class="line">	exit</span><br><span class="line">main ENDP</span><br><span class="line"></span><br><span class="line">funcName PROC</span><br><span class="line"></span><br><span class="line">	ret</span><br><span class="line">funcName ENDP</span><br><span class="line"></span><br><span class="line">END main</span><br></pre></td></tr></table></figure>
+
+<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">;    16 bits	8 bits	8 bits</span><br><span class="line">eax     ax 		  ah 	  al 	; 累加器，是很多加、乘法指令的缺省寄存器</span><br><span class="line">ebx		bx		  bh	  bl	; 基地址寄存器，在内存寻址时存放基地址</span><br><span class="line">ecx		cx		  ch	  cl	; 计数器，是 rep 和 loop 的内定计数器</span><br><span class="line">edx 	dx		; 总是用来放整数除法产生的余数</span><br><span class="line">esp 	sp		; 栈顶指针</span><br><span class="line">ebp		bp		; 基址指针</span><br><span class="line">edi		di		; 目的变址</span><br><span class="line">esi		si		; 源变址</span><br><span class="line">eip		ip		; 指令指针，指向下一条指令的内存地址</span><br><span class="line">eflags	flags 	; 标志</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var db ?   ; 声明一个字节，未初始化</span><br><span class="line">var db 64  ; 声明一个字节，初始值为 64</span><br><span class="line">db 10	   ; 声明一个没有 label 的字节，值为 10</span><br><span class="line">var dw ?   ; 2 字节</span><br><span class="line">var dd 40  ; 4 字节</span><br><span class="line">arr dd 1, 2, 3  ; 数组，初始值为 1, 2, 3</span><br><span class="line">arr db 10 dup(?)  ; 10个元素的数组，未初始化</span><br><span class="line">arr dd 100 dup(0) ; 100 个元素，初始化为 0</span><br><span class="line">str db &apos;hello&apos;,0  ; 字符串，注意 0 结尾</span><br></pre></td></tr></table></figure>
+
+<h2 id="寻址模式"><a href="#寻址模式" class="headerlink" title="寻址模式"></a>寻址模式</h2><h3 id="直接内存寻址"><a href="#直接内存寻址" class="headerlink" title="直接内存寻址"></a>直接内存寻址</h3><h3 id="寄存器间接寻址"><a href="#寄存器间接寻址" class="headerlink" title="寄存器间接寻址"></a>寄存器间接寻址</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov eax, [ebx]  ; 将 ebx 值指示的内存地址中的 4 个字节传送到 eax 中</span><br><span class="line">mov [var], ebx  ; 将 ebx 的内容传送到 var 值指示的内存地址中</span><br><span class="line">movsx dest, src  ; 8 / 16 bits =&gt; 16 / 32 bits，扩展传送</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h2><p><strong>mov</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov &lt;reg&gt;, &lt;reg&gt;</span><br><span class="line">mov &lt;reg&gt;, &lt;mem&gt;</span><br><span class="line">mov &lt;mem&gt;, &lt;reg&gt;</span><br><span class="line">mov &lt;reg&gt;, &lt;const&gt;</span><br><span class="line">mov &lt;mem&gt;, &lt;const&gt;</span><br><span class="line"></span><br><span class="line">mov byte ptr [var], 5</span><br></pre></td></tr></table></figure>
+
+<p><strong>push</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">push &lt;reg32&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>pop</strong></p>
+<p><strong>lea</strong></p>
+<p>Load Effective Address</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">lea &lt;reg32&gt;, &lt;mem&gt;</span><br><span class="line"></span><br><span class="line">lea eax, [var] 		 ;将地址 var 放入寄存器 eax 中</span><br><span class="line">lea edi, [ebx+4*esi] ;edi = ebx+4*esi</span><br><span class="line">; 某些编译器会使用 lea 指令来进行算数运算</span><br></pre></td></tr></table></figure>
+
+<p><strong>leave</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">在32位汇编下相当于:</span><br><span class="line">mov esp,ebp;//将ebp指向（ebp内部应当保存一个地址，所谓指向即这个地址对应的空间）的值赋给esp</span><br><span class="line">pop ebp</span><br><span class="line"> </span><br><span class="line">leave指令将EBP寄存器的内容复制到ESP寄存器中，以释放分配给该过程的所有堆栈空间。</span><br><span class="line">然后，它从堆栈恢复EBP寄存器的旧值。</span><br></pre></td></tr></table></figure>
+
+<p><strong>ret</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">push src  ; 将 src 的数据存入栈中，不允许使用立即数寻址方式。</span><br><span class="line">pushad  ;通用寄存器全入栈</span><br><span class="line">pop dst  ; 用 dst 接收出栈数据，不能使用 cs 段寄存器</span><br><span class="line">popad  ; 通用寄存器依次出栈</span><br><span class="line"></span><br><span class="line">dumpregs  ; 显示所有寄存器信息</span><br><span class="line">dumpmem  ; 显示所有内存信息</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">inc reg/mem  ; ++</span><br><span class="line">dec reg/mem  ; --</span><br><span class="line"></span><br><span class="line">xlat  ; 换码指令，默认 al 寄存器？</span><br><span class="line"></span><br><span class="line">xchg reg, mem/reg  ; 交换两操作数内容</span><br><span class="line">; 两操作数中必须有一个在寄存器中</span><br><span class="line">; 操作数不能为段寄存器和立即数</span><br><span class="line">; 源和目的操作数类型要一致</span><br><span class="line"></span><br><span class="line">shl opr, cnt  ; 逻辑左移 cnt 位</span><br><span class="line">shr opr, cnt</span><br><span class="line">sal opr, cnt  ; 算术左移，同逻辑左移</span><br><span class="line">sar opr, cnt</span><br><span class="line">rol opr, cnt  ; 循环左移</span><br><span class="line">ror opr, cnt</span><br><span class="line"></span><br><span class="line">call writestring  ; 显示 edx 中的值</span><br><span class="line">readstring buffer ; 输入字符串存到 buffer？</span><br><span class="line"></span><br><span class="line">; 输入输入函数</span><br><span class="line">readint</span><br><span class="line">; 返回值：cf = 0  =&gt; 输入存放在 eax 中，cf = 1  =&gt;  输入无效</span><br><span class="line"></span><br><span class="line">writeint</span><br><span class="line">; 输出 eax 中的整数</span><br><span class="line"></span><br><span class="line">; 类型 ptr 内存操作数或标号</span><br><span class="line"></span><br><span class="line">cmp dword ptr [edx + 4*esi], 8  ; 强转后直接能比较</span><br><span class="line"></span><br><span class="line">rep stosed  ; 重复？</span><br><span class="line"></span><br><span class="line">; 函数写完了记得 ret</span><br><span class="line">sub esp, 8</span><br><span class="line">add esp 12  ; 注意回收栈中分配空间</span><br><span class="line">adc ; 进位加法，从进位标志寄存器中读值</span><br></pre></td></tr></table></figure>
+
+<h3 id="控制转移"><a href="#控制转移" class="headerlink" title="控制转移"></a>控制转移</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jmp ;无条件</span><br><span class="line">j[condition] ;条件跳转</span><br><span class="line">cmp</span><br><span class="line">call</span><br><span class="line">ret</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">JE   ;等于则跳转</span><br><span class="line">JNE  ;不等于则跳转</span><br><span class="line"></span><br><span class="line">JZ   ;为 0 则跳转</span><br><span class="line">JNZ  ;不为 0 则跳转</span><br><span class="line"></span><br><span class="line">JS   ;为负则跳转</span><br><span class="line">JNS  ;不为负则跳转</span><br><span class="line"></span><br><span class="line">JC   ;进位则跳转</span><br><span class="line">JNC  ;不进位则跳转</span><br><span class="line"></span><br><span class="line">JO   ;溢出则跳转</span><br><span class="line">JNO  ;不溢出则跳转</span><br><span class="line"></span><br><span class="line">JA   ;无符号大于则跳转</span><br><span class="line">JNA  ;无符号不大于则跳转</span><br><span class="line">JAE  ;无符号大于等于则跳转</span><br><span class="line">JNAE ;无符号不大于等于则跳转</span><br><span class="line"></span><br><span class="line">JG   ;有符号大于则跳转</span><br><span class="line">JNG  ;有符号不大于则跳转</span><br><span class="line">JGE  ;有符号大于等于则跳转</span><br><span class="line">JNGE ;有符号不大于等于则跳转</span><br><span class="line"></span><br><span class="line">JB   ;无符号小于则跳转</span><br><span class="line">JNB  ;无符号不小于则跳转</span><br><span class="line">JBE  ;无符号小于等于则跳转</span><br><span class="line">JNBE ;无符号不小于等于则跳转</span><br><span class="line"></span><br><span class="line">JL   ;有符号小于则跳转</span><br><span class="line">JNL  ;有符号不小于则跳转</span><br><span class="line">JLE  ;有符号小于等于则跳转</span><br><span class="line">JNLE ;有符号不小于等于则跳转</span><br><span class="line"></span><br><span class="line">JP   ;奇偶位置位则跳转</span><br><span class="line">JNP  ;奇偶位清除则跳转</span><br><span class="line">JPE  ;奇偶位相等则跳转</span><br><span class="line">JPO  ;奇偶位不等则跳转</span><br></pre></td></tr></table></figure>
+
+<h1 id="Clang"><a href="#Clang" class="headerlink" title="Clang"></a>Clang</h1><p>C 语言的奇技淫巧 <a href="https://jin-yang.github.io/post/program-c-tips.html" target="_blank" rel="noopener">https://jin-yang.github.io/post/program-c-tips.html</a></p>
+<p>常用函数</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sprintf</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="static"><a href="#static" class="headerlink" title="static"></a>static</h2><p>静态全局变量：自动初始化为 0，只在声明它的整个文件中可见。</p>
+<p>静态函数：只能在声明它的文件当中可见，不能被其他文件使用，降低命名冲突。</p>
+<h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><p>C++逆向学习三步走 <a href="https://bbs.pediy.com/thread-113689.htm" target="_blank" rel="noopener">https://bbs.pediy.com/thread-113689.htm</a></p>
+<h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><ul>
+<li>熟悉如操作系统，汇编语言，加解密等相关知识</li>
+<li>具有丰富的多种高级语言的编程经验</li>
+<li>熟悉多种编译器的编译原理</li>
+<li>较强的程序理解和逆向分析能力</li>
+</ul>
+<h2 id="常规逆向流程"><a href="#常规逆向流程" class="headerlink" title="常规逆向流程"></a>常规逆向流程</h2><ol>
+<li>使用<code>strings/file/binwalk/IDA</code>等静态分析工具收集信息，并根据这些静态信息进行<code>google/github</code>搜索</li>
+<li>研究程序的保护方法，如代码混淆，保护壳及反调试等技术，并设法破除或绕过保护</li>
+<li>反汇编目标软件，快速定位到关键代码进行分析</li>
+<li>结合动态调试，验证自己的初期猜想，在分析的过程中理清程序功能</li>
+<li>针对程序功能，写出对应脚本，求解出 flag</li>
+</ol>
+<h2 id="定位关键代码-tips"><a href="#定位关键代码-tips" class="headerlink" title="定位关键代码 tips"></a>定位关键代码 tips</h2><ol>
+<li><p>分析控制流</p>
+<p>控制流可以参见 IDA 生成的控制流程图（CFG），沿着分支循环和函数调用，逐块地阅读反汇编代码进行分析。</p>
+</li>
+<li><p>利用数据、代码交叉引用</p>
+<p>比如输出的提示字符串，可以通过数据交叉引用找到对应的调用位置，进而找出关键代码。代码交叉引用比如图形界面程序获取用户输入，就可以使用对应的 windowsAPI 函数，我们就可以通过这些 API 函数调用位置找到关键代码。</p>
+</li>
+</ol>
+<h2 id="逆向-tips"><a href="#逆向-tips" class="headerlink" title="逆向 tips"></a>逆向 tips</h2><ol>
+<li><p>编码风格</p>
+<p>每个程序员的编码风格都有所不同，熟悉开发设计模式的同学能更迅速地分析出函数模块功能</p>
+</li>
+<li><p>集中原则</p>
+<p>程序员开发程序时，往往习惯将功能相关的代码或是数据写在同一个地方，而在反汇编代码中也能显示出这一情况，因此在分析时可以查看关键代码附近的函数和数据。</p>
+</li>
+<li><p>代码复用</p>
+<p>代码复用情况非常普遍，而最大的源代码仓库 Github 则是最主要的来源。在分析时可以找一些特征（如字符串，代码风格等）在 Github 搜索，可能会发现类似的代码，并据此恢复出分析时缺失的符号信息等。</p>
+</li>
+<li><p>七分逆向三分猜</p>
+<p>合理的猜测往往能事半功倍，遇到可疑函数却看不清里面的逻辑，不妨根据其中的蛛丝马迹猜测其功能，并依据猜测继续向下分析，在不断的猜测验证中，或许能帮助你更加接近代码的真相。</p>
+</li>
+<li><p>区分代码</p>
+<p>拿到反汇编代码，必须能区分哪些代码是人为编写的，而哪些是编译器自动附加的代码。人为编写的代码中，又有哪些是库函数代码，哪些才是出题人自己写的代码，出题人的代码又经过编译器怎样的优化？我们无须花费时间在出题人以外的代码上，这很重要。如果当你分析半天还在库函数里乱转，那不仅体验极差，也没有丝毫效果。</p>
+</li>
+<li><p>耐心</p>
+<p>无论如何，给予足够的时间，总是能将一个程序分析地透彻。但是也不应该过早地放弃分析。相信自己肯定能在抽茧剥丝的过程中突破问题。</p>
+</li>
+</ol>
+<h2 id="动态分析"><a href="#动态分析" class="headerlink" title="动态分析"></a>动态分析</h2><p>动态分析的目的在于定位关键代码后，在程序运行的过程中，借由输出信息（寄存器，内存变化，程序输出）等来验证自己的推断或是理解程序功能</p>
+<p>主要方法有：调试，符号执行，污点分析</p>
+<p>借用系统调用的跟踪工具看一下宏观动作？</p>
+<ul>
+<li>strace：trace all system call</li>
+<li>ltrace：trace all library call</li>
+<li>ptrace</li>
+<li>dtruss（Mac）</li>
+</ul>
+<h2 id="算法和数据结构识别"><a href="#算法和数据结构识别" class="headerlink" title="算法和数据结构识别"></a>算法和数据结构识别</h2><ul>
+<li>常用算法识别</li>
+</ul>
+<p>如 Tea / XTea / XXTea / IDEA / RC4 / RC5 / RC6 / AES / DES / IDEA / MD5 / SHA256 / SHA1 等加密算法，大数加减乘除、最短路等传统算法</p>
+<ul>
+<li>常用数据结构识别</li>
+</ul>
+<p>如图、树、哈希表等高级数据结构在汇编代码中的识别。</p>
+<h2 id="代码混淆"><a href="#代码混淆" class="headerlink" title="代码混淆"></a>代码混淆</h2><p>比如使用<code>OLLVM</code>，<code>movfuscator</code>，<code>花指令</code>，<code>虚拟化</code>及<code>SMC</code>等工具技术对代码进行混淆，使得程序分析十分困难。</p>
+<p>那么对应的也有反混淆技术，最主要的目的就是复原控制流。比如<code>模拟执行</code>和<code>符号执行</code></p>
+<h2 id="保护壳"><a href="#保护壳" class="headerlink" title="保护壳"></a>保护壳</h2><p>保护壳类型有许多，简单的压缩壳可以归类为如下几种</p>
+<ul>
+<li><p>unpack -&gt; execute</p>
+<p>直接将程序代码全部解压到内存中再继续执行程序代码</p>
+</li>
+<li><p>unpack -&gt; execute -&gt; unpack -&gt; execute …</p>
+<p>解压部分代码，再边解压边执行</p>
+</li>
+<li><p>unpack -&gt; [decoder | encoded code] -&gt; decode -&gt; execute</p>
+<p>程序代码有过编码，在解压后再运行函数将真正的程序代码解码执行</p>
+</li>
+</ul>
+<p>对于脱壳也有相关的方法，比如<code>单步调试法</code>，<code>ESP定律</code>等等</p>
+<h2 id="反调试"><a href="#反调试" class="headerlink" title="反调试"></a>反调试</h2><p>反调试意在通过检测调试器等方法避免程序被调试分析。比如使用一些 API 函数如<code>IsDebuggerPresent</code>检测调试器，使用<code>SEH异常处理</code>，时间差检测等方法。也可以通过覆写调试端口、自调试等方法进行保护。</p>
+<h2 id="非常规逆向思路"><a href="#非常规逆向思路" class="headerlink" title="非常规逆向思路"></a>非常规逆向思路</h2><p>非常规逆向题设计的题目范围非常之广，可以是任意架构的任意格式文件。</p>
+<ul>
+<li>lua / python / java / lua-jit / haskell / applescript / js / solidity / webassembly / etc..</li>
+<li>firmware / raw bin / etc..</li>
+<li>chip8 / avr / clemency / risc-v / etc.</li>
+</ul>
+<p>但是逆向工程的方法学里不惧怕这些未知的平台格式，遇到这样的非常规题，我们也有一些基本的流程可以通用</p>
+<h3 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h3><ul>
+<li>阅读文档。快速学习平台语言的方法就是去阅读官方文档。</li>
+<li>官方工具。官方提供或建议的工具必然是最合适的工具</li>
+<li>教程。在逆向方面，也许有许多前辈写出了专门针对该平台语言的逆向教程，因此也可以快速吸收这其中的知识。</li>
+</ul>
+<h3 id="找工具"><a href="#找工具" class="headerlink" title="找工具"></a>找工具</h3><p>主要找<code>文件解析工具</code>、<code>反汇编器</code>、<code>调试器</code>和<code>反编译器</code>。其中<code>反汇编器</code>是必需的，<code>调试器</code>也包含有相应的反汇编功能，而对于<code>反编译器</code>则要自求多福了，得之我幸失之我命。</p>
+<p>找工具总结起来就是：Google 大法好。合理利用 Google 搜索语法，进行关键字搜索可以帮助你更快更好地找到合适工具。</p>
+<h2 id="寻找主入口（main函数）"><a href="#寻找主入口（main函数）" class="headerlink" title="寻找主入口（main函数）"></a>寻找主入口（main函数）</h2><p><strong>字符串搜索法</strong></p>
+<p><strong>栈回溯法</strong></p>
+<p><strong>逐步分析法</strong></p>
+<h1 id="Stack-Overflow"><a href="#Stack-Overflow" class="headerlink" title="Stack Overflow"></a>Stack Overflow</h1><p>学习环境 <a href="https://exploit.education/phoenix/stack-five" target="_blank" rel="noopener">https://exploit.education/phoenix/stack-five</a></p>
+<p>视频教程 <a href="https://www.youtube.com/watch?v=HSlhY4Uy8SA" target="_blank" rel="noopener">https://www.youtube.com/watch?v=HSlhY4Uy8SA</a></p>
+<p>手把手教你栈溢出从入门到放弃</p>
+<p><a href="https://zhuanlan.zhihu.com/p/25816426" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/25816426</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/25892385" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/25892385</a></p>
+<p>ctf-wiki <a href="https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/basic-rop-zh/#ret2text" target="_blank" rel="noopener">https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/basic-rop-zh/#ret2text</a></p>
+<p>Pwn入坑指南 <a href="https://www.cnblogs.com/wintrysec/p/10616856.html" target="_blank" rel="noopener">https://www.cnblogs.com/wintrysec/p/10616856.html</a></p>
+<p>熊师傅推荐的题库 <a href="https://github.com/scwuaptx/HITCON-Training" target="_blank" rel="noopener">https://github.com/scwuaptx/HITCON-Training</a></p>
+<p>视频教程 入门学习路线 <a href="https://www.bilibili.com/video/av13427867" target="_blank" rel="noopener">https://www.bilibili.com/video/av13427867</a></p>
+<p><strong>发生栈溢出的基本前提：</strong></p>
+<ul>
+<li>程序必须向栈上写入数据；</li>
+<li>写入的数据大小没有被良好地控制。</li>
+</ul>
+<h2 id="Basic"><a href="#Basic" class="headerlink" title="Basic"></a>Basic</h2><h3 id="调用约定"><a href="#调用约定" class="headerlink" title="调用约定"></a>调用约定</h3><ul>
+<li>实现了层面（底层）的规范</li>
+<li>约定了函数之间如何传递参数</li>
+<li>约定了函数如何传递返回值</li>
+</ul>
+<p>ebp（rbp） 用途：</p>
+<ul>
+<li>索引栈上的参数，例如 x86 下，ebp + 8 指向第一个参数</li>
+<li>保存栈顶位置 esp（rsp）</li>
+</ul>
+<p>常见 x86 调用约定：</p>
+<ul>
+<li>调用者负责清理栈上的参数（Caller Clean-up）<ul>
+<li>cdecl<ul>
+<li>用栈传参</li>
+<li>用 eax 保存返回值</li>
+</ul>
+</li>
+<li>optlink</li>
+</ul>
+</li>
+<li>被调用者负责清理栈上的参数（Callee Clean-up）<ul>
+<li>stdcall</li>
+<li>fastcall</li>
+</ul>
+</li>
+</ul>
+<p>需要注意的是，32 位和 64 位程序有以下简单的区别：</p>
+<ul>
+<li>x86<ul>
+<li><strong>函数参数</strong>在<strong>函数返回地址</strong>的上方</li>
+</ul>
+</li>
+<li>x64<ul>
+<li>System V AMD64 ABI (Linux、FreeBSD、macOS 等采用) 中前六个整型或指针参数依次保存在 <strong>RDI, RSI, RDX, RCX, R8 和 R9 寄存器</strong>中，如果还有更多的参数的话才会保存在栈上。</li>
+<li>内存地址不能大于 0x00007FFFFFFFFFFF，<strong>6 个字节长度</strong>，否则会抛出异常。</li>
+<li>cdecl 使用寄存器 rdi、rsi、rdx、rcx、r8、r9 传前 6 个，第七个及以上使用栈传递</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">callee</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b + c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">caller</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ret;</span><br><span class="line"></span><br><span class="line">    ret = callee(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">    ret += <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">pwndbg&gt; disass callee</span><br><span class="line">Dump of assembler code for function callee:</span><br><span class="line">   0x000004ed &lt;+0&gt;:		push   ebp</span><br><span class="line">   0x000004ee &lt;+1&gt;:		mov    ebp,esp</span><br><span class="line">   0x000004f0 &lt;+3&gt;:		mov    edx,DWORD PTR [ebp+0x8]</span><br><span class="line">   0x000004f3 &lt;+6&gt;:		mov    eax,DWORD PTR [ebp+0xc]</span><br><span class="line">   0x000004f6 &lt;+9&gt;:		add    edx,eax</span><br><span class="line">   0x000004f8 &lt;+11&gt;:	mov    eax,DWORD PTR [ebp+0x10]</span><br><span class="line">   0x000004fb &lt;+14&gt;:	add    eax,edx</span><br><span class="line">   0x000004fd &lt;+16&gt;:	pop    ebp</span><br><span class="line">   0x000004fe &lt;+17&gt;:	ret    </span><br><span class="line">End of assembler dump.</span><br><span class="line"></span><br><span class="line">pwndbg&gt; disass caller</span><br><span class="line">Dump of assembler code for function caller:</span><br><span class="line">   0x000004ff &lt;+0&gt;:		push   ebp</span><br><span class="line">   0x00000500 &lt;+1&gt;:		mov    ebp,esp</span><br><span class="line">   0x00000502 &lt;+3&gt;:		sub    esp,0x10</span><br><span class="line">   0x00000505 &lt;+6&gt;:		push   0x3</span><br><span class="line">   0x00000507 &lt;+8&gt;:		push   0x2</span><br><span class="line">   0x00000509 &lt;+10&gt;:	push   0x1</span><br><span class="line">   0x0000050b &lt;+12&gt;:	call   0x4ed &lt;callee&gt;</span><br><span class="line">   0x00000510 &lt;+17&gt;:	add    esp,0xc</span><br><span class="line">   0x00000513 &lt;+20&gt;:	mov    DWORD PTR [ebp-0x4],eax</span><br><span class="line">   0x00000516 &lt;+23&gt;:	add    DWORD PTR [ebp-0x4],0x4</span><br><span class="line">   0x0000051a &lt;+27&gt;:	mov    eax,DWORD PTR [ebp-0x4]</span><br><span class="line">   0x0000051d &lt;+30&gt;:	leave  </span><br><span class="line">   0x0000051e &lt;+31&gt;:	ret    </span><br><span class="line">End of assembler dump.</span><br></pre></td></tr></table></figure>
+
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><p>修改返回地址，让其指向溢出数据中的一段指令（<strong>shellcode</strong>）</p>
+<p>修改返回地址，让其指向内存中已有的某个函数（<strong>return2libc</strong>）</p>
+<p>修改返回地址，让其指向内存中已有的一段指令（<strong>ROP</strong>）</p>
+<p>修改某个被调用函数的地址，让其指向另一个函数（<strong>hijack GOT</strong>）</p>
+<h1 id="Format-Strings"><a href="#Format-Strings" class="headerlink" title="Format Strings"></a>Format Strings</h1><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>基本介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>printf</td>
+<td>输出到 stdout</td>
+</tr>
+<tr>
+<td>fprintf</td>
+<td>输出到指定 FILE 流</td>
+</tr>
+<tr>
+<td>vprintf</td>
+<td>根据参数列表格式化输出到 stdout</td>
+</tr>
+<tr>
+<td>vfprintf</td>
+<td>根据参数列表格式化输出到指定 FILE 流</td>
+</tr>
+<tr>
+<td>sprintf</td>
+<td>输出到字符串</td>
+</tr>
+<tr>
+<td>snprintf</td>
+<td>输出指定字节数到字符串</td>
+</tr>
+<tr>
+<td>vsprintf</td>
+<td>根据参数列表格式化输出到字符串</td>
+</tr>
+<tr>
+<td>vsnprintf</td>
+<td>根据参数列表格式化输出指定字节到字符串</td>
+</tr>
+<tr>
+<td>setproctitle</td>
+<td>设置 argv</td>
+</tr>
+<tr>
+<td>syslog</td>
+<td>输出日志</td>
+</tr>
+<tr>
+<td>err, verr, warn, vwarn 等</td>
+<td>……</td>
+</tr>
+</tbody></table>
+<h1 id="Array-Indexing"><a href="#Array-Indexing" class="headerlink" title="Array Indexing"></a>Array Indexing</h1><h1 id="Bad-Seed"><a href="#Bad-Seed" class="headerlink" title="Bad Seed"></a>Bad Seed</h1><h1 id="Z3-amp-Symbolic-Execution-angr"><a href="#Z3-amp-Symbolic-Execution-angr" class="headerlink" title="Z3 &amp; Symbolic Execution(angr)"></a>Z3 &amp; Symbolic Execution(angr)</h1><h1 id="ROP"><a href="#ROP" class="headerlink" title="ROP"></a>ROP</h1><p>Return Oriented Programming</p>
+<h2 id="Partial-Overwrite"><a href="#Partial-Overwrite" class="headerlink" title="Partial Overwrite"></a>Partial Overwrite</h2><h2 id="Stack-Pivoting"><a href="#Stack-Pivoting" class="headerlink" title="Stack Pivoting"></a>Stack Pivoting</h2><h2 id="SIGROP-SROP"><a href="#SIGROP-SROP" class="headerlink" title="SIGROP(SROP)"></a>SIGROP(SROP)</h2><h2 id="ret2csu"><a href="#ret2csu" class="headerlink" title="ret2csu"></a>ret2csu</h2><h2 id="ret2system"><a href="#ret2system" class="headerlink" title="ret2system"></a>ret2system</h2><h1 id="Heap-Exploitation"><a href="#Heap-Exploitation" class="headerlink" title="Heap Exploitation"></a>Heap Exploitation</h1><h2 id="Double-Frees"><a href="#Double-Frees" class="headerlink" title="Double Frees"></a>Double Frees</h2><h2 id="Heap-Consolidation"><a href="#Heap-Consolidation" class="headerlink" title="Heap Consolidation"></a>Heap Consolidation</h2><h2 id="Use-after-Frees"><a href="#Use-after-Frees" class="headerlink" title="Use after Frees"></a>Use after Frees</h2><h2 id="Protostar-heap0"><a href="#Protostar-heap0" class="headerlink" title="Protostar: heap0"></a>Protostar: heap0</h2><h2 id="protostar-heap1"><a href="#protostar-heap1" class="headerlink" title="protostar: heap1"></a>protostar: heap1</h2><h2 id="protostar-heap2"><a href="#protostar-heap2" class="headerlink" title="protostar: heap2"></a>protostar: heap2</h2><h2 id="unlink-Exploitation"><a href="#unlink-Exploitation" class="headerlink" title="unlink() Exploitation"></a>unlink() Exploitation</h2><h2 id="Heap-Grooming"><a href="#Heap-Grooming" class="headerlink" title="Heap Grooming"></a>Heap Grooming</h2><h2 id="Fastbin-Attack"><a href="#Fastbin-Attack" class="headerlink" title="Fastbin Attack"></a>Fastbin Attack</h2><h2 id="Unsortedbin-Attack"><a href="#Unsortedbin-Attack" class="headerlink" title="Unsortedbin Attack"></a>Unsortedbin Attack</h2><h2 id="Largebin-Attack"><a href="#Largebin-Attack" class="headerlink" title="Largebin Attack"></a>Largebin Attack</h2><h2 id="GLibc-Tcache"><a href="#GLibc-Tcache" class="headerlink" title="GLibc Tcache"></a>GLibc Tcache</h2><h2 id="House-of-Spirit"><a href="#House-of-Spirit" class="headerlink" title="House of Spirit"></a>House of Spirit</h2><h2 id="House-of-Lore"><a href="#House-of-Lore" class="headerlink" title="House of Lore"></a>House of Lore</h2><h2 id="House-of-Force"><a href="#House-of-Force" class="headerlink" title="House of Force"></a>House of Force</h2><h2 id="House-of-Einherjar"><a href="#House-of-Einherjar" class="headerlink" title="House of Einherjar"></a>House of Einherjar</h2><h2 id="House-of-Orange"><a href="#House-of-Orange" class="headerlink" title="House of Orange"></a>House of Orange</h2><h2 id="Miscellaneous"><a href="#Miscellaneous" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h2><h1 id="Grab-Bag"><a href="#Grab-Bag" class="headerlink" title="Grab Bag"></a>Grab Bag</h1><h2 id="Shell-coding"><a href="#Shell-coding" class="headerlink" title="Shell coding"></a>Shell coding</h2><h2 id="Patching"><a href="#Patching" class="headerlink" title="Patching"></a>Patching</h2><h2 id="NET"><a href="#NET" class="headerlink" title=".NET"></a>.NET</h2><h1 id="Security-Protection-Mechanism"><a href="#Security-Protection-Mechanism" class="headerlink" title="Security Protection Mechanism"></a>Security Protection Mechanism</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">checksec fog</span></span><br><span class="line">[*] '/mnt/hgfs/shared/other/pwn/fog/fog'</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Full RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      PIE enabled</span><br></pre></td></tr></table></figure>
+
+<h2 id="NX"><a href="#NX" class="headerlink" title="NX"></a>NX</h2><blockquote>
+<p>NX enabled如果这个保护开启就是意味着栈中数据没有执行权限，以前的经常用的call esp或者jmp esp的方法就不能使用，但是可以利用rop这种方法绕过。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">关闭：-z execstack</span><br><span class="line">开启：-z noexecstack</span><br></pre></td></tr></table></figure>
+
+<p>开启了的话堆栈会变的可执行，可执行的话可能意味着可以执行<code>shellcode</code></p>
+<h2 id="RELRO"><a href="#RELRO" class="headerlink" title="RELRO"></a>RELRO</h2><blockquote>
+<p>RELRO 会有 Partial RELRO 和F ULL RELRO，若开启 FULL RELRO，意味着无法修改got表，否则能劫持程序流程。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">关闭：-z norelro</span><br><span class="line">开启（部分）：-z lazy</span><br><span class="line">开启（完全）：-z now</span><br></pre></td></tr></table></figure>
+
+<h2 id="Stack-Canary"><a href="#Stack-Canary" class="headerlink" title="Stack (Canary)"></a>Stack (Canary)</h2><blockquote>
+<p>如果栈中开启 Canary found，那么就不能用直接用溢出的方法覆盖栈中返回地址，而是要通过改写指针与局部变量、leak canary、overwrite canary 的方法来绕过。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">关闭：-fno-stack-protector</span><br><span class="line">启用（只为局部变量中含有 char 数组的函数插入保护代码）：-fstack-protector</span><br><span class="line">启用（为所有函数插入保护代码）：-fstack-protector-all</span><br></pre></td></tr></table></figure>
+
+<p>没开启的话，栈溢出会变的更加容易</p>
+<h2 id="PIE"><a href="#PIE" class="headerlink" title="PIE"></a>PIE</h2><blockquote>
+<p>Position Independent Executable 地址随机化。</p>
+<p>没开启的话，程序的基地址就是已知的了（0x400000）</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">关闭： -no-pie</span><br><span class="line">开启： -pie -fPIC</span><br></pre></td></tr></table></figure>
+
+<p>Linux 平台下还有地址空间分布随机化（ASLR）的机制，即使可执行文件开启了 PIE 保护，还需要系统开启 ASLR 才会真正打乱基址，否则程序运行时依旧会在加载一个固定的基址上（不过和 No PIE 时基址不同）。</p>
+<p>我们可以通过修改 <code>/proc/sys/kernel/randomize_va_space</code> 来控制 ASLR 启动与否，具体的选项有：</p>
+<ul>
+<li>0，关闭 ASLR，没有随机化。栈、堆、.so 的基地址每次都相同。</li>
+<li>1，普通的 ASLR。栈基地址、mmap 基地址、.so 加载基地址都将被随机化，但是堆基地址没有随机化。</li>
+<li>2，增强的 ASLR，在 1 的基础上，增加了堆基地址随机化。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo bash -c 'echo 0 &gt; /proc/sys/kernel/randomize_va_space'</span><br></pre></td></tr></table></figure>
+
+<h2 id="FORTIFY"><a href="#FORTIFY" class="headerlink" title="FORTIFY"></a>FORTIFY</h2><blockquote>
+<p>FORTIFY_SOURCE 机制对格式化字符串有两个限制</p>
+<ul>
+<li><p>包含%n的格式化字符串不能位于程序内存中的可写地址。</p>
+</li>
+<li><p>当使用位置参数时，必须使用范围内的所有参数。所以如果要使用%7$x，你必须同时使用1,2,3,4,5和6。</p>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">关闭：-D_FORTIFY_SOURCE=0</span><br><span class="line">开启（只会在编译的时候检查）：-D_FORTIFY_SOURCE=1 -O1</span><br><span class="line">开启（强检查）：-D_FORTIFY_SOURCE=2 -O2</span><br></pre></td></tr></table></figure>
+
+<p>开启的话就是不能用 %n,%hn,%hhn 这种的，%4$p 也不行了。</p>
+<h2 id="Bypass"><a href="#Bypass" class="headerlink" title="Bypass"></a>Bypass</h2><p>程序没有开启地址随机化：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">debug</span><span class="params">(addr)</span>:</span></span><br><span class="line">    raw_input(<span class="string">'debug:'</span>)</span><br><span class="line">    gdb.attach(r, <span class="string">"b *"</span> + addr)</span><br></pre></td></tr></table></figure>
+
+<p>在程序运行时调用这个函数就可以调试了</p>
+<p>程序开启地址随机化：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">wordSz = <span class="number">4</span></span><br><span class="line">hwordSz = <span class="number">2</span></span><br><span class="line">bits = <span class="number">32</span></span><br><span class="line">PIE = <span class="number">0</span></span><br><span class="line">mypid=<span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">leak</span><span class="params">(address, size)</span>:</span></span><br><span class="line">   <span class="keyword">with</span> open(<span class="string">'/proc/%s/mem'</span> % mypid) <span class="keyword">as</span> mem:</span><br><span class="line">      mem.seek(address)</span><br><span class="line">      <span class="keyword">return</span> mem.read(size)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">findModuleBase</span><span class="params">(pid, mem)</span>:</span></span><br><span class="line">   name = os.readlink(<span class="string">'/proc/%s/exe'</span> % pid)</span><br><span class="line">   <span class="keyword">with</span> open(<span class="string">'/proc/%s/maps'</span> % pid) <span class="keyword">as</span> maps:</span><br><span class="line">      <span class="keyword">for</span> line <span class="keyword">in</span> maps:</span><br><span class="line">         <span class="keyword">if</span> name <span class="keyword">in</span> line:</span><br><span class="line">            addr = int(line.split(<span class="string">'-'</span>)[<span class="number">0</span>], <span class="number">16</span>)</span><br><span class="line">            mem.seek(addr)</span><br><span class="line">            <span class="keyword">if</span> mem.read(<span class="number">4</span>) == <span class="string">"\x7fELF"</span>:</span><br><span class="line">               bitFormat = u8(leak(addr + <span class="number">4</span>, <span class="number">1</span>))</span><br><span class="line">               <span class="keyword">if</span> bitFormat == <span class="number">2</span>:</span><br><span class="line">                  <span class="keyword">global</span> wordSz</span><br><span class="line">                  <span class="keyword">global</span> hwordSz</span><br><span class="line">                  <span class="keyword">global</span> bits</span><br><span class="line">                  wordSz = <span class="number">8</span></span><br><span class="line">                  hwordSz = <span class="number">4</span></span><br><span class="line">                  bits = <span class="number">64</span></span><br><span class="line">               <span class="keyword">return</span> addr</span><br><span class="line">   log.failure(<span class="string">"Module's base address not found."</span>)</span><br><span class="line">   sys.exit(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">debug</span><span class="params">(addr = <span class="number">0</span>)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> mypid</span><br><span class="line">    mypid = proc.pidof(r)[<span class="number">0</span>]</span><br><span class="line">    raw_input(<span class="string">'debug:'</span>)</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'/proc/%s/mem'</span> % mypid) <span class="keyword">as</span> mem:</span><br><span class="line">        moduleBase = findModuleBase(mypid, mem)</span><br><span class="line">        gdb.attach(r, <span class="string">"set follow-fork-mode parent\nb *"</span> + hex(moduleBase+addr))</span><br></pre></td></tr></table></figure>
+
+<p>由于开启地址随机化之后ida pro打开程序后，显示的是程序的偏移地址，而不是实际的地址，当程序加载后程序的程序的实际地址是：基地址+偏移地址，调用debug函数的时候只要把偏移地址传递进去就好</p>
+<h4 id="泄露libc地址和版本的方法"><a href="#泄露libc地址和版本的方法" class="headerlink" title="泄露libc地址和版本的方法"></a>泄露libc地址和版本的方法</h4><p>【1】利用格式化字符串漏洞泄露栈中的数据，从而找到libc的某个函数地址，再利用libc-database来判断远程libc的版本，之后再计算出libc的基址，一般做题我喜欢找<code>__libc_start_main</code>的地址</p>
+<p>【2】利用write这个函数，pwntools有个很好用的函数DynELF去利用这个函数计算出程序的各种地址，包括函数的基地址，libc的基地址，libc中system的地址</p>
+<p>【3】利用printf函数，printf函数输出的时候遇到0x00时候会停止输出，如果输入的时候没有在最后的字节处填充0x00，那么输出的时候就可能泄露栈中的重要数据，比如libc的某个函数地址</p>
+<h4 id="简单的栈溢出"><a href="#简单的栈溢出" class="headerlink" title="简单的栈溢出"></a>简单的栈溢出</h4><p>程序没有开启任何保护:</p>
+<p>方法一：传统的教材思路是把shellcode写入栈中，然后查找程序中或者libc中有没有call esp或者jmp esp，比如这个题目： <a href="http://blog.csdn.net/niexinming/article/details/76893510" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/76893510</a></p>
+<p>方法二：但是现代操作系统中libc中会开启地址随机化，所以先寻找程序中system的函数，再布局栈空间，调用gets(.bss)，最后调用system(‘/bin/sh’) 比如这个题目：<a href="http://blog.csdn.net/niexinming/article/details/78796408" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78796408</a></p>
+<p>方法三：覆盖虚表方式利用栈溢出漏洞，这个方法是m4x师傅教我的方法，我觉得很巧妙，比如这个题目：<a href="http://blog.csdn.net/niexinming/article/details/78144301" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78144301</a></p>
+<h4 id="开启nx的程序"><a href="#开启nx的程序" class="headerlink" title="开启nx的程序"></a>开启nx的程序</h4><p>开启nx之后栈和bss段就只有读写权限，没有执行权限了，所以就要用到rop这种方法拿到系统权限，如果程序很复杂，或者程序用的是静态编译的话，那么就可以使用ROPgadget这个工具很方便的直接生成rop利用链。有时候好多程序不能直接用ROPgadget这个工具直接找到利用链，所以就要手动分析程序来getshell了，比如这两个题目： <a href="http://blog.csdn.net/niexinming/article/details/78259866" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78259866</a></p>
+<h4 id="开启canary的程序"><a href="#开启canary的程序" class="headerlink" title="开启canary的程序"></a>开启canary的程序</h4><p>开启canary后就不能直接使用普通的溢出方法来覆盖栈中的函数返回地址了，要用一些巧妙的方法来绕过或者利canary本身的弱点来攻击</p>
+<p>【1】利用canary泄露flag，这个方法很巧妙的运用了canary本身的弱点，当<code>__stack_check_fail</code>时，会打印出正在运行中程序的名称，所以，我们只要将<code>__libc_argv[0]</code>覆盖为flag的地址就能将flag打印出来，比如这个题目： <a href="http://blog.csdn.net/niexinming/article/details/78522682" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78522682</a></p>
+<p>【2】利用printf函数泄露一个子进程的Canary，再在另一个子进程栈中伪造Canary就可以绕过Canary的保护了，比如这个题目：<a href="http://blog.csdn.net/niexinming/article/details/78681846" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78681846</a></p>
+<h4 id="开启PIE的程序"><a href="#开启PIE的程序" class="headerlink" title="开启PIE的程序"></a>开启PIE的程序</h4><p>【1】利用printf函数尽量多打印一些栈中的数据，根据泄露的地址来计算程序基地址，libc基地址，system地址，比如这篇文章中echo2的wp： <a href="http://blog.csdn.net/niexinming/article/details/78512274" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78512274</a></p>
+<p>【2】利用write泄露程序的关键信息，这样的话可以很方便的用DynELF这个函数了，比如这个文章中的rsbo2的题解：<a href="http://blog.csdn.net/niexinming/article/details/78620566" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78620566</a></p>
+<h4 id="全部保护开启"><a href="#全部保护开启" class="headerlink" title="全部保护开启"></a>全部保护开启</h4><p>如果程序的栈可以被完全控制，那么程序的保护全打开也会被攻破，比如这个题目：<a href="http://blog.csdn.net/niexinming/article/details/78666941" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78666941</a></p>
+<h5 id="格式化字符串漏洞"><a href="#格式化字符串漏洞" class="headerlink" title="格式化字符串漏洞"></a>格式化字符串漏洞</h5><p>格式化漏洞现在很难在成熟的软件中遇到，但是这个漏洞却很有趣</p>
+<p>【1】pwntools有很不错的函数FmtStr和fmtstr_payload来自动计算格式化漏洞的利用点，并且自动生成payload，比如这个题目：<a href="http://blog.csdn.net/niexinming/article/details/78699413" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78699413</a> 和 <a href="http://blog.csdn.net/niexinming/article/details/78512274" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78512274</a> 中echo的题解</p>
+<p>【2】格式化漏洞也是信息泄露的好伴侣，比如这个题目中制造格式化字符串漏洞泄露各种数据 <a href="http://blog.csdn.net/niexinming/article/details/78768850" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78768850</a></p>
+<h5 id="uaf漏洞"><a href="#uaf漏洞" class="headerlink" title="uaf漏洞"></a>uaf漏洞</h5><p>如果把堆释放之后，没有把指针指针清0，还让指针保存下来，那么就会引发很多问题，比如这个题目 <a href="http://blog.csdn.net/niexinming/article/details/78598635" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78598635</a></p>
+<h5 id="任意位置写"><a href="#任意位置写" class="headerlink" title="任意位置写"></a>任意位置写</h5><p>如果程序可以在内存中的任意位置写的话，那么威力绝对很大</p>
+<p>【1】虽然只能写一个字节，但是依然可以控制程序的并getshell，比如这个题目 <a href="http://blog.csdn.net/niexinming/article/details/78542089" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78542089</a></p>
+<p>【2】修改got表是个控制程序流程的好办法，很多ctf题目只要能通过各种方法控制got的写入，就可以最终得到胜利，比如这个题目： <a href="http://blog.csdn.net/niexinming/article/details/78542089" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78542089</a></p>
+<p>【3】如果能计算出libc的基地址的话，控制top_chunk指针也是解题的好方法，比如这个题目： <a href="http://blog.csdn.net/niexinming/article/details/78759363" target="_blank" rel="noopener">http://blog.csdn.net/niexinming/article/details/78759363</a></p>
+<h1 id="Virus"><a href="#Virus" class="headerlink" title="Virus"></a>Virus</h1><p>病毒通常会遵循如下相同步骤：</p>
+<ol>
+<li>定位要感染的文件（一直等待直到打开某些东西，或者搜索目录）</li>
+<li>检查某个文件是否已经被感染</li>
+<li>如果已感染，跳过</li>
+<li>保存文件日期/时间</li>
+<li>设置一个跳转跳到我们的代码保存前几个字节</li>
+<li>添加病毒主体代码</li>
+<li>恢复文件日期/时间</li>
+</ol>
+<h2 id="DOS"><a href="#DOS" class="headerlink" title="DOS"></a>DOS</h2><h3 id="COM-简介"><a href="#COM-简介" class="headerlink" title="COM 简介"></a>COM 简介</h3><p>DOS 内存布局</p>
+<p><img src="https://wywwzjj.oss-cn-shenzhen.aliyuncs.com/img/20200713172720.png" alt></p>
+<h3 id="COM-覆盖型病毒"><a href="#COM-覆盖型病毒" class="headerlink" title="COM 覆盖型病毒"></a>COM 覆盖型病毒</h3><h3 id="COM-伴随型病毒"><a href="#COM-伴随型病毒" class="headerlink" title="COM 伴随型病毒"></a>COM 伴随型病毒</h3><h3 id="COM-寄生型病毒"><a href="#COM-寄生型病毒" class="headerlink" title="COM 寄生型病毒"></a>COM 寄生型病毒</h3><h2 id="隐藏技术"><a href="#隐藏技术" class="headerlink" title="隐藏技术"></a>隐藏技术</h2><h2 id="变形技术"><a href="#变形技术" class="headerlink" title="变形技术"></a>变形技术</h2><h2 id="反跟踪、反调试、反分析"><a href="#反跟踪、反调试、反分析" class="headerlink" title="反跟踪、反调试、反分析"></a>反跟踪、反调试、反分析</h2><h2 id="驻留内存"><a href="#驻留内存" class="headerlink" title="驻留内存"></a>驻留内存</h2><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h1 id="Executable"><a href="#Executable" class="headerlink" title="Executable"></a>Executable</h1><h2 id="ELF"><a href="#ELF" class="headerlink" title="ELF"></a>ELF</h2><p>ELF （Executable and Linkable Format）文件，也就是在 Linux 中的目标文件，主要有以下三种类型</p>
+<ul>
+<li>可重定位文件（Relocatable File），包含由编译器生成的代码以及数据。链接器会将它与其它目标文件链接起来从而创建可执行文件或者共享目标文件。在 Linux 系统中，这种文件的后缀一般为 <code>.o</code> 。</li>
+<li>可执行文件（Executable File），就是我们通常在 Linux 中执行的程序。</li>
+<li>共享目标文件（Shared Object File），包含代码和数据，这种文件是我们所称的库文件，一般以 <code>.so</code> 结尾。一般情况下，它有以下两种使用情景：<ul>
+<li>链接器（Link eDitor, ld）可能会处理它和其它可重定位文件以及共享目标文件，生成另外一个目标文件。</li>
+<li>动态链接器（Dynamic Linker）将它与可执行文件以及其它共享目标组合在一起生成进程镜像。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>关于 Link eDitor 的命名，<a href="https://en.wikipedia.org/wiki/GNU_linker" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/GNU_linker</a></p>
+</blockquote>
+<p>目标文件由汇编器和链接器创建，是文本程序的二进制形式，可以直接在处理器上运行。那些需要虚拟机才能够执行的程序 (Java) 不属于这一范围。</p>
+<h2 id="PE"><a href="#PE" class="headerlink" title="PE"></a>PE</h2><h1 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h1><h2 id="pwntools"><a href="#pwntools" class="headerlink" title="pwntools"></a>pwntools</h2><p>Pwntools is a python ctf library designed for rapid exploit development. It essentially help us write exploits quickly, and has a lot of useful functionality behind it.</p>
+<p>Also one thing to note, pwntools has Python2 and Python3 versions. Atm this course uses the Python2, but I have plans to switch it all over to Python3. Just keep in mind that some things change between Python2 to the Python3 versions, however the changes are relatively small.</p>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a><a href="https://guyinatuxedo.github.io/02-intro_tooling/pwntools/index.html#installation" target="_blank" rel="noopener">Installation</a></h3><p>It’s fairly simple process. The installation process is pretty much just using pip:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$    sudo pip install pwn</span><br></pre></td></tr></table></figure>
+
+<p>If you have any problems, google will help a lot.</p>
+<h3 id="Using-it"><a href="#Using-it" class="headerlink" title="Using it"></a><a href="https://guyinatuxedo.github.io/02-intro_tooling/pwntools/index.html#using-it" target="_blank" rel="noopener">Using it</a></h3><p>So this is going to be an explanation on how you do various things with pwntools. It will only cover a small bit of functionality.</p>
+<p>If we want to import it into python:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from pwn import *</span><br></pre></td></tr></table></figure>
+
+<p>Now one thing that pwntools does for us, is it has some nice piping functionality which helps with IO. If we want to connect to the server at <code>github.com</code> (if you have an IP address, just swap out the dns name with the IP address) on port <code>9000</code> via tcp:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">target = remote(&quot;github.com&quot;, 9000)</span><br></pre></td></tr></table></figure>
+
+<p>If you want to run a target binary:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">target = process(&quot;./challenge&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>If you want to attach the <code>gdb</code> debugger to a process:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gdb.attach(target)</span><br></pre></td></tr></table></figure>
+
+<p>If we want to attach the <code>gdb</code> debugger to a process, and also immediately pass a command to <code>gdb</code> to set a breakpoint at main:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gdb.attach(target, gdbscript=&apos;b *main&apos;)</span><br></pre></td></tr></table></figure>
+
+<p>Now for actual I/O. If we want to send the variable <code>x</code> to the <code>target</code> (target can be something like a process, or remote connection established by pwntools):</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">target.send(x)</span><br></pre></td></tr></table></figure>
+
+<p>If we wanted to send the variable <code>x</code> followed by a newline character appended to the end:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">target.sendline(x)</span><br></pre></td></tr></table></figure>
+
+<p>If we wanted to print a single line of text from <code>target</code>:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">print target.recvline()</span><br></pre></td></tr></table></figure>
+
+<p>If we wanted to print all text from <code>target</code> up to the string <code>out</code>:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">print target.recvuntil(&quot;out&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>Now one more thing, ELFs store data via least endian, meaning that data is stored with the least significant byte first. In a few situations where we are scanning in an integer, we will need to take this into account. Luckily pwntools will take care of this for us.</p>
+<p>To pack the integer <code>y</code> as a least endian QWORD (commonly used for <code>x64</code>):</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">p64(x)</span><br></pre></td></tr></table></figure>
+
+<p>To pack the integer <code>y</code> as a least endian DWORD (commonly used for <code>x86</code>):</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">p32(x)</span><br></pre></td></tr></table></figure>
+
+<p>It can also unpack values we get. Let’s say we wanted to unpack a least endian QWORD and get it’s integer value:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">u64(x)</span><br></pre></td></tr></table></figure>
+
+<p>To unpack a DWORD:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">u32(x)</span><br></pre></td></tr></table></figure>
+
+<p>Lastly if just wanted to interact directly with <code>target</code>:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">target.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>This is only a small bit of the functionality pwntools has. You will see a lot more of the functionality later. If you want to see more of pwntools, it has some great docs: <a href="http://docs.pwntools.com/en/stable/" target="_blank" rel="noopener">http://docs.pwntools.com/en/stable/</a></p>
+<ul>
+<li><code>send(payload)</code> 发送payload</li>
+<li><code>sendline(payload)</code> 发送payload，并进行换行（末尾<strong>\n</strong>）</li>
+<li><code>sendafter(some_string, payload)</code> 接收到 some_string 后, 发送你的 payload</li>
+<li><code>recvn(N)</code> 接受 N(数字) 字符</li>
+<li><code>recvline()</code> 接收一行输出</li>
+<li><code>recvlines(N)</code> 接收 N(数字) 行输出</li>
+<li><code>recvuntil(some_string)</code> 接收到 some_string 为止</li>
+</ul>
+<h2 id="IDA-Pro"><a href="#IDA-Pro" class="headerlink" title="IDA Pro"></a>IDA Pro</h2><blockquote>
+<p><a href="https://xz.aliyun.com/t/4205" target="_blank" rel="noopener">https://xz.aliyun.com/t/4205</a> IDA Pro7.0使用技巧总结</p>
+<p>其他的慢慢看 IDA 权威指南吧</p>
+</blockquote>
+<p>IDA Pro 逆向速参 <a href="https://juejin.im/post/6844903550460362766" target="_blank" rel="noopener">https://juejin.im/post/6844903550460362766</a></p>
+<p>a：将数据转换为字符串</p>
+<p>f5：一键反汇编</p>
+<p>esc：回退键，能够倒回上一部操作的视图（只有在反汇编窗口才是这个作用，如果是在其他窗口按下esc，会关闭该窗口）</p>
+<p>shift+f12：可以打开string窗口，一键找出所有的字符串，右击setup，还能对窗口的属性进行设置</p>
+<p>ctrl+w：保存ida数据库</p>
+<p>ctrl+s：选择某个数据段，直接进行跳转</p>
+<p>ctrl+鼠标滚轮：能够调节流程视图的大小</p>
+<p>x：对着某个函数、变量按该快捷键，可以查看它的交叉引用</p>
+<p>g：直接跳转到某个地址</p>
+<p>n：更改变量的名称</p>
+<p>y：更改变量的类型</p>
+<p>/ ：在反编译后伪代码的界面中写下注释</p>
+<p>\：在反编译后伪代码的界面中隐藏/显示变量和函数的类型描述，有时候变量特别多的时候隐藏掉类型描述看起来会轻松很多</p>
+<p>；：在反汇编后的界面中写下注释</p>
+<p>ctrl+shift+w：拍摄IDA快照</p>
+<p>u：undefine，取消定义函数、代码、数据的定义</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="Disassembly"><a href="#Disassembly" class="headerlink" title="Disassembly"></a>Disassembly</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">OPCODE_BYTES            = 6   // 机器码字节数，默认0</span><br><span class="line">INDENTION               = 0   // 指令缩进，默认16，设为0代码会整洁一些</span><br><span class="line">COMMENTS_INDENTION      = 30  // 注释缩进，默认40</span><br><span class="line">MAX_TAIL                = 16  // 交叉参考的深度，默认16</span><br><span class="line">MAX_XREF_LENGTH         = 80  // Maximal length of line with cross-references</span><br><span class="line">MAX_DATALINE_LENGTH     = 100  // Data directives (db,dw, etc):</span><br><span class="line">                              //   max length of argument string</span><br><span class="line">SHOW_AUTOCOMMENTS       = NO  // Display comments for every instruction</span><br><span class="line">                              // Advanced users will turn this off</span><br><span class="line">                              // Please note that there is another definition</span><br><span class="line">                              // for IBM PC below</span><br><span class="line">SHOW_BASIC_BLOCKS       = NO  // Generate an empty line at the end of a basic block</span><br><span class="line">SHOW_BORDERS            = YES // Borders between data/code</span><br><span class="line">SHOW_EMPTYLINES         = YES // Generate empty line to make disassembly more readable</span><br><span class="line">SHOW_LINEPREFIXES       = YES // Show line prefixes (like 1000:0000)</span><br><span class="line">SHOW_XREFS              = 15   	// 显示大量的交叉参考信息，默认2</span><br><span class="line">SHOW_ORIGINS            = NO 	// Generate &apos;org&apos; directives</span><br></pre></td></tr></table></figure>
+
+<h4 id="ASCII-strings-amp-names"><a href="#ASCII-strings-amp-names" class="headerlink" title="ASCII strings &amp; names"></a>ASCII strings &amp; names</h4><p>Options =&gt; ASCII String styles</p>
+<h4 id="中文"><a href="#中文" class="headerlink" title="中文"></a>中文</h4><p>IDA 从 7.0 版本开始正式支持中文字符串的显示，但仍需要配置 ida.cfg。</p>
+<p>在 IDA \ CFG 目录下新建一个文件 Chinese.clt，内容如下。（好像默认就有了）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">u2000..u206F,</span><br><span class="line">u2F00..u2FDF,</span><br><span class="line">u3000..u303F,</span><br><span class="line">u31C0..u31EF,</span><br><span class="line">u3400..u4DBF,</span><br><span class="line">u4E00..u9FFF,</span><br><span class="line">uF900..uFAFF,</span><br><span class="line">uFE30..uFE4F,</span><br><span class="line">u20000..u2A6DF,</span><br><span class="line">u2A700..u2BA7F,</span><br><span class="line">u2B740..u2B81F,</span><br><span class="line">u2F800..u2FA1F;</span><br></pre></td></tr></table></figure>
+
+<h3 id="导航条"><a href="#导航条" class="headerlink" title="导航条"></a>导航条</h3><ul>
+<li><p>蓝色：.text section</p>
+<ul>
+<li>深蓝：用户自己写的函数编译后的代码区</li>
+<li>浅蓝：编译器自己添加的函数，像启动函数，异常函数等（我自己猜的，不一定百分百正确）</li>
+</ul>
+</li>
+<li><p>粉红色：.idata section</p>
+<p>有关输入表的一些数据信息</p>
+</li>
+<li><p>军绿色：.rdata section</p>
+<p>纯数据，只读</p>
+</li>
+<li><p>灰色：为了段对齐而留下的空隙</p>
+</li>
+<li><p>黑色：禁区，不存在任何数据</p>
+</li>
+</ul>
+<h2 id="ghidra"><a href="#ghidra" class="headerlink" title="ghidra"></a>ghidra</h2><h2 id="GDB"><a href="#GDB" class="headerlink" title="GDB"></a>GDB</h2><p>gdb 还有其他一些小技巧，可以参考<a href="https://github.com/pannzh/awesome-cheatsheets/blob/master/tools/gdb.txt" target="_blank" rel="noopener">awesome-cheatsheets/tools/gdb.txt</a>中的列表。该列表最初由韦神创建，我时不时也会添加一些上去。当然为了方便大家的查阅，这里直接给出汇总表格附录:</p>
+<h3 id="启动-GDB"><a href="#启动-GDB" class="headerlink" title="启动 GDB"></a>启动 GDB</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>gdb object</code></td>
+<td>正常启动，加载可执行</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gdb object core</code></td>
+<td>对可执行 + core 文件进行调试</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gdb object pid</code></td>
+<td>对正在执行的进程进行调试</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gdb</code></td>
+<td>正常启动，启动后需要 file 命令手动加载</td>
+<td></td>
+</tr>
+<tr>
+<td><code>gdb -tui</code></td>
+<td>启用 gdb 的文本界面（或 ctrl-x ctrl-a 更换 CLI/TUI）</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="帮助信息"><a href="#帮助信息" class="headerlink" title="帮助信息"></a>帮助信息</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>help</code></td>
+<td>列出命令分类</td>
+<td></td>
+</tr>
+<tr>
+<td><code>help running</code></td>
+<td>查看某个类别的帮助信息</td>
+<td></td>
+</tr>
+<tr>
+<td><code>help run</code></td>
+<td>查看命令 run 的帮助</td>
+<td></td>
+</tr>
+<tr>
+<td><code>help info</code></td>
+<td>列出查看程序运行状态相关的命令</td>
+<td></td>
+</tr>
+<tr>
+<td><code>help info line</code></td>
+<td>列出具体的一个运行状态命令的帮助</td>
+<td></td>
+</tr>
+<tr>
+<td><code>help show</code></td>
+<td>列出 GDB 状态相关的命令</td>
+<td></td>
+</tr>
+<tr>
+<td><code>help show commands</code></td>
+<td>列出 show 命令的帮助</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="断点"><a href="#断点" class="headerlink" title="断点"></a>断点</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>break main</code></td>
+<td>对函数 main 设置一个断点，可简写为 b main</td>
+<td></td>
+</tr>
+<tr>
+<td><code>break 101</code></td>
+<td>对源代码的行号设置断点，可简写为 b 101</td>
+<td></td>
+</tr>
+<tr>
+<td><code>break basic.c:101</code></td>
+<td>对源代码和行号设置断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>break basic.c:foo</code></td>
+<td>对源代码和函数名设置断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>break *0x00400448</code></td>
+<td>对内存地址 0x00400448 设置断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info breakpoints</code></td>
+<td>列出当前的所有断点信息，可简写为 info break</td>
+<td></td>
+</tr>
+<tr>
+<td><code>delete 1</code></td>
+<td>按编号删除一个断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>delete</code></td>
+<td>删除所有断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>clear</code></td>
+<td>删除在当前行的断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>clear function</code></td>
+<td>删除函数断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>clear line</code></td>
+<td>删除行号断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>clear basic.c:101</code></td>
+<td>删除文件名和行号的断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>clear basic.c:main</code></td>
+<td>删除文件名和函数名的断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>clear *0x00400448</code></td>
+<td>删除内存地址的断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>disable 2</code></td>
+<td>禁用某断点，但是部删除</td>
+<td></td>
+</tr>
+<tr>
+<td><code>enable 2</code></td>
+<td>允许某个之前被禁用的断点，让它生效</td>
+<td></td>
+</tr>
+<tr>
+<td><code>rbreak {regexpr}</code></td>
+<td>匹配正则的函数前断点，如 <code>ex_*</code> 将断点 ex_ 开头的函数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>tbreak function/line</code></td>
+<td>临时断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>hbreak function/line</code></td>
+<td>硬件断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ignore {id} {count}</code></td>
+<td>忽略某断点 N-1 次</td>
+<td></td>
+</tr>
+<tr>
+<td><code>condition {id} {expr}</code></td>
+<td>条件断点，只有在条件生效时才发生</td>
+<td></td>
+</tr>
+<tr>
+<td><code>condition 2 i == 20</code></td>
+<td>2号断点只有在 i == 20 条件为真时才生效</td>
+<td></td>
+</tr>
+<tr>
+<td><code>watch {expr}</code></td>
+<td>对变量设置监视点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info watchpoints</code></td>
+<td>显示所有观察点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>catch exec</code></td>
+<td>断点在exec事件，即子进程的入口地址</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="运行程序"><a href="#运行程序" class="headerlink" title="运行程序"></a>运行程序</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>run</code></td>
+<td>运行程序</td>
+<td></td>
+</tr>
+<tr>
+<td><code>run {args}</code></td>
+<td>以某参数运行程序</td>
+<td></td>
+</tr>
+<tr>
+<td><code>run &lt; file</code></td>
+<td>以某文件为标准输入运行程序</td>
+<td></td>
+</tr>
+<tr>
+<td><code>run &lt; &lt;(cmd)</code></td>
+<td>以某命令的输出作为标准输入运行程序</td>
+<td></td>
+</tr>
+<tr>
+<td><code>run &lt;&lt;&lt; $(cmd)</code></td>
+<td>以某命令的输出作为标准输入运行程序</td>
+<td>Here-String</td>
+</tr>
+<tr>
+<td><code>set args {args} ...</code></td>
+<td>设置运行的参数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>show args</code></td>
+<td>显示当前的运行参数</td>
+<td></td>
+</tr>
+<tr>
+<td><code>cont</code></td>
+<td>继续运行，可简写为 c</td>
+<td></td>
+</tr>
+<tr>
+<td><code>step</code></td>
+<td>单步进入（si 执行一行汇编），碰到函数会进去。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>step {count}</code></td>
+<td>单步多少次</td>
+<td></td>
+</tr>
+<tr>
+<td><code>next</code></td>
+<td>单步跳过（ni 执行一行汇编），碰到函数不会进入。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>next {count}</code></td>
+<td>单步多少次</td>
+<td></td>
+</tr>
+<tr>
+<td><code>CTRL+C</code></td>
+<td>发送 SIGINT 信号，中止当前运行的程序</td>
+<td></td>
+</tr>
+<tr>
+<td><code>attach {process-id}</code></td>
+<td>链接上当前正在运行的进程，开始调试</td>
+<td></td>
+</tr>
+<tr>
+<td><code>detach</code></td>
+<td>断开进程链接</td>
+<td></td>
+</tr>
+<tr>
+<td><code>finish</code></td>
+<td>结束当前函数的运行</td>
+<td></td>
+</tr>
+<tr>
+<td><code>until</code></td>
+<td>持续执行直到代码行号大于当前行号（跳出循环）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>until {line}</code></td>
+<td>持续执行直到执行到某行</td>
+<td></td>
+</tr>
+<tr>
+<td><code>kill</code></td>
+<td>杀死当前运行的函数</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bt</code></td>
+<td>打印 backtrace</td>
+<td></td>
+</tr>
+<tr>
+<td><code>frame</code></td>
+<td>显示当前运行的栈帧</td>
+<td></td>
+</tr>
+<tr>
+<td><code>up</code></td>
+<td>向上移动栈帧（向着 main 函数）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>down</code></td>
+<td>向下移动栈帧（远离 main 函数）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info locals</code></td>
+<td>打印帧内的相关变量</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info args</code></td>
+<td>打印函数的参数</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="代码浏览"><a href="#代码浏览" class="headerlink" title="代码浏览"></a>代码浏览</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>list 101</code></td>
+<td>显示第 101 行周围 10行代码</td>
+<td></td>
+</tr>
+<tr>
+<td><code>list 1,10</code></td>
+<td>显示 1 到 10 行代码</td>
+<td></td>
+</tr>
+<tr>
+<td><code>list main</code></td>
+<td>显示函数周围代码</td>
+<td></td>
+</tr>
+<tr>
+<td><code>list basic.c:main</code></td>
+<td>显示另外一个源代码文件的函数周围代码</td>
+<td></td>
+</tr>
+<tr>
+<td><code>list -</code></td>
+<td>重复之前 10 行代码</td>
+<td></td>
+</tr>
+<tr>
+<td><code>list *0x22e4</code></td>
+<td>显示特定地址的代码</td>
+<td></td>
+</tr>
+<tr>
+<td><code>cd dir</code></td>
+<td>切换当前目录</td>
+<td></td>
+</tr>
+<tr>
+<td><code>pwd</code></td>
+<td>显示当前目录</td>
+<td></td>
+</tr>
+<tr>
+<td><code>search {regexpr}</code></td>
+<td>向前进行正则搜索</td>
+<td></td>
+</tr>
+<tr>
+<td><code>reverse-search {regexp}</code></td>
+<td>向后进行正则搜索</td>
+<td></td>
+</tr>
+<tr>
+<td><code>dir {dirname}</code></td>
+<td>增加源代码搜索路径</td>
+<td></td>
+</tr>
+<tr>
+<td><code>dir</code></td>
+<td>复位源代码搜索路径（清空）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>show directories</code></td>
+<td>显示源代码路径</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="浏览数据"><a href="#浏览数据" class="headerlink" title="浏览数据"></a>浏览数据</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>print {expression}</code></td>
+<td>打印表达式，并且增加到打印历史</td>
+<td></td>
+</tr>
+<tr>
+<td><code>print /x {expression}</code></td>
+<td>十六进制输出，print 可以简写为 p</td>
+<td></td>
+</tr>
+<tr>
+<td><code>print array[i]@count</code></td>
+<td>打印数组范围</td>
+<td></td>
+</tr>
+<tr>
+<td><code>print $</code></td>
+<td>打印之前的变量</td>
+<td></td>
+</tr>
+<tr>
+<td><code>print *$-&gt;next</code></td>
+<td>打印 list</td>
+<td></td>
+</tr>
+<tr>
+<td><code>print $1</code></td>
+<td>输出打印历史里第一条</td>
+<td></td>
+</tr>
+<tr>
+<td><code>print ::gx</code></td>
+<td>将变量可视范围（scope）设置为全局</td>
+<td></td>
+</tr>
+<tr>
+<td><code>print &#39;basic.c&#39;::gx</code></td>
+<td>打印某源代码里的全局变量，(gdb 4.6)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>print /x &amp;main</code></td>
+<td>打印函数地址</td>
+<td></td>
+</tr>
+<tr>
+<td><code>x *0x11223344</code></td>
+<td>显示给定地址的内存数据</td>
+<td></td>
+</tr>
+<tr>
+<td><code>x /nfu {address}</code></td>
+<td>打印内存数据，n是多少个，f是格式，u是单位大小</td>
+<td></td>
+</tr>
+<tr>
+<td><code>x /10xb *0x11223344</code></td>
+<td>按十六进制打印内存地址 0x11223344 处的十个字节</td>
+<td></td>
+</tr>
+<tr>
+<td><code>x/x &amp;gx</code></td>
+<td>按十六进制打印变量 gx，x和斜杆后参数可以连写</td>
+<td></td>
+</tr>
+<tr>
+<td><code>x/4wx &amp;main</code></td>
+<td>按十六进制打印位于 main 函数开头的四个 long</td>
+<td></td>
+</tr>
+<tr>
+<td><code>x/gf &amp;gd1</code></td>
+<td>打印 double 类型</td>
+<td></td>
+</tr>
+<tr>
+<td><code>help x</code></td>
+<td>查看关于 x 命令的帮助</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info locals</code></td>
+<td>打印本地局部变量</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info functions {regexp}</code></td>
+<td>打印函数名称</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info variables {regexp}</code></td>
+<td>打印全局变量名称</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ptype name</code></td>
+<td>查看类型定义，比如 ptype FILE，查看 FILE 结构体定义</td>
+<td></td>
+</tr>
+<tr>
+<td><code>whatis {expression}</code></td>
+<td>查看表达式的类型</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set var = {expression}</code></td>
+<td>变量赋值</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set *address = value</code></td>
+<td>可将 * 换成 char / short / long 分别设定 1/2/8 byte</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set {int}0x600000 = 1337</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>display {expression}</code></td>
+<td>在单步指令后查看某表达式的值</td>
+<td></td>
+</tr>
+<tr>
+<td><code>undisplay</code></td>
+<td>删除单步后对某些值的监控</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info display</code></td>
+<td>显示监视的表达式</td>
+<td></td>
+</tr>
+<tr>
+<td><code>show values</code></td>
+<td>查看记录到打印历史中的变量的值 (gdb 4.0)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info history</code></td>
+<td>查看打印历史的帮助 (gdb 3.5)</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>file {object}</code></td>
+<td>加载新的可执行文件供调试</td>
+<td></td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>放弃可执行和符号表信息</td>
+<td></td>
+</tr>
+<tr>
+<td><code>symbol-file {object}</code></td>
+<td>仅加载符号表</td>
+<td></td>
+</tr>
+<tr>
+<td><code>exec-file {object}</code></td>
+<td>指定用于调试的可执行文件（非符号表）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>core-file {core}</code></td>
+<td>加载 core 用于分析</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="信号控制"><a href="#信号控制" class="headerlink" title="信号控制"></a>信号控制</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>info signals</code></td>
+<td>打印信号设置</td>
+<td></td>
+</tr>
+<tr>
+<td><code>handle {signo} {actions}</code></td>
+<td>设置信号的调试行为</td>
+<td></td>
+</tr>
+<tr>
+<td><code>handle INT print</code></td>
+<td>信号发生时打印信息</td>
+<td></td>
+</tr>
+<tr>
+<td><code>handle INT noprint</code></td>
+<td>信号发生时不打印信息</td>
+<td></td>
+</tr>
+<tr>
+<td><code>handle INT stop</code></td>
+<td>信号发生时中止被调试程序</td>
+<td></td>
+</tr>
+<tr>
+<td><code>handle INT nostop</code></td>
+<td>信号发生时不中止被调试程序</td>
+<td></td>
+</tr>
+<tr>
+<td><code>handle INT pass</code></td>
+<td>调试器接获信号，不让程序知道</td>
+<td></td>
+</tr>
+<tr>
+<td><code>handle INT nopass</code></td>
+<td>调试起不接获信号</td>
+<td></td>
+</tr>
+<tr>
+<td><code>signal signo</code></td>
+<td>继续并将信号转移给程序</td>
+<td></td>
+</tr>
+<tr>
+<td><code>signal 0</code></td>
+<td>继续但不把信号给程序</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="线程调试"><a href="#线程调试" class="headerlink" title="线程调试"></a>线程调试</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>info threads</code></td>
+<td>查看当前线程和 id</td>
+<td></td>
+</tr>
+<tr>
+<td><code>thread {id}</code></td>
+<td>切换当前调试线程为指定 id 的线程</td>
+<td></td>
+</tr>
+<tr>
+<td><code>break {line} thread all</code></td>
+<td>所有线程在指定行号处设置断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>thread apply {id..} cmd</code></td>
+<td>指定多个线程共同执行 gdb 命令</td>
+<td></td>
+</tr>
+<tr>
+<td><code>thread apply all cmd</code></td>
+<td>所有线程共同执行 gdb 命令</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set schedule-locking ?</code></td>
+<td>调试一个线程时，其他线程是否执行</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set non-stop on/off</code></td>
+<td>调试一个线程时，其他线程是否运行</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set pagination on/off</code></td>
+<td>调试一个线程时，分页是否停止</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set target-async on/off</code></td>
+<td>同步或者异步调试，是否等待线程中止的信息</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="进程调试"><a href="#进程调试" class="headerlink" title="进程调试"></a>进程调试</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>info inferiors</code></td>
+<td>查看当前进程和 id</td>
+<td></td>
+</tr>
+<tr>
+<td><code>inferior {id}</code></td>
+<td>切换某个进程</td>
+<td></td>
+</tr>
+<tr>
+<td><code>kill inferior {id...}</code></td>
+<td>杀死某个进程</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set detach-on-fork on/off</code></td>
+<td>设置当进程调用fork时gdb是否同时调试父子进程</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set follow-fork-mode parent/child</code></td>
+<td>设置当进程调用fork时是否进入子进程</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="汇编调试"><a href="#汇编调试" class="headerlink" title="汇编调试"></a>汇编调试</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>info registers</code></td>
+<td>打印普通寄存器</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info all-registers</code></td>
+<td>打印所有寄存器</td>
+<td></td>
+</tr>
+<tr>
+<td><code>print/x $pc</code></td>
+<td>打印单个寄存器</td>
+<td></td>
+</tr>
+<tr>
+<td><code>stepi</code></td>
+<td>指令级别单步进入</td>
+<td>si</td>
+</tr>
+<tr>
+<td><code>nexti</code></td>
+<td>指令级别单步跳过</td>
+<td>ni</td>
+</tr>
+<tr>
+<td><code>display/i $pc</code></td>
+<td>监控寄存器（每条单步完以后会自动打印值）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>x/x &amp;gx</code></td>
+<td>十六进制打印变量</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info line 22</code></td>
+<td>打印行号为 22 的内存地址信息</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info line *0x2c4e</code></td>
+<td>打印给定内存地址对应的源代码和行号信息</td>
+<td></td>
+</tr>
+<tr>
+<td><code>disassemble {addr}</code></td>
+<td>对地址进行反汇编，比如 disassemble 0x2c4e</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>show commands</code></td>
+<td>显示历史命令 (gdb 4.0)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>info editing</code></td>
+<td>显示历史命令 (gdb 3.5)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ESC-CTRL-J</code></td>
+<td>切换到 Vi 命令行编辑模式</td>
+<td></td>
+</tr>
+<tr>
+<td><code>set history expansion on</code></td>
+<td>允许类 c-shell 的历史</td>
+<td></td>
+</tr>
+<tr>
+<td><code>break class::member</code></td>
+<td>在类成员处设置断点</td>
+<td></td>
+</tr>
+<tr>
+<td><code>list class:member</code></td>
+<td>显示类成员代码</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ptype class</code></td>
+<td>查看类包含的成员</td>
+<td>/o可以看成员偏移，类似pahole</td>
+</tr>
+<tr>
+<td><code>print *this</code></td>
+<td>查看 this 指针</td>
+<td></td>
+</tr>
+<tr>
+<td><code>define command ... end</code></td>
+<td>定义用户命令</td>
+<td></td>
+</tr>
+<tr>
+<td><code>&lt;return&gt;</code></td>
+<td>直接按回车执行上一条指令</td>
+<td></td>
+</tr>
+<tr>
+<td><code>shell {command} [args]</code></td>
+<td>执行 shell 命令</td>
+<td></td>
+</tr>
+<tr>
+<td><code>source {file}</code></td>
+<td>从文件加载 gdb 命令</td>
+<td></td>
+</tr>
+<tr>
+<td><code>quit</code></td>
+<td>退出 gdb</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="pwndbg"><a href="#pwndbg" class="headerlink" title="pwndbg"></a>pwndbg</h2><p>用法特性：<a href="https://github.com/pwndbg/pwndbg/blob/dev/FEATURES.md" target="_blank" rel="noopener">https://github.com/pwndbg/pwndbg/blob/dev/FEATURES.md</a></p>
+<p>分屏</p>
+<p><img src="https://raw.githubusercontent.com/pwndbg/pwndbg/dev/caps/context_splitting.png" alt></p>
+<h2 id="peda"><a href="#peda" class="headerlink" title="peda"></a>peda</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/longld/peda.git ~/peda</span><br><span class="line">echo &quot;source ~/peda/peda.py&quot; &gt;&gt; ~/.gdbinit</span><br></pre></td></tr></table></figure>
+
+<h2 id="Ollydbg"><a href="#Ollydbg" class="headerlink" title="Ollydbg"></a>Ollydbg</h2><h2 id="PE-类工具"><a href="#PE-类工具" class="headerlink" title="PE 类工具"></a>PE 类工具</h2><h2 id="masm32"><a href="#masm32" class="headerlink" title="masm32"></a>masm32</h2><h2 id="Immunitydebugger"><a href="#Immunitydebugger" class="headerlink" title="Immunitydebugger"></a>Immunitydebugger</h2><h2 id="pwndbg-1"><a href="#pwndbg-1" class="headerlink" title="pwndbg"></a>pwndbg</h2><h2 id="z3"><a href="#z3" class="headerlink" title="z3"></a>z3</h2><h2 id="strings"><a href="#strings" class="headerlink" title="strings"></a>strings</h2><h2 id="file"><a href="#file" class="headerlink" title="file"></a>file</h2><h2 id="binwalk"><a href="#binwalk" class="headerlink" title="binwalk"></a>binwalk</h2><h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://guyinatuxedo.github.io/" target="_blank" rel="noopener">https://guyinatuxedo.github.io/</a></p>
+<p><a href="https://adworld.xctf.org.cn/task" target="_blank" rel="noopener">https://adworld.xctf.org.cn/task</a>  REVERSE或者PWN或者MOBILE三个方向合计完成任意9题</p>
+<p><a href="http://reversing.kr/" target="_blank" rel="noopener">http://reversing.kr/</a> 5题</p>
+<p><a href="http://pwnable.kr/" target="_blank" rel="noopener">http://pwnable.kr/</a> 6题</p>
+<p><a href="https://pwnable.tw/" target="_blank" rel="noopener">https://pwnable.tw/</a> 4题</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
+            </p><p>原文链接：<a href="https://wywwzjj.top/2020/10/07/二进制学习/">https://wywwzjj.top/2020/10/07/二进制学习/</a>
+            </p><p>发表日期：<a href="https://wywwzjj.top/2020/10/07/二进制学习/">October 7th 2020, 10:31:26 am</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2020/10/07/二进制学习/">October 15th 2020, 11:35:50 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2020/10/10/pwnable.kr/" title="pwnable.kr">
+                    <div class="nextTitle">pwnable.kr</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/06/23/frida初体验/" title="Frida 初体验">
+                    <div class="prevTitle">Frida 初体验</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- gitalk评论 -->
+
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="//github.com/wywwzjj" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <a href="//twitter.com/wywwzjj" class="iconfont-archer twitter" target="_blank" title="twitter"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title="qq">
+                  
+                  <img class="profile-qr" src="/assets/QQ.png">
+                </span>
+            
+        
+    
+        
+    
+        
+            
+                <a href="mailto:wywwzjj@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#每天学点新东西"><span class="toc-number">1.</span> <span class="toc-text">每天学点新东西</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Assembly"><span class="toc-number">2.</span> <span class="toc-text">Assembly</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intel-vs-AT-amp-T"><span class="toc-number">2.1.</span> <span class="toc-text">Intel vs AT&amp;T</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#程序模板"><span class="toc-number">2.2.</span> <span class="toc-text">程序模板</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#寄存器"><span class="toc-number">2.3.</span> <span class="toc-text">寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型"><span class="toc-number">2.4.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#寻址模式"><span class="toc-number">2.5.</span> <span class="toc-text">寻址模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#直接内存寻址"><span class="toc-number">2.5.1.</span> <span class="toc-text">直接内存寻址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#寄存器间接寻址"><span class="toc-number">2.5.2.</span> <span class="toc-text">寄存器间接寻址</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用指令"><span class="toc-number">2.6.</span> <span class="toc-text">常用指令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#控制转移"><span class="toc-number">2.6.1.</span> <span class="toc-text">控制转移</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Clang"><span class="toc-number">3.</span> <span class="toc-text">Clang</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#static"><span class="toc-number">3.1.</span> <span class="toc-text">static</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reverse"><span class="toc-number">4.</span> <span class="toc-text">Reverse</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#要求"><span class="toc-number">4.1.</span> <span class="toc-text">要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常规逆向流程"><span class="toc-number">4.2.</span> <span class="toc-text">常规逆向流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定位关键代码-tips"><span class="toc-number">4.3.</span> <span class="toc-text">定位关键代码 tips</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逆向-tips"><span class="toc-number">4.4.</span> <span class="toc-text">逆向 tips</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态分析"><span class="toc-number">4.5.</span> <span class="toc-text">动态分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法和数据结构识别"><span class="toc-number">4.6.</span> <span class="toc-text">算法和数据结构识别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码混淆"><span class="toc-number">4.7.</span> <span class="toc-text">代码混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#保护壳"><span class="toc-number">4.8.</span> <span class="toc-text">保护壳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反调试"><span class="toc-number">4.9.</span> <span class="toc-text">反调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非常规逆向思路"><span class="toc-number">4.10.</span> <span class="toc-text">非常规逆向思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前期准备"><span class="toc-number">4.10.1.</span> <span class="toc-text">前期准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#找工具"><span class="toc-number">4.10.2.</span> <span class="toc-text">找工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#寻找主入口（main函数）"><span class="toc-number">4.11.</span> <span class="toc-text">寻找主入口（main函数）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Stack-Overflow"><span class="toc-number">5.</span> <span class="toc-text">Stack Overflow</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Basic"><span class="toc-number">5.1.</span> <span class="toc-text">Basic</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#调用约定"><span class="toc-number">5.1.1.</span> <span class="toc-text">调用约定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型"><span class="toc-number">5.2.</span> <span class="toc-text">类型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Format-Strings"><span class="toc-number">6.</span> <span class="toc-text">Format Strings</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Array-Indexing"><span class="toc-number">7.</span> <span class="toc-text">Array Indexing</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Bad-Seed"><span class="toc-number">8.</span> <span class="toc-text">Bad Seed</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Z3-amp-Symbolic-Execution-angr"><span class="toc-number">9.</span> <span class="toc-text">Z3 &amp; Symbolic Execution(angr)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ROP"><span class="toc-number">10.</span> <span class="toc-text">ROP</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Partial-Overwrite"><span class="toc-number">10.1.</span> <span class="toc-text">Partial Overwrite</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stack-Pivoting"><span class="toc-number">10.2.</span> <span class="toc-text">Stack Pivoting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SIGROP-SROP"><span class="toc-number">10.3.</span> <span class="toc-text">SIGROP(SROP)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ret2csu"><span class="toc-number">10.4.</span> <span class="toc-text">ret2csu</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ret2system"><span class="toc-number">10.5.</span> <span class="toc-text">ret2system</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Heap-Exploitation"><span class="toc-number">11.</span> <span class="toc-text">Heap Exploitation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Double-Frees"><span class="toc-number">11.1.</span> <span class="toc-text">Double Frees</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Heap-Consolidation"><span class="toc-number">11.2.</span> <span class="toc-text">Heap Consolidation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Use-after-Frees"><span class="toc-number">11.3.</span> <span class="toc-text">Use after Frees</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Protostar-heap0"><span class="toc-number">11.4.</span> <span class="toc-text">Protostar: heap0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#protostar-heap1"><span class="toc-number">11.5.</span> <span class="toc-text">protostar: heap1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#protostar-heap2"><span class="toc-number">11.6.</span> <span class="toc-text">protostar: heap2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unlink-Exploitation"><span class="toc-number">11.7.</span> <span class="toc-text">unlink() Exploitation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Heap-Grooming"><span class="toc-number">11.8.</span> <span class="toc-text">Heap Grooming</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fastbin-Attack"><span class="toc-number">11.9.</span> <span class="toc-text">Fastbin Attack</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Unsortedbin-Attack"><span class="toc-number">11.10.</span> <span class="toc-text">Unsortedbin Attack</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Largebin-Attack"><span class="toc-number">11.11.</span> <span class="toc-text">Largebin Attack</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GLibc-Tcache"><span class="toc-number">11.12.</span> <span class="toc-text">GLibc Tcache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#House-of-Spirit"><span class="toc-number">11.13.</span> <span class="toc-text">House of Spirit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#House-of-Lore"><span class="toc-number">11.14.</span> <span class="toc-text">House of Lore</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#House-of-Force"><span class="toc-number">11.15.</span> <span class="toc-text">House of Force</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#House-of-Einherjar"><span class="toc-number">11.16.</span> <span class="toc-text">House of Einherjar</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#House-of-Orange"><span class="toc-number">11.17.</span> <span class="toc-text">House of Orange</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Miscellaneous"><span class="toc-number">11.18.</span> <span class="toc-text">Miscellaneous</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Grab-Bag"><span class="toc-number">12.</span> <span class="toc-text">Grab Bag</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Shell-coding"><span class="toc-number">12.1.</span> <span class="toc-text">Shell coding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Patching"><span class="toc-number">12.2.</span> <span class="toc-text">Patching</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NET"><span class="toc-number">12.3.</span> <span class="toc-text">.NET</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Security-Protection-Mechanism"><span class="toc-number">13.</span> <span class="toc-text">Security Protection Mechanism</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#NX"><span class="toc-number">13.1.</span> <span class="toc-text">NX</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RELRO"><span class="toc-number">13.2.</span> <span class="toc-text">RELRO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stack-Canary"><span class="toc-number">13.3.</span> <span class="toc-text">Stack (Canary)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PIE"><span class="toc-number">13.4.</span> <span class="toc-text">PIE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FORTIFY"><span class="toc-number">13.5.</span> <span class="toc-text">FORTIFY</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bypass"><span class="toc-number">13.6.</span> <span class="toc-text">Bypass</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#泄露libc地址和版本的方法"><span class="toc-number">13.6.0.1.</span> <span class="toc-text">泄露libc地址和版本的方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#简单的栈溢出"><span class="toc-number">13.6.0.2.</span> <span class="toc-text">简单的栈溢出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开启nx的程序"><span class="toc-number">13.6.0.3.</span> <span class="toc-text">开启nx的程序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开启canary的程序"><span class="toc-number">13.6.0.4.</span> <span class="toc-text">开启canary的程序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开启PIE的程序"><span class="toc-number">13.6.0.5.</span> <span class="toc-text">开启PIE的程序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#全部保护开启"><span class="toc-number">13.6.0.6.</span> <span class="toc-text">全部保护开启</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#格式化字符串漏洞"><span class="toc-number">13.6.0.6.1.</span> <span class="toc-text">格式化字符串漏洞</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#uaf漏洞"><span class="toc-number">13.6.0.6.2.</span> <span class="toc-text">uaf漏洞</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#任意位置写"><span class="toc-number">13.6.0.6.3.</span> <span class="toc-text">任意位置写</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Virus"><span class="toc-number">14.</span> <span class="toc-text">Virus</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DOS"><span class="toc-number">14.1.</span> <span class="toc-text">DOS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#COM-简介"><span class="toc-number">14.1.1.</span> <span class="toc-text">COM 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#COM-覆盖型病毒"><span class="toc-number">14.1.2.</span> <span class="toc-text">COM 覆盖型病毒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#COM-伴随型病毒"><span class="toc-number">14.1.3.</span> <span class="toc-text">COM 伴随型病毒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#COM-寄生型病毒"><span class="toc-number">14.1.4.</span> <span class="toc-text">COM 寄生型病毒</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#隐藏技术"><span class="toc-number">14.2.</span> <span class="toc-text">隐藏技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变形技术"><span class="toc-number">14.3.</span> <span class="toc-text">变形技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反跟踪、反调试、反分析"><span class="toc-number">14.4.</span> <span class="toc-text">反跟踪、反调试、反分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#驻留内存"><span class="toc-number">14.5.</span> <span class="toc-text">驻留内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">14.6.</span> <span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Executable"><span class="toc-number">15.</span> <span class="toc-text">Executable</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ELF"><span class="toc-number">15.1.</span> <span class="toc-text">ELF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PE"><span class="toc-number">15.2.</span> <span class="toc-text">PE</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tools"><span class="toc-number">16.</span> <span class="toc-text">Tools</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#pwntools"><span class="toc-number">16.1.</span> <span class="toc-text">pwntools</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Installation"><span class="toc-number">16.1.1.</span> <span class="toc-text">Installation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Using-it"><span class="toc-number">16.1.2.</span> <span class="toc-text">Using it</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IDA-Pro"><span class="toc-number">16.2.</span> <span class="toc-text">IDA Pro</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置"><span class="toc-number">16.2.1.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Disassembly"><span class="toc-number">16.2.1.1.</span> <span class="toc-text">Disassembly</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ASCII-strings-amp-names"><span class="toc-number">16.2.1.2.</span> <span class="toc-text">ASCII strings &amp; names</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#中文"><span class="toc-number">16.2.1.3.</span> <span class="toc-text">中文</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#导航条"><span class="toc-number">16.2.2.</span> <span class="toc-text">导航条</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ghidra"><span class="toc-number">16.3.</span> <span class="toc-text">ghidra</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GDB"><span class="toc-number">16.4.</span> <span class="toc-text">GDB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启动-GDB"><span class="toc-number">16.4.1.</span> <span class="toc-text">启动 GDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#帮助信息"><span class="toc-number">16.4.2.</span> <span class="toc-text">帮助信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#断点"><span class="toc-number">16.4.3.</span> <span class="toc-text">断点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行程序"><span class="toc-number">16.4.4.</span> <span class="toc-text">运行程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栈帧"><span class="toc-number">16.4.5.</span> <span class="toc-text">栈帧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码浏览"><span class="toc-number">16.4.6.</span> <span class="toc-text">代码浏览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#浏览数据"><span class="toc-number">16.4.7.</span> <span class="toc-text">浏览数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件操作"><span class="toc-number">16.4.8.</span> <span class="toc-text">文件操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#信号控制"><span class="toc-number">16.4.9.</span> <span class="toc-text">信号控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程调试"><span class="toc-number">16.4.10.</span> <span class="toc-text">线程调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程调试"><span class="toc-number">16.4.11.</span> <span class="toc-text">进程调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#汇编调试"><span class="toc-number">16.4.12.</span> <span class="toc-text">汇编调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他命令"><span class="toc-number">16.4.13.</span> <span class="toc-text">其他命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwndbg"><span class="toc-number">16.5.</span> <span class="toc-text">pwndbg</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#peda"><span class="toc-number">16.6.</span> <span class="toc-text">peda</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ollydbg"><span class="toc-number">16.7.</span> <span class="toc-text">Ollydbg</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PE-类工具"><span class="toc-number">16.8.</span> <span class="toc-text">PE 类工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#masm32"><span class="toc-number">16.9.</span> <span class="toc-text">masm32</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Immunitydebugger"><span class="toc-number">16.10.</span> <span class="toc-text">Immunitydebugger</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwndbg-1"><span class="toc-number">16.11.</span> <span class="toc-text">pwndbg</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#z3"><span class="toc-number">16.12.</span> <span class="toc-text">z3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#strings"><span class="toc-number">16.13.</span> <span class="toc-text">strings</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#file"><span class="toc-number">16.14.</span> <span class="toc-text">file</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#binwalk"><span class="toc-number">16.15.</span> <span class="toc-text">binwalk</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-number">17.</span> <span class="toc-text">Reference</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 61
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2020/10/10/pwnable.kr/">pwnable.kr</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span><a class="archive-post-title" href="/2020/10/07/二进制学习/">二进制学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href="/2020/06/23/frida初体验/">Frida 初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-181/">LeetCode Weekly Contest 181</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-22/">LeetCode Weekly Contest 22（双周赛）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href="/2020/03/21/LeetCode-数据库专题/">LeetCode 数据库专题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href="/2020/03/08/LeetCode-Weekly-Contest-179/">LeetCode Weekly Contest 179</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href="/2020/03/08/LeetCode-Weekly-Contest-21/">LeetCode Weekly Contest 21（双周赛）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span><a class="archive-post-title" href="/2020/02/23/LeetCode-Weekly-Contest-177/">LeetCode Weekly Contest 177</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2020/01/30/ThinkPHP-3-X-5-X-order-by-注入/">ThinkPHP 3.X / 5.X order by 注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href="/2020/01/24/Go-学习/">Go 学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href="/2020/01/23/PHP-FPM-RCE/">PHP-FPM RCE (CVE-2019-11043)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href="/2020/01/17/ThinkPHP-6.0-任意文件写入/">ThinkPHP 6.0 任意文件写入</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span><a class="archive-post-title" href="/2019/12/16/CSAPP-Chapter-12-Notes/">CSAPP 并发编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href="/2019/12/15/smarty-3.1.31-RCE/">smarty 3.1.31 RCE（CVE-2017-1000480）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2019/12/02/CSAPP-Chapter-11-Notes/">CSAPP 网络编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href="/2019/11/25/CSAPP-Chapter-10-Notes/">CSAPP 系统级 IO 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href="/2019/11/21/ThinkCMF-前台模板注入-RCE/">ThinkCMF 前台模板注入 RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2019/11/11/CSAPP-Chapter-9-Notes/">CSAPP 虚拟存储器 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2019/10/28/CSAPP-Chapter-8-Notes/">CSAPP 异常控制流 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href="/2019/10/24/Python-pickle-反序列化实例分析/">Python pickle 反序列化实例分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span><a class="archive-post-title" href="/2019/10/21/CSAPP-Chapter-6-Notes/">CSAPP 存储器层次结构 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2019/10/10/CSAPP-Chapter-3-Notes/">CSAPP 程序的机器级表示 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href="/2019/10/06/BalsnCTF-2019-web题/">Balsn CTF 2019 web 题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href="/2019/09/08/CSAPP-Chapter-2-Notes/">CSAPP 信息的表示和处理 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href="/2019/09/01/CSAPP-Chapter-1-Notes/">CSAPP 计算机系统漫游 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href="/2019/08/20/当PHP反序列化遇上SSRF/">当 PHP 反序列化遇上 SSRF</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href="/2019/07/18/Discuz-ML!-V3.X-RCE/">Discuz ML! V3.X RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写配置文件经典问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化学习/">phar 与反序列化学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入总结/">命令注入总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span><a class="archive-post-title" href="/2019/04/07/vulnhub-靶机实战系列-HackInOS/">vulnhub 靶机实战系列 HackInOS</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href="/2019/04/04/Leetcode-322-Coin-Change/">Leetcode 322.Coin Change[DP]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/无字母数字-webshell/">无字母数字 webshell</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href="/2019/03/02/PHP-SECURITY-CALENDAR-2017/">PHP SECURITY CALENDAR Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/sqlmap-tamper-列表/">sqlmap tamper 列表</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/Jarvis-OJ-inject/">Jarvis OJ inject</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2019/02/25/Jarvis-OJ-phpinfo/">Jarvis OJ phpinfo</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Hackme-Writeup/">Hackme-Web-Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Jarvis-OJ-Writeup/">Jarvis OJ Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href="/2019/02/01/Prompt-1-xss-通关记录/">Prompt 1 to win 通关记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/22</span><a class="archive-post-title" href="/2018/12/22/优雅实现哈夫曼编码/">优雅实现哈夫曼编码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href="/2018/12/08/Please_don't_stop_rua_233333/">Please don't stop rua 233333</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/30</span><a class="archive-post-title" href="/2018/11/30/Docker-常用命令/">Docker-常用命令清单</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href="/2018/11/23/漏洞练习平台及工具/">漏洞练习平台及工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span><a class="archive-post-title" href="/2018/11/02/Sqli-labs-通关记录/">Sqli-labs 通关笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href="/2018/10/23/Raccoon-Writeup/">Raccoon web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/02</span><a class="archive-post-title" href="/2018/10/02/学习一项技能要花多少时间/">学习一项技能要花多少时间？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href="/2018/09/26/Bugku-Web-writeup/">Bugku Web 部分WP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href="/2018/07/28/ACM-常用Trick/">ACM 常用小 Trick</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href="/2018/05/16/十年学会编程/">Teach Yourself Programming in Ten Years</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href="/2018/01/25/Hello-World/">Hello World</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+    
+        <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+    
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
+        <span class="sidebar-tag-name" data-tags="frida"><span class="iconfont-archer">&#xe606;</span>frida</span>
+    
+        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
+    
+        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="pwn"><span class="iconfont-archer">&#xe606;</span>pwn</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQL"><span class="iconfont-archer">&#xe606;</span>SQL</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "wywwzjj"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

